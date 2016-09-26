@@ -1,20 +1,25 @@
 package hu.bme.aut.onlab.rest;
 
+import hu.bme.aut.onlab.beans.CategoryBean;
 import hu.bme.aut.onlab.model.Category;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by N. Vilagos.
  */
-@Path("test")
-@RequestScoped
+@Path("/test")
 public class TestRs {
+
+
+    @EJB
+    CategoryBean categoryBean;
 
 
     @GET
@@ -23,8 +28,8 @@ public class TestRs {
     }
 
     @GET
-    @Path("json")
-    @Produces("application/json")
+    @Path("/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Category> listLocalCategories() {
         Category category1 = new Category();
         category1.setId(1);
@@ -37,5 +42,12 @@ public class TestRs {
         list.add(category1);
         list.add(category2);
         return list;
+    }
+
+    @GET
+    @Path("/categories")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Category> listRemoteCategories() {
+        return categoryBean.findAllOrderedByTitle();
     }
 }
