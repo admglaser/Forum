@@ -1,0 +1,90 @@
+[ 
+	{
+		"title": "Member Boards",
+		"subcategories": [
+			{
+				"unread": true,
+				"title": "Announcements",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/1",
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			},
+			{
+				"unread": false,
+				"title": "General discussions",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/2",
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			},
+			{
+				"unread": true,
+				"title": "Off topic",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/3",				
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			}
+		]
+	},
+	{
+		"title": "Public Boards",
+		"subcategories": [
+			{
+				"unread": true,
+				"title": "Introductions",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/4",
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			},
+			{
+				"unread": true,
+				"title": "Frequently Asked Questions",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/5",				
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			},
+			{
+				"unread": true,
+				"title": "Important changes",
+				"desc": "Some description",
+				"topicCount": "9 542",
+				"postCount": "89 897",
+				"lastTitle": "How do I do this?",
+				"lastPoster": "John Doe",
+				"lastDate": "03 Sept 2016",
+				"categoryLink": "#/category/6",
+				"postLink": "#/topic/6/45",
+				"userLink": "#/user/7"
+			}
+		]
+	}
+]
