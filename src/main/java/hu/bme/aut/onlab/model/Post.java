@@ -1,15 +1,13 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
  * Created by Logan on 2016.09.17..
  */
 @Entity
+@Table(name = "post")
 public class Post {
     private int id;
     private Integer postId;

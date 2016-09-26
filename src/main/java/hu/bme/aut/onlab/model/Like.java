@@ -1,14 +1,12 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Logan on 2016.09.17..
  */
 @Entity
+@Table(name = "like")
 public class Like {
     private int id;
     private int memberId;

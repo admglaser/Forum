@@ -7,6 +7,7 @@ import java.util.Set;
  * Created by Logan on 2016.09.17..
  */
 @Entity
+@Table(name = "permission")
 public class Permission {
     private int id;
     private byte readAllowed;

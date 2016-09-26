@@ -8,6 +8,7 @@ import java.util.Set;
  * Created by Logan on 2016.09.17..
  */
 @Entity
+@Table(name = "member")
 public class Member {
     private int id;
     private String userName;
