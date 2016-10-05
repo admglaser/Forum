@@ -32,15 +32,19 @@
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
 			<version>5.2.2.Final</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160810</version>
+		</dependency>
 	</dependencies>
 	<build>
+		<finalName>ForumApp</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -49,6 +53,8 @@
 					<target>1.8</target>
 					<compilerArguments>
 						<processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+						<!-- source output directory -->
+						<outputDirectory>target/generated-sources/annotations</outputDirectory>
 					</compilerArguments>
 				</configuration>
 			</plugin>

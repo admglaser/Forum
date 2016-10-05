@@ -1,11 +1,17 @@
 package hu.bme.aut.onlab.rest;
 
 import hu.bme.aut.onlab.beans.CategoryBean;
+import hu.bme.aut.onlab.beans.SubcategoryBean;
 import hu.bme.aut.onlab.model.Category;
+import hu.bme.aut.onlab.model.Category_;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ejb.EJB;
+import javax.persistence.Tuple;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -15,12 +21,14 @@ import java.util.List;
  * Created by N. Vilagos.
  */
 @Path("/test")
-public class TestRs {
+public class TestRs extends BaseRs {
 
 
     @EJB
     CategoryBean categoryBean;
 
+    @EJB
+    SubcategoryBean subcategoryBean;
 
     @GET
     public String testString() {
@@ -48,6 +56,35 @@ public class TestRs {
     @Path("/categories")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Category> listRemoteCategories() {
-        return categoryBean.findAllOrderedByTitle();
+        return categoryBean.findAllEntity();
+    }
+
+    @GET
+    @Path("/category-{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Category getRemoteCategory(@PathParam("id") Integer id) {
+        return categoryBean.findEntityById(Category_.id, id);
+    }
+
+    @GET
+    @Path("/subcategory_combined")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listRemoteCombinedCategory() {
+        List<Tuple> data = subcategoryBean.testJoinedFind();
+        //Map<Integer, List<String>> fields = new HashMap<>();
+        //fields.put(0, Arrays.asList("title", "desc" , "category_title" , "topics"));
+        //fields.put(1, Arrays.asList("topic_title"));
+
+        //JSONArray result = generateSimpleJson(fields, data);
+        JSONArray result = new JSONArray();
+        for (Tuple object : data){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("title", object.get(0));
+            jsonObject.put("desc", object.get(1));
+            jsonObject.put("category_title", object.get(2));
+            result.put(jsonObject);
+        }
+
+        return result.toString();
     }
 }
