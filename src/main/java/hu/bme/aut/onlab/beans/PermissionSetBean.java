@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.beans;
 
-import hu.bme.aut.onlab.model.Category;
+import hu.bme.aut.onlab.model.PermissionSet;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -12,18 +12,17 @@ import javax.persistence.PersistenceContext;
  */
 @LocalBean
 @Stateless
-public class CategoryBean extends BaseBean<Category> {
+public class PermissionSetBean extends BaseBean<PermissionSet> {
 
     @PersistenceContext
     EntityManager entityManager;
 
-    public CategoryBean() {
-        super(Category.class);
+    public PermissionSetBean() {
+        super(PermissionSet.class);
     }
 
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;
     }
-
 }

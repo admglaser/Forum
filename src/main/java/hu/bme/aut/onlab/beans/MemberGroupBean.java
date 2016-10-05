@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.beans;
 
-import hu.bme.aut.onlab.model.Category;
+import hu.bme.aut.onlab.model.MemberGroup;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -12,18 +12,17 @@ import javax.persistence.PersistenceContext;
  */
 @LocalBean
 @Stateless
-public class CategoryBean extends BaseBean<Category> {
+public class MemberGroupBean extends BaseBean<MemberGroup> {
 
     @PersistenceContext
     EntityManager entityManager;
 
-    public CategoryBean() {
-        super(Category.class);
+    public MemberGroupBean() {
+        super(MemberGroup.class);
     }
 
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;
     }
-
 }
