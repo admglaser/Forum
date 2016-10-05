@@ -3,43 +3,23 @@ package hu.bme.aut.onlab.model;
 import javax.persistence.*;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "like")
 public class Like {
     private int id;
-    private int memberId;
-    private int postId;
+    private Post postByPostId;
+    private Member memberByMemberId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "member_id")
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
-
-    @Basic
-    @Column(name = "post_id")
-    public int getPostId() {
-        return postId;
-    }
-
-    public void setPostId(int postId) {
-        this.postId = postId;
     }
 
     @Override
@@ -50,17 +30,36 @@ public class Like {
         Like like = (Like) o;
 
         if (id != like.id) return false;
-        if (memberId != like.memberId) return false;
-        if (postId != like.postId) return false;
+        if (postByPostId != null ? !postByPostId.equals(like.postByPostId) : like.postByPostId != null) return false;
+        return !(memberByMemberId != null ? !memberByMemberId.equals(like.memberByMemberId) : like.memberByMemberId != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + memberId;
-        result = 31 * result + postId;
+        result = 31 * result + (postByPostId != null ? postByPostId.hashCode() : 0);
+        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
+    public Post getPostByPostId() {
+        return postByPostId;
+    }
+
+    public void setPostByPostId(Post postByPostId) {
+        this.postByPostId = postByPostId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    public Member getMemberByMemberId() {
+        return memberByMemberId;
+    }
+
+    public void setMemberByMemberId(Member memberByMemberId) {
+        this.memberByMemberId = memberByMemberId;
     }
 }

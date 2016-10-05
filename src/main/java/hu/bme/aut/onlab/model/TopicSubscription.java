@@ -3,43 +3,23 @@ package hu.bme.aut.onlab.model;
 import javax.persistence.*;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "topic_subscription", schema = "", catalog = "forum")
+@Table(name = "topic_subscription")
 public class TopicSubscription {
     private int id;
-    private int topicId;
-    private int memberId;
+    private Member memberByMemberId;
+    private Topic topicByTopicId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "topic_id")
-    public int getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
-
-    @Basic
-    @Column(name = "member_id")
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
     }
 
     @Override
@@ -50,17 +30,37 @@ public class TopicSubscription {
         TopicSubscription that = (TopicSubscription) o;
 
         if (id != that.id) return false;
-        if (topicId != that.topicId) return false;
-        if (memberId != that.memberId) return false;
+        if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
+            return false;
+        return !(topicByTopicId != null ? !topicByTopicId.equals(that.topicByTopicId) : that.topicByTopicId != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + topicId;
-        result = 31 * result + memberId;
+        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
+        result = 31 * result + (topicByTopicId != null ? topicByTopicId.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    public Member getMemberByMemberId() {
+        return memberByMemberId;
+    }
+
+    public void setMemberByMemberId(Member memberByMemberId) {
+        this.memberByMemberId = memberByMemberId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+    public Topic getTopicByTopicId() {
+        return topicByTopicId;
+    }
+
+    public void setTopicByTopicId(Topic topicByTopicId) {
+        this.topicByTopicId = topicByTopicId;
     }
 }

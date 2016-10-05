@@ -3,18 +3,18 @@ package hu.bme.aut.onlab.model;
 import javax.persistence.*;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "notification")
 public class Notification {
     private int id;
     private byte seen;
-    private int memberId;
-    private int notificationEventId;
+    private Member memberByMemberId;
+    private NotificationEvent notificationEventByNotificationEventId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -24,33 +24,13 @@ public class Notification {
     }
 
     @Basic
-    @Column(name = "seen")
+    @Column(name = "seen", nullable = false, insertable = true, updatable = true)
     public byte getSeen() {
         return seen;
     }
 
     public void setSeen(byte seen) {
         this.seen = seen;
-    }
-
-    @Basic
-    @Column(name = "member_id")
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
-
-    @Basic
-    @Column(name = "notification_event_id")
-    public int getNotificationEventId() {
-        return notificationEventId;
-    }
-
-    public void setNotificationEventId(int notificationEventId) {
-        this.notificationEventId = notificationEventId;
     }
 
     @Override
@@ -62,18 +42,38 @@ public class Notification {
 
         if (id != that.id) return false;
         if (seen != that.seen) return false;
-        if (memberId != that.memberId) return false;
-        if (notificationEventId != that.notificationEventId) return false;
+        if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
+            return false;
+        return !(notificationEventByNotificationEventId != null ? !notificationEventByNotificationEventId.equals(that.notificationEventByNotificationEventId) : that.notificationEventByNotificationEventId != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (int) seen;
-        result = 31 * result + memberId;
-        result = 31 * result + notificationEventId;
+        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
+        result = 31 * result + (notificationEventByNotificationEventId != null ? notificationEventByNotificationEventId.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    public Member getMemberByMemberId() {
+        return memberByMemberId;
+    }
+
+    public void setMemberByMemberId(Member memberByMemberId) {
+        this.memberByMemberId = memberByMemberId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "notification_event_id", referencedColumnName = "id", nullable = false)
+    public NotificationEvent getNotificationEventByNotificationEventId() {
+        return notificationEventByNotificationEventId;
+    }
+
+    public void setNotificationEventByNotificationEventId(NotificationEvent notificationEventByNotificationEventId) {
+        this.notificationEventByNotificationEventId = notificationEventByNotificationEventId;
     }
 }

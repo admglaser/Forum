@@ -2,20 +2,22 @@ package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "notification_event", schema = "", catalog = "forum")
+@Table(name = "notification_event")
 public class NotificationEvent {
     private int id;
     private int type;
     private Timestamp time;
     private String link;
+    private Collection<Notification> notificationsById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -25,7 +27,7 @@ public class NotificationEvent {
     }
 
     @Basic
-    @Column(name = "type")
+    @Column(name = "type", nullable = false, insertable = true, updatable = true)
     public int getType() {
         return type;
     }
@@ -35,7 +37,7 @@ public class NotificationEvent {
     }
 
     @Basic
-    @Column(name = "time")
+    @Column(name = "time", nullable = false, insertable = true, updatable = true)
     public Timestamp getTime() {
         return time;
     }
@@ -45,7 +47,7 @@ public class NotificationEvent {
     }
 
     @Basic
-    @Column(name = "link")
+    @Column(name = "link", nullable = false, insertable = true, updatable = true, length = 255)
     public String getLink() {
         return link;
     }
@@ -76,5 +78,14 @@ public class NotificationEvent {
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (link != null ? link.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "notificationEventByNotificationEventId")
+    public Collection<Notification> getNotificationsById() {
+        return notificationsById;
+    }
+
+    public void setNotificationsById(Collection<Notification> notificationsById) {
+        this.notificationsById = notificationsById;
     }
 }

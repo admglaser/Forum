@@ -2,9 +2,10 @@ package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "post")
@@ -13,11 +14,12 @@ public class Post {
     private Integer postId;
     private String text;
     private Timestamp time;
-    private int topicId;
-    private int memberId;
+    private Collection<Like> likesById;
+    private Topic topicByTopicId;
+    private Member memberByMemberId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -27,7 +29,7 @@ public class Post {
     }
 
     @Basic
-    @Column(name = "postId")
+    @Column(name = "postId", nullable = true, insertable = true, updatable = true)
     public Integer getPostId() {
         return postId;
     }
@@ -37,7 +39,7 @@ public class Post {
     }
 
     @Basic
-    @Column(name = "text")
+    @Column(name = "text", nullable = true, insertable = true, updatable = true, length = 255)
     public String getText() {
         return text;
     }
@@ -47,33 +49,13 @@ public class Post {
     }
 
     @Basic
-    @Column(name = "time")
+    @Column(name = "time", nullable = false, insertable = true, updatable = true)
     public Timestamp getTime() {
         return time;
     }
 
     public void setTime(Timestamp time) {
         this.time = time;
-    }
-
-    @Basic
-    @Column(name = "topic_id")
-    public int getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
-
-    @Basic
-    @Column(name = "member_id")
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
     }
 
     @Override
@@ -84,13 +66,14 @@ public class Post {
         Post post = (Post) o;
 
         if (id != post.id) return false;
-        if (topicId != post.topicId) return false;
-        if (memberId != post.memberId) return false;
         if (postId != null ? !postId.equals(post.postId) : post.postId != null) return false;
         if (text != null ? !text.equals(post.text) : post.text != null) return false;
         if (time != null ? !time.equals(post.time) : post.time != null) return false;
+        if (likesById != null ? !likesById.equals(post.likesById) : post.likesById != null) return false;
+        if (topicByTopicId != null ? !topicByTopicId.equals(post.topicByTopicId) : post.topicByTopicId != null)
+            return false;
+        return !(memberByMemberId != null ? !memberByMemberId.equals(post.memberByMemberId) : post.memberByMemberId != null);
 
-        return true;
     }
 
     @Override
@@ -99,8 +82,38 @@ public class Post {
         result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + topicId;
-        result = 31 * result + memberId;
+        result = 31 * result + (likesById != null ? likesById.hashCode() : 0);
+        result = 31 * result + (topicByTopicId != null ? topicByTopicId.hashCode() : 0);
+        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "postByPostId")
+    public Collection<Like> getLikesById() {
+        return likesById;
+    }
+
+    public void setLikesById(Collection<Like> likesById) {
+        this.likesById = likesById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+    public Topic getTopicByTopicId() {
+        return topicByTopicId;
+    }
+
+    public void setTopicByTopicId(Topic topicByTopicId) {
+        this.topicByTopicId = topicByTopicId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    public Member getMemberByMemberId() {
+        return memberByMemberId;
+    }
+
+    public void setMemberByMemberId(Member memberByMemberId) {
+        this.memberByMemberId = memberByMemberId;
     }
 }

@@ -1,10 +1,11 @@
 package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "conversation")
@@ -12,10 +13,11 @@ public class Conversation {
     private int id;
     private String title;
     private int messageCount;
+    private Collection<Message> messagesById;
     private Set<Member> members;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -25,7 +27,7 @@ public class Conversation {
     }
 
     @Basic
-    @Column(name = "title")
+    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
     public String getTitle() {
         return title;
     }
@@ -35,7 +37,7 @@ public class Conversation {
     }
 
     @Basic
-    @Column(name = "message_count")
+    @Column(name = "message_count", nullable = false, insertable = true, updatable = true)
     public int getMessageCount() {
         return messageCount;
     }
@@ -74,5 +76,14 @@ public class Conversation {
 
     public void setMembers(Set<Member> members) {
         this.members = members;
+    }
+
+    @OneToMany(mappedBy = "conversationByConversationId")
+    public Collection<Message> getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(Collection<Message> messagesById) {
+        this.messagesById = messagesById;
     }
 }

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "permission")
@@ -13,11 +13,11 @@ public class Permission {
     private byte readAllowed;
     private byte replyAllowed;
     private byte startAllowed;
-    private int subcategoryId;
+    private Subcategory subcategoryBySubcategoryId;
     private Set<PermissionSet> permissionSets;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -27,7 +27,7 @@ public class Permission {
     }
 
     @Basic
-    @Column(name = "read_allowed")
+    @Column(name = "read_allowed", nullable = false, insertable = true, updatable = true)
     public byte getReadAllowed() {
         return readAllowed;
     }
@@ -37,7 +37,7 @@ public class Permission {
     }
 
     @Basic
-    @Column(name = "reply_allowed")
+    @Column(name = "reply_allowed", nullable = false, insertable = true, updatable = true)
     public byte getReplyAllowed() {
         return replyAllowed;
     }
@@ -47,23 +47,13 @@ public class Permission {
     }
 
     @Basic
-    @Column(name = "start_allowed")
+    @Column(name = "start_allowed", nullable = false, insertable = true, updatable = true)
     public byte getStartAllowed() {
         return startAllowed;
     }
 
     public void setStartAllowed(byte startAllowed) {
         this.startAllowed = startAllowed;
-    }
-
-    @Basic
-    @Column(name = "subcategory_id")
-    public int getSubcategoryId() {
-        return subcategoryId;
-    }
-
-    public void setSubcategoryId(int subcategoryId) {
-        this.subcategoryId = subcategoryId;
     }
 
     @Override
@@ -77,9 +67,10 @@ public class Permission {
         if (readAllowed != that.readAllowed) return false;
         if (replyAllowed != that.replyAllowed) return false;
         if (startAllowed != that.startAllowed) return false;
-        if (subcategoryId != that.subcategoryId) return false;
+        if (subcategoryBySubcategoryId != null ? !subcategoryBySubcategoryId.equals(that.subcategoryBySubcategoryId) : that.subcategoryBySubcategoryId != null)
+            return false;
+        return !(permissionSets != null ? !permissionSets.equals(that.permissionSets) : that.permissionSets != null);
 
-        return true;
     }
 
     @Override
@@ -88,8 +79,19 @@ public class Permission {
         result = 31 * result + (int) readAllowed;
         result = 31 * result + (int) replyAllowed;
         result = 31 * result + (int) startAllowed;
-        result = 31 * result + subcategoryId;
+        result = 31 * result + (subcategoryBySubcategoryId != null ? subcategoryBySubcategoryId.hashCode() : 0);
+        result = 31 * result + (permissionSets != null ? permissionSets.hashCode() : 0);
         return result;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "subcategory_id", referencedColumnName = "id", nullable = false)
+    public Subcategory getSubcategoryBySubcategoryId() {
+        return subcategoryBySubcategoryId;
+    }
+
+    public void setSubcategoryBySubcategoryId(Subcategory subcategoryBySubcategoryId) {
+        this.subcategoryBySubcategoryId = subcategoryBySubcategoryId;
     }
 
     @ManyToMany

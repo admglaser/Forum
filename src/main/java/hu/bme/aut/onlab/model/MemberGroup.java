@@ -1,22 +1,24 @@
 package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "member_group", schema = "", catalog = "forum")
+@Table(name = "member_group")
 public class MemberGroup {
     private int id;
     private String title;
     private String prefix;
     private String postfix;
+    private Collection<Member> membersById;
     private Set<PermissionSet> permissionSets;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -26,7 +28,7 @@ public class MemberGroup {
     }
 
     @Basic
-    @Column(name = "title")
+    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
     public String getTitle() {
         return title;
     }
@@ -36,7 +38,7 @@ public class MemberGroup {
     }
 
     @Basic
-    @Column(name = "prefix")
+    @Column(name = "prefix", nullable = true, insertable = true, updatable = true, length = 255)
     public String getPrefix() {
         return prefix;
     }
@@ -46,7 +48,7 @@ public class MemberGroup {
     }
 
     @Basic
-    @Column(name = "postfix")
+    @Column(name = "postfix", nullable = true, insertable = true, updatable = true, length = 255)
     public String getPostfix() {
         return postfix;
     }
@@ -77,6 +79,15 @@ public class MemberGroup {
         result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
         result = 31 * result + (postfix != null ? postfix.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "memberGroupByMemberGroupId")
+    public Collection<Member> getMembersById() {
+        return membersById;
+    }
+
+    public void setMembersById(Collection<Member> membersById) {
+        this.membersById = membersById;
     }
 
     @ManyToMany(mappedBy = "memberGroups")

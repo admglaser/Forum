@@ -2,10 +2,11 @@ package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Set;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "member")
@@ -19,12 +20,17 @@ public class Member {
     private int likesCount;
     private int profileViewsCount;
     private Date birthday;
-    private int memberGroupId;
-    private Integer messageid;
+    private Collection<Like> likesById;
+    private Message messageByMessageid;
+    private MemberGroup memberGroupByMemberGroupId;
+    private Collection<Notification> notificationsById;
+    private Collection<Post> postsById;
+    private Collection<SubcategorySubscription> subcategorySubscriptionsById;
+    private Collection<TopicSubscription> topicSubscriptionsById;
     private Set<Conversation> conversations;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -34,7 +40,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false, insertable = true, updatable = true, length = 255)
     public String getUserName() {
         return userName;
     }
@@ -44,7 +50,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 255)
     public String getPassword() {
         return password;
     }
@@ -54,7 +60,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, insertable = true, updatable = true, length = 255)
     public String getEmail() {
         return email;
     }
@@ -64,7 +70,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "display_name")
+    @Column(name = "display_name", nullable = false, insertable = true, updatable = true, length = 255)
     public String getDisplayName() {
         return displayName;
     }
@@ -74,7 +80,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "post_count")
+    @Column(name = "post_count", nullable = false, insertable = true, updatable = true)
     public int getPostCount() {
         return postCount;
     }
@@ -84,7 +90,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "likes_count")
+    @Column(name = "likes_count", nullable = false, insertable = true, updatable = true)
     public int getLikesCount() {
         return likesCount;
     }
@@ -94,7 +100,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "profile_views_count")
+    @Column(name = "profile_views_count", nullable = false, insertable = true, updatable = true)
     public int getProfileViewsCount() {
         return profileViewsCount;
     }
@@ -104,7 +110,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "birthday")
+    @Column(name = "birthday", nullable = true, insertable = true, updatable = true)
     public Date getBirthday() {
         return birthday;
     }
@@ -113,24 +119,78 @@ public class Member {
         this.birthday = birthday;
     }
 
-    @Basic
-    @Column(name = "member_group_id")
-    public int getMemberGroupId() {
-        return memberGroupId;
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<Like> getLikesById() {
+        return likesById;
     }
 
-    public void setMemberGroupId(int memberGroupId) {
-        this.memberGroupId = memberGroupId;
+    public void setLikesById(Collection<Like> likesById) {
+        this.likesById = likesById;
     }
 
-    @Basic
-    @Column(name = "messageid")
-    public Integer getMessageid() {
-        return messageid;
+    @ManyToOne
+    @JoinColumn(name = "messageid", referencedColumnName = "id")
+    public Message getMessageByMessageid() {
+        return messageByMessageid;
     }
 
-    public void setMessageid(Integer messageid) {
-        this.messageid = messageid;
+    public void setMessageByMessageid(Message messageByMessageid) {
+        this.messageByMessageid = messageByMessageid;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false)
+    public MemberGroup getMemberGroupByMemberGroupId() {
+        return memberGroupByMemberGroupId;
+    }
+
+    public void setMemberGroupByMemberGroupId(MemberGroup memberGroupByMemberGroupId) {
+        this.memberGroupByMemberGroupId = memberGroupByMemberGroupId;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<Notification> getNotificationsById() {
+        return notificationsById;
+    }
+
+    public void setNotificationsById(Collection<Notification> notificationsById) {
+        this.notificationsById = notificationsById;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<Post> getPostsById() {
+        return postsById;
+    }
+
+    public void setPostsById(Collection<Post> postsById) {
+        this.postsById = postsById;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<SubcategorySubscription> getSubcategorySubscriptionsById() {
+        return subcategorySubscriptionsById;
+    }
+
+    public void setSubcategorySubscriptionsById(Collection<SubcategorySubscription> subcategorySubscriptionsById) {
+        this.subcategorySubscriptionsById = subcategorySubscriptionsById;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<TopicSubscription> getTopicSubscriptionsById() {
+        return topicSubscriptionsById;
+    }
+
+    public void setTopicSubscriptionsById(Collection<TopicSubscription> topicSubscriptionsById) {
+        this.topicSubscriptionsById = topicSubscriptionsById;
+    }
+
+    @ManyToMany(mappedBy = "members")
+    public Set<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(Set<Conversation> conversations) {
+        this.conversations = conversations;
     }
 
     @Override
@@ -144,15 +204,25 @@ public class Member {
         if (postCount != member.postCount) return false;
         if (likesCount != member.likesCount) return false;
         if (profileViewsCount != member.profileViewsCount) return false;
-        if (memberGroupId != member.memberGroupId) return false;
         if (userName != null ? !userName.equals(member.userName) : member.userName != null) return false;
         if (password != null ? !password.equals(member.password) : member.password != null) return false;
         if (email != null ? !email.equals(member.email) : member.email != null) return false;
         if (displayName != null ? !displayName.equals(member.displayName) : member.displayName != null) return false;
         if (birthday != null ? !birthday.equals(member.birthday) : member.birthday != null) return false;
-        if (messageid != null ? !messageid.equals(member.messageid) : member.messageid != null) return false;
+        if (likesById != null ? !likesById.equals(member.likesById) : member.likesById != null) return false;
+        if (messageByMessageid != null ? !messageByMessageid.equals(member.messageByMessageid) : member.messageByMessageid != null)
+            return false;
+        if (memberGroupByMemberGroupId != null ? !memberGroupByMemberGroupId.equals(member.memberGroupByMemberGroupId) : member.memberGroupByMemberGroupId != null)
+            return false;
+        if (notificationsById != null ? !notificationsById.equals(member.notificationsById) : member.notificationsById != null)
+            return false;
+        if (postsById != null ? !postsById.equals(member.postsById) : member.postsById != null) return false;
+        if (subcategorySubscriptionsById != null ? !subcategorySubscriptionsById.equals(member.subcategorySubscriptionsById) : member.subcategorySubscriptionsById != null)
+            return false;
+        if (topicSubscriptionsById != null ? !topicSubscriptionsById.equals(member.topicSubscriptionsById) : member.topicSubscriptionsById != null)
+            return false;
+        return !(conversations != null ? !conversations.equals(member.conversations) : member.conversations != null);
 
-        return true;
     }
 
     @Override
@@ -166,17 +236,14 @@ public class Member {
         result = 31 * result + likesCount;
         result = 31 * result + profileViewsCount;
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-        result = 31 * result + memberGroupId;
-        result = 31 * result + (messageid != null ? messageid.hashCode() : 0);
+        result = 31 * result + (likesById != null ? likesById.hashCode() : 0);
+        result = 31 * result + (messageByMessageid != null ? messageByMessageid.hashCode() : 0);
+        result = 31 * result + (memberGroupByMemberGroupId != null ? memberGroupByMemberGroupId.hashCode() : 0);
+        result = 31 * result + (notificationsById != null ? notificationsById.hashCode() : 0);
+        result = 31 * result + (postsById != null ? postsById.hashCode() : 0);
+        result = 31 * result + (subcategorySubscriptionsById != null ? subcategorySubscriptionsById.hashCode() : 0);
+        result = 31 * result + (topicSubscriptionsById != null ? topicSubscriptionsById.hashCode() : 0);
+        result = 31 * result + (conversations != null ? conversations.hashCode() : 0);
         return result;
-    }
-
-    @ManyToMany(mappedBy = "members")
-    public Set<Conversation> getConversations() {
-        return conversations;
-    }
-
-    public void setConversations(Set<Conversation> conversations) {
-        this.conversations = conversations;
     }
 }

@@ -1,18 +1,20 @@
 package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
 @Table(name = "category")
 public class Category {
     private int id;
     private String title;
+    private Collection<Subcategory> subcategoriesById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
@@ -22,7 +24,7 @@ public class Category {
     }
 
     @Basic
-    @Column(name = "title")
+    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
     public String getTitle() {
         return title;
     }
@@ -49,5 +51,14 @@ public class Category {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
+    }
+
+    @OneToMany(mappedBy = "categoryByCategoryId")
+    public Collection<Subcategory> getSubcategoriesById() {
+        return subcategoriesById;
+    }
+
+    public void setSubcategoriesById(Collection<Subcategory> subcategoriesById) {
+        this.subcategoriesById = subcategoriesById;
     }
 }

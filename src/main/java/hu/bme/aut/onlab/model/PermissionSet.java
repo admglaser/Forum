@@ -4,34 +4,23 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * Created by Logan on 2016.09.17..
+ * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "permission_set", schema = "", catalog = "forum")
+@Table(name = "permission_set")
 public class PermissionSet {
     private int id;
-    private int permissionId;
     private Set<MemberGroup> memberGroups;
     private Set<Permission> permissions;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "permission_id")
-    public int getPermissionId() {
-        return permissionId;
-    }
-
-    public void setPermissionId(int permissionId) {
-        this.permissionId = permissionId;
     }
 
     @Override
@@ -42,15 +31,16 @@ public class PermissionSet {
         PermissionSet that = (PermissionSet) o;
 
         if (id != that.id) return false;
-        if (permissionId != that.permissionId) return false;
+        if (memberGroups != null ? !memberGroups.equals(that.memberGroups) : that.memberGroups != null) return false;
+        return !(permissions != null ? !permissions.equals(that.permissions) : that.permissions != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + permissionId;
+        result = 31 * result + (memberGroups != null ? memberGroups.hashCode() : 0);
+        result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
         return result;
     }
 
