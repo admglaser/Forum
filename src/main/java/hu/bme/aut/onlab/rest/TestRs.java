@@ -14,8 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by N. Vilagos.
@@ -69,7 +68,7 @@ public class TestRs extends BaseRs {
     @GET
     @Path("/subcategory_combined")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedCategory() {
+    public String listRemoteCombinedSubCategory() {
         List<Tuple> data = subcategoryBean.testJoinedFind();
         //Map<Integer, List<String>> fields = new HashMap<>();
         //fields.put(0, Arrays.asList("title", "desc" , "category_title" , "topics"));
@@ -82,8 +81,26 @@ public class TestRs extends BaseRs {
             jsonObject.put("title", object.get(0));
             jsonObject.put("desc", object.get(1));
             jsonObject.put("category_title", object.get(2));
+            jsonObject.put("topics", object.get(3));
             result.put(jsonObject);
         }
+
+        return result.toString();
+    }
+
+    @GET
+    @Path("/category_combined")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String listRemoteCombinedCategory() {
+        List<Tuple> data = categoryBean.testJoinedFind();
+
+        List<Integer> subcategories = Arrays.asList(2, 3);
+        List<List<Object>> correctedData = formatResultList(data, 0, subcategories, true);
+
+        Map<Integer, List<String>> fields = new HashMap<>();
+        fields.put(0, Arrays.asList("title", "subcategories"));
+        fields.put(1, Arrays.asList("subcat_title", "subcat_desc"));
+        JSONArray result = generateJson(fields, correctedData);
 
         return result.toString();
     }
