@@ -4,7 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.Tuple;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by N. Vilagos.
@@ -24,7 +28,6 @@ public class BaseRs {
 
         List<String> currentFields = fields.get(key);
         int numberOfFields = currentFields.size();
-        int sizeOfData = data.size();
 
         // Iterate through the data
         for (List<Object> currentObject : data) {
@@ -53,14 +56,14 @@ public class BaseRs {
     /**
      * Add sub list to a list.
      * @param list                      The root list to extend.
-     * @param tuple                     The tuple of data to put in the sub list.
+     * @param listOfFieldValues         The listOfFieldValues of data to put in the sub list.
      * @param collectionFieldIndexes    The field
      */
-    private static void addSublist(List<Object> list, Tuple tuple, List<Integer> collectionFieldIndexes) {
+    private static void addSublist(List<Object> list, List<Object> listOfFieldValues, List<Integer> collectionFieldIndexes) {
         List<Object> subList = new ArrayList<Object>();
         list.add(list.size(), subList);
         for (Integer inputIndex : collectionFieldIndexes) {
-            subList.add(subList.size(), tuple.get(inputIndex));
+            subList.add(subList.size(), listOfFieldValues.get(inputIndex));
         }
     }
 
@@ -98,16 +101,16 @@ public class BaseRs {
     }
 
     /**
-     * Formats a list of {@link Tuple} to the list of list of {@link Object}s, with the required changes.
+     * Formats a list of Object, with the required changes.
      *   If collection is included in the result list then the separate results will be merged and the changed data will be put in a collection.
-     *   ID of the root entity in the list of {@link Tuple} is required to process.
+     *   ID of the root entity in the list of the Object is required to process.
      * @param data                      The data to work on.
-     * @param idFieldIndex              The index of the ID of the root entity in the individual {@link Tuple}s.
-     * @param collectionFieldIndexes    The field indexes that are in a collection in the individual {@link Tuple}s.
+     * @param idFieldIndex              The index of the ID of the root entity in the individual Objects.
+     * @param collectionFieldIndexes    The field indexes that are in a collection in the individual Objects.
      * @param isIdDeletable             Whether delete the ID of the root entity from the result or not.
      * @return                          The reformatted data.
      */
-    protected static List<List<Object>> formatResultList(List<Tuple> data, Integer idFieldIndex, List<Integer> collectionFieldIndexes, boolean isIdDeletable) {
+    protected static List<List<Object>> formatResultList(List<List<Object>> data, Integer idFieldIndex, List<Integer> collectionFieldIndexes, boolean isIdDeletable) {
         List<List<Object>> result = new ArrayList<>();
 
         int idResultIndex = 0;
@@ -121,16 +124,16 @@ public class BaseRs {
             idResultIndex = idResultIndex + idFieldIndex + 1;
         }
 
-        for (Tuple tuple : data) {
+        for (List<Object> fieldList : data) {
             // Initialize components //
             List<Object> instance = new ArrayList<>();
             int outputIndex = 0;
 
             // Create the list of the not-list type fields' number
-            List<Integer> notListFields = createNumberSequenceWithExclusions(0, tuple.getElements().size(), collectionFieldIndexes);
+            List<Integer> notListFields = createNumberSequenceWithExclusions(0, fieldList.size(), collectionFieldIndexes);
 
             // Check for containment //
-            int foundIdListIndex = findFistEqualityIn2Depth(result, idResultIndex, tuple.get(idFieldIndex));
+            int foundIdListIndex = findFistEqualityIn2Depth(result, idResultIndex, fieldList.get(idFieldIndex));
 
             int indexOfList = Collections.min(collectionFieldIndexes);
 
@@ -139,7 +142,7 @@ public class BaseRs {
 
                 // Manage non-list type fields //
                 for (Integer inputIndex : notListFields) {
-                    instance.add(outputIndex++, tuple.get(inputIndex));
+                    instance.add(outputIndex++, fieldList.get(inputIndex));
                 }
 
                 // Manage list fields //
@@ -148,7 +151,7 @@ public class BaseRs {
                 instance.add(indexOfList, listOfLists);
 
                 // Add the fields to the new list
-                addSublist(listOfLists, tuple, collectionFieldIndexes);
+                addSublist(listOfLists, fieldList, collectionFieldIndexes);
 
                 // Add the whole data to the result
                 result.add(instance);
@@ -157,7 +160,7 @@ public class BaseRs {
 
                 // Manage list fields
                 List<Object> list = ((List<Object>) result.get(foundIdListIndex).get(indexOfList));
-                addSublist(list, tuple, collectionFieldIndexes);
+                addSublist(list, fieldList, collectionFieldIndexes);
             }
         }
 
@@ -211,4 +214,45 @@ public class BaseRs {
         return result;
     }
 
+    protected static List<List<Object>> generateListOfObjects(List<Tuple> tupleList) {
+/*        List<List<Object>> result = new ArrayList<>();
+        int index = 0;
+        for (Tuple tuple : tupleList) {
+            result.add(index++,
+                    new ArrayList<Object>( tuple.getElements()) );
+        }
+        return result;*/
+        List<List<Object>> result = new ArrayList<>();
+        int index = 0;
+        for (Tuple tuple : tupleList) {
+            List<Object> listOfFields = new ArrayList<>();
+
+            int fieldIndex = 0;
+            final int numberOfFields = tuple.getElements().size();
+            for (int i=0; i < numberOfFields; i++) {
+                Object fieldValue = tuple.get(i);
+                listOfFields.add(fieldIndex++, fieldValue);
+            }
+
+            result.add(index++, listOfFields);
+        }
+        return result;
+    }
+
+    protected static List<List<Object>> generateListOfObjectsFromEntities(List<? extends Object> objectList) throws IllegalAccessException {
+        List<List<Object>> result = new ArrayList<>();
+        int index = 0;
+        for (Object currentObject : objectList) {
+            List<Object> listOfFields = new ArrayList<>();
+
+            int fieldIndex = 0;
+            for (Field field : currentObject.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object fieldValue = field.get(currentObject);
+                listOfFields.add(fieldIndex++, fieldValue);
+            }
+            result.add(index++, listOfFields);
+        }
+        return result;
+    }
 }

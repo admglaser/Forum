@@ -44,10 +44,10 @@ public class CategoryBean extends BaseBean<Category> {
         Join<Category, Subcategory> subcategoryJoin = rootEntity.join(Category_.subcategoriesById);
 
         criteria.multiselect(
-                  rootEntity.get(Category_.id)
-                , rootEntity.get(Category_.title)
-                , subcategoryJoin.get(Subcategory_.title)
-                , subcategoryJoin.get(Subcategory_.desc)
+                rootEntity.get(Category_.id),
+                rootEntity.get(Category_.title),
+                subcategoryJoin.get(Subcategory_.title),
+                subcategoryJoin.get(Subcategory_.desc)
         );
 
         return executeTupleQuery(categoryCriteriaHelper);

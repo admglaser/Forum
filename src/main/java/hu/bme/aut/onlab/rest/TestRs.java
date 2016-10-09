@@ -93,9 +93,10 @@ public class TestRs extends BaseRs {
     @Produces(MediaType.APPLICATION_JSON)
     public String listRemoteCombinedCategory() {
         List<Tuple> data = categoryBean.testJoinedFind();
+        List<List<Object>> dataAsFieldValues = generateListOfObjects(data);
 
         List<Integer> subcategories = Arrays.asList(2, 3);
-        List<List<Object>> correctedData = formatResultList(data, 0, subcategories, true);
+        List<List<Object>> correctedData = formatResultList(dataAsFieldValues, 0, subcategories, true);
 
         Map<Integer, List<String>> fields = new HashMap<>();
         fields.put(0, Arrays.asList("title", "subcategories"));
