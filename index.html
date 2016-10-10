@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="description" content="">
-<meta name="author" content="">
-<title>Forum</title>  
+	<head>
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>Forum</title>
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/custom.css" rel="stylesheet">
-<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link href="vendor/wysibb/theme/default/wbbtheme.css">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/custom.css" rel="stylesheet">
+		<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+		<link href="vendor/wysibb/theme/default/wbbtheme.css">
+		<link href="css/xbbcode.css">
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
-<script src="js/bbcodeParser.js"></script>
-<script src="js/app/app.js"></script>
-<script src="vendor/wysibb/jquery.wysibb.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+		<script src="js/app/app.js"></script>
+		<script src="vendor/wysibb/jquery.wysibb.min.js"></script>
+		<script src="js/xbbcode.js"></script>
+	</head>
+	<body ng-app="forumApp">
 
-</head>
-<body ng-app="forumApp">
-   
-   
-   	<div ng-include="'pages/navbar.template.html'"></div>
-   
-	
-	<div class="container">
-	
-		<div ng-view></div>
+		<div ng-include="'pages/navbar.template.html'"></div>
 
-	</div>
-
-	<!-- footer -->
-	<footer class="footer">
 		<div class="container">
-			<p class="text-muted">© TestForum</p>
+
+			<div ng-view></div>
+
 		</div>
-    </footer>
-	<!-- end of footer -->
+
+		<!-- footer -->
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">
+					© TestForum
+				</p>
+			</div>
+		</footer>
+		<!-- end of footer -->
 
 	</body>
 </html>

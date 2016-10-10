@@ -1,99 +1,109 @@
 <div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
-	
-	
-	
-		
-	<div class="container">	
-			<div class="pull-left">
-				<h3>{{data.title}}</h3>		
-				<h6>Started by {{data.startedByText}}</h6>					
-			</div>
-			<div class="pull-right">
-			
-				<h3><button type="button" class="btn btn-primary">Follow</button></h3>
-			</div>
+
+	<div class="container">
+		<div class="pull-left">
+			<h3>{{data.title}}</h3>
+			<h6>Started by {{data.startedByText}}</h6>
+		</div>
+		<div class="pull-right">
+
+			<h3>
+			<button type="button" class="btn btn-primary">
+				Follow
+			</button></h3>
+		</div>
 	</div>
-		
-	<div class="container">	
+
+	<div class="container">
 		<!-- posts -->
-		<div ng-repeat="post in data.posts" class="panel-group">	
-			
+		<div ng-repeat="post in data.posts" class="panel-group">
+
 			<div class="panel panel-default">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="container">
 							<div class="pull-left small">
-								
+
 								<h4><a href="">{{post.username}}</a></h4>
 								<small>{{post.time}}</small>
-							</div>	
+							</div>
 							<div class="pull-right small">
 								<h5><a href="{{post.postLink}}">{{post.postNumber}}</a></h5>
-							</div>	
-						</div>						
+							</div>
+						</div>
 					</div>
 					<div class="panel-body">
 						<div class="col-xs-2 text-center">
 							<img class="img-thumbnail" src="images/user.png"></img>
-							
+
 							<h5>{{post.memberGroup}}</h5>
 							<h6>{{post.postCount}} posts</h6>
 						</div>
 						<div class="col-xs-10 text-center">
-						
-							<div id="post" class="">
-								{{post.text}}
+
+							<div ng-bind-html-unsafe="post.text">
+								
 							</div>
-							
-							
-						</div>		
+
+						</div>
 					</div>
 					<div class="panel-footer">
 						<div class="container">
-							<div class="pull-right">							
-								<button type="button" class="btn btn-sm btn-primary">Edit</button>							
-								<button type="button" class="btn btn-sm btn-primary">Delete</button>
-								<button type="button" class="btn btn-sm btn-primary">Like</button>
-								<button type="button" class="btn btn-sm btn-primary">Quote</button>
+							<div class="pull-right">
+								<button type="button" class="btn btn-sm btn-primary">
+									Edit
+								</button>
+								<button type="button" class="btn btn-sm btn-primary">
+									Delete
+								</button>
+								<button type="button" class="btn btn-sm btn-primary">
+									Like
+								</button>
+								<button type="button" class="btn btn-sm btn-primary">
+									Quote
+								</button>
 							</div>
 						</div>
 					</div>
-				</div>				
-			</div>	
-			
-			
-			
+				</div>
+			</div>
+
 		</div>
 		<!-- end of posts -->
-		
+
 		<div style="margin-top: 25px;">
-		<div class="btn-group pull-right">
-			<button type="button" class="btn btn-primary">New Reply</button>
+			<div class="btn-group pull-right">
+				<button type="button" class="btn btn-primary">
+					New Reply
+				</button>
+			</div>
+
+			<div class="btn-group ">
+				<ul class="pagination" style="margin: 0;">
+					<li>
+						<a href="">«</a>
+					</li>
+					<li class="active">
+						<a href="">1</a>
+					</li>
+					<li>
+						<a href="">2</a>
+					</li>
+					<li>
+						<a href="">3</a>
+					</li>
+					<li>
+						<a href="">4</a>
+					</li>
+					<li>
+						<a href="">5</a>
+					</li>
+					<li>
+						<a href="">»</a>
+					</li>
+				</ul>
+			</div>
 		</div>
 
-		<div class="btn-group ">
-			<ul class="pagination" style="margin: 0;">
-				<li><a href="">«</a></li>
-				<li class="active"><a href="">1</a></li>
-				<li><a href="">2</a></li>
-				<li><a href="">3</a></li>
-				<li><a href="">4</a></li>
-				<li><a href="">5</a></li>
-				<li><a href="">»</a></li>
-			</ul>
-		</div>
-	</div>
-		
-		
 	</div>
 </div>
-
-<script>
-	var element = document.getElementById("post");
-	var html = bbcodeParser.bbcodeToHtml(element.innerHTML);
-	element.innerHTML = html;
-	
-	$(function() {
-	$("#editor").wysibb();
-	})
-</script>
