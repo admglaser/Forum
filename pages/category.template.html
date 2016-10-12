@@ -1,86 +1,132 @@
 <div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
-	
+
 	<!-- topics -->
 	<table class="table forum table-striped">
 		<thead>
 			<tr>
 				<th class="cell-stat"></th>
-				<th>
-				<h3>
-				{{data.title}}
-				</h3>
-				</th>
+				<th><h3> {{data.title}} </h3></th>
 				<th class="cell-stat hidden-xs"></th>
 				<th class="cell-stat-2x">Last Post
-				<button type="button" class="btn btn-xs btn-primary pull-right">Follow</button>
-
-				</th>
+				<button type="button" class="btn btn-xs btn-primary pull-right">
+					Follow
+				</button></th>
 			</tr>
 		</thead>
 		<tbody>
-			
+
 			<!-- topic -->
 			<tr ng-repeat="topic in data.topics">
 				<td class="text-center">
-					<div ng-if="topic.unread">
-						<i class="fa fa-circle fa-2x text-primary"></i>
-					</div>
-					<div ng-if="!topic.unread">
-						<i class="fa fa-circle-o fa-2x text-primary"></i>
-					</div>
-				</td>
-				<td>
-					<a href="{{topic.topicLink}}">
-						{{topic.title}}
-					</a>
+				<div ng-if="topic.unread">
+					<i class="fa fa-circle fa-2x text-primary"></i>
+				</div>
+				<div ng-if="!topic.unread">
+					<i class="fa fa-circle-o fa-2x text-primary"></i>
+				</div></td>
+				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a>
+				<br>
+				<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a> <i class="fa fa-clock-o"></i> {{topic.startDate}} </small></td>
+				<td class="hidden-xs"><small> {{topic.postCount}} replies
 					<br>
-					<small>
-						Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a> <i class="fa fa-clock-o"></i> {{topic.startDate}}
-					</small>
-				</td>
-				<td class="hidden-xs">
-					<small>	
-						{{topic.postCount}} replies
-						<br>{{topic.viewCount}} views
-					</small>
-				</td>
+					{{topic.viewCount}} views </small></td>
 				<td>
-					<div class="row">
-						<div class="col-xs-3">
-							<img class="user-icon img-thumbnail" src="images/user.png">
-						</div>
-						<div class="col-xs-9">
-							<small>
-								By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
-								<br>{{topic.lastDate}}
-							</small>
-						</div>
+				<div class="row">
+					<div class="col-xs-3">
+						<img class="user-icon img-thumbnail" src="images/user.png">
 					</div>
-				</td>
+					<div class="col-xs-9">
+						<small> By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
+							<br>
+							{{topic.lastDate}} </small>
+					</div>
+				</div></td>
 			</tr>
 			<!-- end of topic -->
-			
+
 		</tbody>
 	</table>
 	<!-- end of topics -->
 
-
-
 	<div style="margin-top: 25px;">
 		<div class="btn-group pull-right">
-			<button type="button" class="btn btn-primary">Start New Topic</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startNewTopicModalForm">
+				Start New Topic
+			</button>
 		</div>
 
 		<div class="btn-group ">
 			<ul class="pagination" style="margin: 0;">
-				<li><a href="">«</a></li>
-				<li class="active"><a href="">1</a></li>
-				<li><a href="">2</a></li>
-				<li><a href="">3</a></li>
-				<li><a href="">4</a></li>
-				<li><a href="">5</a></li>
-				<li><a href="">»</a></li>
+				<li>
+					<a href="">«</a>
+				</li>
+				<li class="active">
+					<a href="">1</a>
+				</li>
+				<li>
+					<a href="">2</a>
+				</li>
+				<li>
+					<a href="">3</a>
+				</li>
+				<li>
+					<a href="">4</a>
+				</li>
+				<li>
+					<a href="">5</a>
+				</li>
+				<li>
+					<a href="">»</a>
+				</li>
 			</ul>
 		</div>
 	</div>
 </div>
+
+<div id="startNewTopicModalForm" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2 class="form-signin-heading">Start new topic</h2>
+			</div>
+			<div class="modal-body">
+				<form id="startNewTopicForm">
+					<div class="form-group">
+						<label for="title" class="control-label">Title</label>
+						<input type="text" class="form-control" id="title" name="title" value="" required="true" title="Please enter the topic title">
+					</div>
+					<div class="form-group">
+						<label for="bbcodeEditor" class="control-label">Text</label>
+						<textarea id="bbcodeEditor" class="form-control" style="height:300px;width:100%;"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary btn-block">
+						Post
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		$("#bbcodeEditor").sceditor({
+			plugins : 'bbcode',
+			style : "vendor/sceditor/minified/jquery.sceditor.default.min.css",
+			resizeEnabled: false
+		});
+		$(".sceditor-container").css("width", "100%");
+		$(".sceditor-container").css("height", "500px");
+		$("iframe").css("width", "99%");
+	});
+	$('#startNewTopicModalForm').on('shown.bs.modal', function() {
+		setIframe();
+   	});
+	function setIframe() {
+		var containerHeight = $(".sceditor-container").height();
+		var toolbarHeight = $(".sceditor-toolbar").height();
+		console.log(containerHeight);
+		console.log(toolbarHeight);
+		$("iframe").css("height", (containerHeight-toolbarHeight-20) + "px");
+	};
+</script>

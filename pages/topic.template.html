@@ -40,11 +40,9 @@
 							<h6>{{post.postCount}} posts</h6>
 						</div>
 						<div class="col-xs-10 text-center">
-
-							<div ng-bind-html-unsafe="post.text">
-								
+							<div class="container">
+								<div class="post-text" ng-bind-html="post.text"></div>
 							</div>
-
 						</div>
 					</div>
 					<div class="panel-footer">
