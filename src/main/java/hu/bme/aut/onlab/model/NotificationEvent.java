@@ -8,7 +8,7 @@ import java.util.Collection;
  * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "notification_event")
+@Table(name = "notification_event", schema = "", catalog = "forum")
 public class NotificationEvent {
     private int id;
     private int type;

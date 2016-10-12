@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "topic_subscription")
+@Table(name = "topic_subscription", schema = "", catalog = "forum")
 public class TopicSubscription {
     private int id;
     private Member memberByMemberId;
@@ -62,5 +62,29 @@ public class TopicSubscription {
 
     public void setTopicByTopicId(Topic topicByTopicId) {
         this.topicByTopicId = topicByTopicId;
+    }
+
+    private int topicId;
+
+    @Basic
+    @Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
+    }
+
+    private int memberId;
+
+    @Basic
+    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
     }
 }

@@ -95,12 +95,22 @@ public class Permission {
     }
 
     @ManyToMany
-    @JoinTable(name = "permission_to_permission_set", catalog = "forum", schema = "", joinColumns = @JoinColumn(name = "permissionid", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "permission_setid", referencedColumnName = "id", nullable = false))
+    @JoinTable(name = "permission_to_permission_set", catalog = "forum", schema = "", joinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "permission_set_id", referencedColumnName = "id", nullable = false))
     public Set<PermissionSet> getPermissionSets() {
         return permissionSets;
     }
 
     public void setPermissionSets(Set<PermissionSet> permissionSets) {
         this.permissionSets = permissionSets;
+    }    private int subcategoryId;
+
+    @Basic
+    @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)
+    public int getSubcategoryId() {
+        return subcategoryId;
+    }
+
+    public void setSubcategoryId(int subcategoryId) {
+        this.subcategoryId = subcategoryId;
     }
 }

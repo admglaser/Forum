@@ -8,7 +8,7 @@ import java.util.Set;
  * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "member_group")
+@Table(name = "member_group", schema = "", catalog = "forum")
 public class MemberGroup {
     private int id;
     private String title;

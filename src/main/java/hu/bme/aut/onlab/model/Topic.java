@@ -26,7 +26,7 @@ public class Topic {
     }
 
     @Basic
-    @Column(name = "title", nullable = false, insertable = true, updatable = true)
+    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
     public String getTitle() {
         return title;
     }
@@ -87,5 +87,28 @@ public class Topic {
 
     public void setTopicSubscriptionsById(Collection<TopicSubscription> topicSubscriptionsById) {
         this.topicSubscriptionsById = topicSubscriptionsById;
+    }
+
+    private int subcategoryId;
+
+    @Basic
+    @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)
+    public int getSubcategoryId() {
+        return subcategoryId;
+    }
+
+    public void setSubcategoryId(int subcategoryId) {
+        this.subcategoryId = subcategoryId;
+    }
+
+    private Collection<TopicSeenByMember> topicSeenByMembersById;
+
+    @OneToMany(mappedBy = "topicByTopicId")
+    public Collection<TopicSeenByMember> getTopicSeenByMembersById() {
+        return topicSeenByMembersById;
+    }
+
+    public void setTopicSeenByMembersById(Collection<TopicSeenByMember> topicSeenByMembersById) {
+        this.topicSeenByMembersById = topicSeenByMembersById;
     }
 }

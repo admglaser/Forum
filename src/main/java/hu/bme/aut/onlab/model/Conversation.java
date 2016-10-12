@@ -15,6 +15,7 @@ public class Conversation {
     private int messageCount;
     private Collection<Message> messagesById;
     private Set<Member> members;
+    private Collection<ConversationSeenByMember> conversationSeenByMembersById;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -85,5 +86,14 @@ public class Conversation {
 
     public void setMessagesById(Collection<Message> messagesById) {
         this.messagesById = messagesById;
+    }
+
+    @OneToMany(mappedBy = "conversationByConversationId")
+    public Collection<ConversationSeenByMember> getConversationSeenByMembersById() {
+        return conversationSeenByMembersById;
+    }
+
+    public void setConversationSeenByMembersById(Collection<ConversationSeenByMember> conversationSeenByMembersById) {
+        this.conversationSeenByMembersById = conversationSeenByMembersById;
     }
 }

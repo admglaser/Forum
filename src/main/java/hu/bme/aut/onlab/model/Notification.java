@@ -12,6 +12,8 @@ public class Notification {
     private byte seen;
     private Member memberByMemberId;
     private NotificationEvent notificationEventByNotificationEventId;
+    private int memberId;
+    private int notificationEventId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -75,5 +77,25 @@ public class Notification {
 
     public void setNotificationEventByNotificationEventId(NotificationEvent notificationEventByNotificationEventId) {
         this.notificationEventByNotificationEventId = notificationEventByNotificationEventId;
+    }
+
+    @Basic
+    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
+
+    @Basic
+    @Column(name = "notification_event_id", nullable = false, insertable = true, updatable = true)
+    public int getNotificationEventId() {
+        return notificationEventId;
+    }
+
+    public void setNotificationEventId(int notificationEventId) {
+        this.notificationEventId = notificationEventId;
     }
 }

@@ -2,6 +2,7 @@ package hu.bme.aut.onlab.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Set;
 
@@ -28,6 +29,11 @@ public class Member {
     private Collection<SubcategorySubscription> subcategorySubscriptionsById;
     private Collection<TopicSubscription> topicSubscriptionsById;
     private Set<Conversation> conversations;
+    private Timestamp registerTime;
+    private int memberGroupId;
+    private String pictureId;
+    private Collection<ConversationSeenByMember> conversationSeenByMembersById;
+    private Collection<TopicSeenByMember> topicSeenByMembersById;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -245,5 +251,53 @@ public class Member {
         result = 31 * result + (topicSubscriptionsById != null ? topicSubscriptionsById.hashCode() : 0);
         result = 31 * result + (conversations != null ? conversations.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "register_time", nullable = false, insertable = true, updatable = true)
+    public Timestamp getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Timestamp registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    @Basic
+    @Column(name = "member_group_id", nullable = false, insertable = true, updatable = true)
+    public int getMemberGroupId() {
+        return memberGroupId;
+    }
+
+    public void setMemberGroupId(int memberGroupId) {
+        this.memberGroupId = memberGroupId;
+    }
+
+    @Basic
+    @Column(name = "picture_id", nullable = true, insertable = true, updatable = true, length = 255)
+    public String getPictureId() {
+        return pictureId;
+    }
+
+    public void setPictureId(String pictureId) {
+        this.pictureId = pictureId;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<ConversationSeenByMember> getConversationSeenByMembersById() {
+        return conversationSeenByMembersById;
+    }
+
+    public void setConversationSeenByMembersById(Collection<ConversationSeenByMember> conversationSeenByMembersById) {
+        this.conversationSeenByMembersById = conversationSeenByMembersById;
+    }
+
+    @OneToMany(mappedBy = "memberByMemberId")
+    public Collection<TopicSeenByMember> getTopicSeenByMembersById() {
+        return topicSeenByMembersById;
+    }
+
+    public void setTopicSeenByMembersById(Collection<TopicSeenByMember> topicSeenByMembersById) {
+        this.topicSeenByMembersById = topicSeenByMembersById;
     }
 }

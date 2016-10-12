@@ -11,6 +11,8 @@ public class Like {
     private int id;
     private Post postByPostId;
     private Member memberByMemberId;
+    private int memberId;
+    private int postId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -61,5 +63,25 @@ public class Like {
 
     public void setMemberByMemberId(Member memberByMemberId) {
         this.memberByMemberId = memberByMemberId;
+    }
+
+    @Basic
+    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
+
+    @Basic
+    @Column(name = "post_id", nullable = false, insertable = true, updatable = true)
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 }

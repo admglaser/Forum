@@ -19,8 +19,11 @@ public class CategoriesSummary {
     private String lastPostTopicTitle;
     private String lastPostMemberName;
     private Timestamp lastPostPostTime;
+    private Integer lastPostTopicId;
+    private Integer lastPostPostId;
+    private Integer lastPostMemberId;
 
-    @Basic
+    @Id
     @Column(name = "subcategory_id", nullable = false, insertable = false, updatable = false)
     public int getSubcategoryId() {
         return subcategoryId;
@@ -50,7 +53,7 @@ public class CategoriesSummary {
         this.subcategoryDescription = subcategoryDescription;
     }
 
-    @Id
+    @Basic
     @Column(name = "category_id", nullable = false, insertable = false, updatable = false)
     public int getCategoryId() {
         return categoryId;
@@ -160,5 +163,35 @@ public class CategoriesSummary {
         result = 31 * result + (lastPostMemberName != null ? lastPostMemberName.hashCode() : 0);
         result = 31 * result + (lastPostPostTime != null ? lastPostPostTime.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "last_post_topic_id", nullable = true, insertable = false, updatable = false)
+    public Integer getLastPostTopicId() {
+        return lastPostTopicId;
+    }
+
+    public void setLastPostTopicId(Integer lastPostTopicId) {
+        this.lastPostTopicId = lastPostTopicId;
+    }
+
+    @Basic
+    @Column(name = "last_post_post_id", nullable = true, insertable = false, updatable = false)
+    public Integer getLastPostPostId() {
+        return lastPostPostId;
+    }
+
+    public void setLastPostPostId(Integer lastPostPostId) {
+        this.lastPostPostId = lastPostPostId;
+    }
+
+    @Basic
+    @Column(name = "last_post_member_id", nullable = true, insertable = false, updatable = false)
+    public Integer getLastPostMemberId() {
+        return lastPostMemberId;
+    }
+
+    public void setLastPostMemberId(Integer lastPostMemberId) {
+        this.lastPostMemberId = lastPostMemberId;
     }
 }

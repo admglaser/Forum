@@ -17,6 +17,7 @@ public class Message {
     private byte seen;
     private Collection<Member> membersById;
     private Conversation conversationByConversationId;
+    private int conversationId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -114,5 +115,15 @@ public class Message {
 
     public void setConversationByConversationId(Conversation conversationByConversationId) {
         this.conversationByConversationId = conversationByConversationId;
+    }
+
+    @Basic
+    @Column(name = "conversation_id", nullable = false, insertable = true, updatable = true)
+    public int getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(int conversationId) {
+        this.conversationId = conversationId;
     }
 }

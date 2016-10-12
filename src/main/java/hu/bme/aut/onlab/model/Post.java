@@ -116,4 +116,28 @@ public class Post {
     public void setMemberByMemberId(Member memberByMemberId) {
         this.memberByMemberId = memberByMemberId;
     }
+
+    private int topicId;
+
+    @Basic
+    @Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
+    }
+
+    private int memberId;
+
+    @Basic
+    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    public int getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
 }

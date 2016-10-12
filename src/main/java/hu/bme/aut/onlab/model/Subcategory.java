@@ -115,4 +115,16 @@ public class Subcategory {
     public void setTopicsById(Collection<Topic> topicsById) {
         this.topicsById = topicsById;
     }
+
+    private int categoryId;
+
+    @Basic
+    @Column(name = "category_id", nullable = false, insertable = true, updatable = true)
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
 }

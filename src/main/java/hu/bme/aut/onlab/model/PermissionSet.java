@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "permission_set")
+@Table(name = "permission_set", schema = "", catalog = "forum")
 public class PermissionSet {
     private int id;
     private Set<MemberGroup> memberGroups;
@@ -61,5 +61,17 @@ public class PermissionSet {
 
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
+    }
+
+    private int permissionId;
+
+    @Basic
+    @Column(name = "permission_id", nullable = false, insertable = true, updatable = true)
+    public int getPermissionId() {
+        return permissionId;
+    }
+
+    public void setPermissionId(int permissionId) {
+        this.permissionId = permissionId;
     }
 }
