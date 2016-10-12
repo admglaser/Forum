@@ -103,4 +103,10 @@ html, body {
 
 #startNewTopicModalForm .modal-dialog {
 	width: 80%;
+	min-width: 80%;
+}
+
+#newPostModalForm .modal-dialog {
+	width: 80%;
+	min-width: 80%;
 }
