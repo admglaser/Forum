@@ -42,14 +42,15 @@ public class Category {
 
         if (id != category.id) return false;
         if (title != null ? !title.equals(category.title) : category.title != null) return false;
+        return !(subcategoriesById != null ? !subcategoriesById.equals(category.subcategoriesById) : category.subcategoriesById != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (subcategoriesById != null ? subcategoriesById.hashCode() : 0);
         return result;
     }
 

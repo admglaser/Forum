@@ -44,6 +44,8 @@ public class Notification {
 
         if (id != that.id) return false;
         if (seen != that.seen) return false;
+        if (memberId != that.memberId) return false;
+        if (notificationEventId != that.notificationEventId) return false;
         if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
             return false;
         return !(notificationEventByNotificationEventId != null ? !notificationEventByNotificationEventId.equals(that.notificationEventByNotificationEventId) : that.notificationEventByNotificationEventId != null);
@@ -56,6 +58,8 @@ public class Notification {
         result = 31 * result + (int) seen;
         result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
         result = 31 * result + (notificationEventByNotificationEventId != null ? notificationEventByNotificationEventId.hashCode() : 0);
+        result = 31 * result + memberId;
+        result = 31 * result + notificationEventId;
         return result;
     }
 

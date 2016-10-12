@@ -66,8 +66,10 @@ public class ConversationSeenByMember {
         if (seenMessageNumber != that.seenMessageNumber) return false;
         if (memberId != that.memberId) return false;
         if (conversationId != that.conversationId) return false;
+        if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
+            return false;
+        return !(conversationByConversationId != null ? !conversationByConversationId.equals(that.conversationByConversationId) : that.conversationByConversationId != null);
 
-        return true;
     }
 
     @Override
@@ -76,6 +78,8 @@ public class ConversationSeenByMember {
         result = 31 * result + seenMessageNumber;
         result = 31 * result + memberId;
         result = 31 * result + conversationId;
+        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
+        result = 31 * result + (conversationByConversationId != null ? conversationByConversationId.hashCode() : 0);
         return result;
     }
 

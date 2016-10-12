@@ -68,8 +68,9 @@ public class MemberGroup {
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (prefix != null ? !prefix.equals(that.prefix) : that.prefix != null) return false;
         if (postfix != null ? !postfix.equals(that.postfix) : that.postfix != null) return false;
+        if (membersById != null ? !membersById.equals(that.membersById) : that.membersById != null) return false;
+        return !(permissionSets != null ? !permissionSets.equals(that.permissionSets) : that.permissionSets != null);
 
-        return true;
     }
 
     @Override
@@ -78,6 +79,8 @@ public class MemberGroup {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
         result = 31 * result + (postfix != null ? postfix.hashCode() : 0);
+        result = 31 * result + (membersById != null ? membersById.hashCode() : 0);
+        result = 31 * result + (permissionSets != null ? permissionSets.hashCode() : 0);
         return result;
     }
 

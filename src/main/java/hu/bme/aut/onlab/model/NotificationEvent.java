@@ -67,8 +67,8 @@ public class NotificationEvent {
         if (type != that.type) return false;
         if (time != null ? !time.equals(that.time) : that.time != null) return false;
         if (link != null ? !link.equals(that.link) : that.link != null) return false;
+        return !(notificationsById != null ? !notificationsById.equals(that.notificationsById) : that.notificationsById != null);
 
-        return true;
     }
 
     @Override
@@ -77,6 +77,7 @@ public class NotificationEvent {
         result = 31 * result + type;
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (link != null ? link.hashCode() : 0);
+        result = 31 * result + (notificationsById != null ? notificationsById.hashCode() : 0);
         return result;
     }
 

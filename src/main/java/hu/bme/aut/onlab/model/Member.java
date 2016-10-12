@@ -22,7 +22,6 @@ public class Member {
     private int profileViewsCount;
     private Date birthday;
     private Collection<Like> likesById;
-    private Message messageByMessageid;
     private MemberGroup memberGroupByMemberGroupId;
     private Collection<Notification> notificationsById;
     private Collection<Post> postsById;
@@ -135,16 +134,6 @@ public class Member {
     }
 
     @ManyToOne
-    @JoinColumn(name = "messageid", referencedColumnName = "id")
-    public Message getMessageByMessageid() {
-        return messageByMessageid;
-    }
-
-    public void setMessageByMessageid(Message messageByMessageid) {
-        this.messageByMessageid = messageByMessageid;
-    }
-
-    @ManyToOne
     @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false)
     public MemberGroup getMemberGroupByMemberGroupId() {
         return memberGroupByMemberGroupId;
@@ -210,14 +199,13 @@ public class Member {
         if (postCount != member.postCount) return false;
         if (likesCount != member.likesCount) return false;
         if (profileViewsCount != member.profileViewsCount) return false;
+        if (memberGroupId != member.memberGroupId) return false;
         if (userName != null ? !userName.equals(member.userName) : member.userName != null) return false;
         if (password != null ? !password.equals(member.password) : member.password != null) return false;
         if (email != null ? !email.equals(member.email) : member.email != null) return false;
         if (displayName != null ? !displayName.equals(member.displayName) : member.displayName != null) return false;
         if (birthday != null ? !birthday.equals(member.birthday) : member.birthday != null) return false;
         if (likesById != null ? !likesById.equals(member.likesById) : member.likesById != null) return false;
-        if (messageByMessageid != null ? !messageByMessageid.equals(member.messageByMessageid) : member.messageByMessageid != null)
-            return false;
         if (memberGroupByMemberGroupId != null ? !memberGroupByMemberGroupId.equals(member.memberGroupByMemberGroupId) : member.memberGroupByMemberGroupId != null)
             return false;
         if (notificationsById != null ? !notificationsById.equals(member.notificationsById) : member.notificationsById != null)
@@ -227,7 +215,14 @@ public class Member {
             return false;
         if (topicSubscriptionsById != null ? !topicSubscriptionsById.equals(member.topicSubscriptionsById) : member.topicSubscriptionsById != null)
             return false;
-        return !(conversations != null ? !conversations.equals(member.conversations) : member.conversations != null);
+        if (conversations != null ? !conversations.equals(member.conversations) : member.conversations != null)
+            return false;
+        if (registerTime != null ? !registerTime.equals(member.registerTime) : member.registerTime != null)
+            return false;
+        if (pictureId != null ? !pictureId.equals(member.pictureId) : member.pictureId != null) return false;
+        if (conversationSeenByMembersById != null ? !conversationSeenByMembersById.equals(member.conversationSeenByMembersById) : member.conversationSeenByMembersById != null)
+            return false;
+        return !(topicSeenByMembersById != null ? !topicSeenByMembersById.equals(member.topicSeenByMembersById) : member.topicSeenByMembersById != null);
 
     }
 
@@ -243,13 +238,17 @@ public class Member {
         result = 31 * result + profileViewsCount;
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
         result = 31 * result + (likesById != null ? likesById.hashCode() : 0);
-        result = 31 * result + (messageByMessageid != null ? messageByMessageid.hashCode() : 0);
         result = 31 * result + (memberGroupByMemberGroupId != null ? memberGroupByMemberGroupId.hashCode() : 0);
         result = 31 * result + (notificationsById != null ? notificationsById.hashCode() : 0);
         result = 31 * result + (postsById != null ? postsById.hashCode() : 0);
         result = 31 * result + (subcategorySubscriptionsById != null ? subcategorySubscriptionsById.hashCode() : 0);
         result = 31 * result + (topicSubscriptionsById != null ? topicSubscriptionsById.hashCode() : 0);
         result = 31 * result + (conversations != null ? conversations.hashCode() : 0);
+        result = 31 * result + (registerTime != null ? registerTime.hashCode() : 0);
+        result = 31 * result + memberGroupId;
+        result = 31 * result + (pictureId != null ? pictureId.hashCode() : 0);
+        result = 31 * result + (conversationSeenByMembersById != null ? conversationSeenByMembersById.hashCode() : 0);
+        result = 31 * result + (topicSeenByMembersById != null ? topicSeenByMembersById.hashCode() : 0);
         return result;
     }
 
