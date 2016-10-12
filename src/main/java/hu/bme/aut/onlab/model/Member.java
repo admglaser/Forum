@@ -205,24 +205,9 @@ public class Member {
         if (email != null ? !email.equals(member.email) : member.email != null) return false;
         if (displayName != null ? !displayName.equals(member.displayName) : member.displayName != null) return false;
         if (birthday != null ? !birthday.equals(member.birthday) : member.birthday != null) return false;
-        if (likesById != null ? !likesById.equals(member.likesById) : member.likesById != null) return false;
-        if (memberGroupByMemberGroupId != null ? !memberGroupByMemberGroupId.equals(member.memberGroupByMemberGroupId) : member.memberGroupByMemberGroupId != null)
-            return false;
-        if (notificationsById != null ? !notificationsById.equals(member.notificationsById) : member.notificationsById != null)
-            return false;
-        if (postsById != null ? !postsById.equals(member.postsById) : member.postsById != null) return false;
-        if (subcategorySubscriptionsById != null ? !subcategorySubscriptionsById.equals(member.subcategorySubscriptionsById) : member.subcategorySubscriptionsById != null)
-            return false;
-        if (topicSubscriptionsById != null ? !topicSubscriptionsById.equals(member.topicSubscriptionsById) : member.topicSubscriptionsById != null)
-            return false;
-        if (conversations != null ? !conversations.equals(member.conversations) : member.conversations != null)
-            return false;
         if (registerTime != null ? !registerTime.equals(member.registerTime) : member.registerTime != null)
             return false;
-        if (pictureId != null ? !pictureId.equals(member.pictureId) : member.pictureId != null) return false;
-        if (conversationSeenByMembersById != null ? !conversationSeenByMembersById.equals(member.conversationSeenByMembersById) : member.conversationSeenByMembersById != null)
-            return false;
-        return !(topicSeenByMembersById != null ? !topicSeenByMembersById.equals(member.topicSeenByMembersById) : member.topicSeenByMembersById != null);
+        return !(pictureId != null ? !pictureId.equals(member.pictureId) : member.pictureId != null);
 
     }
 
@@ -237,18 +222,9 @@ public class Member {
         result = 31 * result + likesCount;
         result = 31 * result + profileViewsCount;
         result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-        result = 31 * result + (likesById != null ? likesById.hashCode() : 0);
-        result = 31 * result + (memberGroupByMemberGroupId != null ? memberGroupByMemberGroupId.hashCode() : 0);
-        result = 31 * result + (notificationsById != null ? notificationsById.hashCode() : 0);
-        result = 31 * result + (postsById != null ? postsById.hashCode() : 0);
-        result = 31 * result + (subcategorySubscriptionsById != null ? subcategorySubscriptionsById.hashCode() : 0);
-        result = 31 * result + (topicSubscriptionsById != null ? topicSubscriptionsById.hashCode() : 0);
-        result = 31 * result + (conversations != null ? conversations.hashCode() : 0);
         result = 31 * result + (registerTime != null ? registerTime.hashCode() : 0);
         result = 31 * result + memberGroupId;
         result = 31 * result + (pictureId != null ? pictureId.hashCode() : 0);
-        result = 31 * result + (conversationSeenByMembersById != null ? conversationSeenByMembersById.hashCode() : 0);
-        result = 31 * result + (topicSeenByMembersById != null ? topicSeenByMembersById.hashCode() : 0);
         return result;
     }
 

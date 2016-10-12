@@ -55,15 +55,9 @@ public class Subcategory {
         Subcategory that = (Subcategory) o;
 
         if (id != that.id) return false;
+        if (categoryId != that.categoryId) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
-        if (permissionsById != null ? !permissionsById.equals(that.permissionsById) : that.permissionsById != null)
-            return false;
-        if (categoryByCategoryId != null ? !categoryByCategoryId.equals(that.categoryByCategoryId) : that.categoryByCategoryId != null)
-            return false;
-        if (subcategorySubscriptionsById != null ? !subcategorySubscriptionsById.equals(that.subcategorySubscriptionsById) : that.subcategorySubscriptionsById != null)
-            return false;
-        return !(topicsById != null ? !topicsById.equals(that.topicsById) : that.topicsById != null);
+        return !(desc != null ? !desc.equals(that.desc) : that.desc != null);
 
     }
 
@@ -72,10 +66,7 @@ public class Subcategory {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (desc != null ? desc.hashCode() : 0);
-        result = 31 * result + (permissionsById != null ? permissionsById.hashCode() : 0);
-        result = 31 * result + (categoryByCategoryId != null ? categoryByCategoryId.hashCode() : 0);
-        result = 31 * result + (subcategorySubscriptionsById != null ? subcategorySubscriptionsById.hashCode() : 0);
-        result = 31 * result + (topicsById != null ? topicsById.hashCode() : 0);
+        result = 31 * result + categoryId;
         return result;
     }
 

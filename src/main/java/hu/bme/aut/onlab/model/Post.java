@@ -66,13 +66,11 @@ public class Post {
         Post post = (Post) o;
 
         if (id != post.id) return false;
+        if (topicId != post.topicId) return false;
+        if (memberId != post.memberId) return false;
         if (postId != null ? !postId.equals(post.postId) : post.postId != null) return false;
         if (text != null ? !text.equals(post.text) : post.text != null) return false;
-        if (time != null ? !time.equals(post.time) : post.time != null) return false;
-        if (likesById != null ? !likesById.equals(post.likesById) : post.likesById != null) return false;
-        if (topicByTopicId != null ? !topicByTopicId.equals(post.topicByTopicId) : post.topicByTopicId != null)
-            return false;
-        return !(memberByMemberId != null ? !memberByMemberId.equals(post.memberByMemberId) : post.memberByMemberId != null);
+        return !(time != null ? !time.equals(post.time) : post.time != null);
 
     }
 
@@ -82,9 +80,8 @@ public class Post {
         result = 31 * result + (postId != null ? postId.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (likesById != null ? likesById.hashCode() : 0);
-        result = 31 * result + (topicByTopicId != null ? topicByTopicId.hashCode() : 0);
-        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
+        result = 31 * result + topicId;
+        result = 31 * result + memberId;
         return result;
     }
 

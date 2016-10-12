@@ -13,6 +13,7 @@ public class Permission {
     private byte readAllowed;
     private byte replyAllowed;
     private byte startAllowed;
+    private int subcategoryId;
     private Subcategory subcategoryBySubcategoryId;
     private Set<PermissionSet> permissionSets;
 
@@ -67,9 +68,7 @@ public class Permission {
         if (readAllowed != that.readAllowed) return false;
         if (replyAllowed != that.replyAllowed) return false;
         if (startAllowed != that.startAllowed) return false;
-        if (subcategoryBySubcategoryId != null ? !subcategoryBySubcategoryId.equals(that.subcategoryBySubcategoryId) : that.subcategoryBySubcategoryId != null)
-            return false;
-        return !(permissionSets != null ? !permissionSets.equals(that.permissionSets) : that.permissionSets != null);
+        return subcategoryId == that.subcategoryId;
 
     }
 
@@ -79,8 +78,7 @@ public class Permission {
         result = 31 * result + (int) readAllowed;
         result = 31 * result + (int) replyAllowed;
         result = 31 * result + (int) startAllowed;
-        result = 31 * result + (subcategoryBySubcategoryId != null ? subcategoryBySubcategoryId.hashCode() : 0);
-        result = 31 * result + (permissionSets != null ? permissionSets.hashCode() : 0);
+        result = 31 * result + subcategoryId;
         return result;
     }
 
@@ -102,7 +100,7 @@ public class Permission {
 
     public void setPermissionSets(Set<PermissionSet> permissionSets) {
         this.permissionSets = permissionSets;
-    }    private int subcategoryId;
+    }
 
     @Basic
     @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)

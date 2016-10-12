@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "permission_set", schema = "", catalog = "forum")
 public class PermissionSet {
     private int id;
+    private int permissionId;
     private Set<MemberGroup> memberGroups;
     private Set<Permission> permissions;
 
@@ -31,16 +32,14 @@ public class PermissionSet {
         PermissionSet that = (PermissionSet) o;
 
         if (id != that.id) return false;
-        if (memberGroups != null ? !memberGroups.equals(that.memberGroups) : that.memberGroups != null) return false;
-        return !(permissions != null ? !permissions.equals(that.permissions) : that.permissions != null);
+        return permissionId == that.permissionId;
 
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (memberGroups != null ? memberGroups.hashCode() : 0);
-        result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
+        result = 31 * result + permissionId;
         return result;
     }
 
@@ -62,8 +61,6 @@ public class PermissionSet {
     public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
-
-    private int permissionId;
 
     @Basic
     @Column(name = "permission_id", nullable = false, insertable = true, updatable = true)

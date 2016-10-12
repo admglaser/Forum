@@ -33,17 +33,13 @@ public class Like {
 
         if (id != like.id) return false;
         if (memberId != like.memberId) return false;
-        if (postId != like.postId) return false;
-        if (postByPostId != null ? !postByPostId.equals(like.postByPostId) : like.postByPostId != null) return false;
-        return !(memberByMemberId != null ? !memberByMemberId.equals(like.memberByMemberId) : like.memberByMemberId != null);
+        return postId == like.postId;
 
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (postByPostId != null ? postByPostId.hashCode() : 0);
-        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
         result = 31 * result + memberId;
         result = 31 * result + postId;
         return result;

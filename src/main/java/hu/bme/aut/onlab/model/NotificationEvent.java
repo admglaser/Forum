@@ -81,6 +81,8 @@ public class NotificationEvent {
         return result;
     }
 
+
+
     @OneToMany(mappedBy = "notificationEventByNotificationEventId")
     public Collection<Notification> getNotificationsById() {
         return notificationsById;
@@ -89,4 +91,5 @@ public class NotificationEvent {
     public void setNotificationsById(Collection<Notification> notificationsById) {
         this.notificationsById = notificationsById;
     }
+
 }

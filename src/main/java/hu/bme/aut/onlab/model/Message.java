@@ -37,8 +37,7 @@ public class Message {
         if (messageNumber != message.messageNumber) return false;
         if (conversationId != message.conversationId) return false;
         if (text != null ? !text.equals(message.text) : message.text != null) return false;
-        if (time != null ? !time.equals(message.time) : message.time != null) return false;
-        return !(conversationByConversationId != null ? !conversationByConversationId.equals(message.conversationByConversationId) : message.conversationByConversationId != null);
+        return !(time != null ? !time.equals(message.time) : message.time != null);
 
     }
 
@@ -48,7 +47,6 @@ public class Message {
         result = 31 * result + messageNumber;
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (conversationByConversationId != null ? conversationByConversationId.hashCode() : 0);
         result = 31 * result + conversationId;
         return result;
     }

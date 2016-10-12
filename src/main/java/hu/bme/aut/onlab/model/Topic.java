@@ -11,6 +11,7 @@ import java.util.Collection;
 public class Topic {
     private int id;
     private String title;
+    private int subcategoryId;
     private Collection<Post> postsById;
     private Subcategory subcategoryBySubcategoryId;
     private Collection<TopicSubscription> topicSubscriptionsById;
@@ -43,11 +44,8 @@ public class Topic {
         Topic topic = (Topic) o;
 
         if (id != topic.id) return false;
-        if (title != null ? !title.equals(topic.title) : topic.title != null) return false;
-        if (postsById != null ? !postsById.equals(topic.postsById) : topic.postsById != null) return false;
-        if (subcategoryBySubcategoryId != null ? !subcategoryBySubcategoryId.equals(topic.subcategoryBySubcategoryId) : topic.subcategoryBySubcategoryId != null)
-            return false;
-        return !(topicSubscriptionsById != null ? !topicSubscriptionsById.equals(topic.topicSubscriptionsById) : topic.topicSubscriptionsById != null);
+        if (subcategoryId != topic.subcategoryId) return false;
+        return !(title != null ? !title.equals(topic.title) : topic.title != null);
 
     }
 
@@ -55,9 +53,7 @@ public class Topic {
     public int hashCode() {
         int result = id;
         result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (postsById != null ? postsById.hashCode() : 0);
-        result = 31 * result + (subcategoryBySubcategoryId != null ? subcategoryBySubcategoryId.hashCode() : 0);
-        result = 31 * result + (topicSubscriptionsById != null ? topicSubscriptionsById.hashCode() : 0);
+        result = 31 * result + subcategoryId;
         return result;
     }
 
@@ -88,8 +84,6 @@ public class Topic {
     public void setTopicSubscriptionsById(Collection<TopicSubscription> topicSubscriptionsById) {
         this.topicSubscriptionsById = topicSubscriptionsById;
     }
-
-    private int subcategoryId;
 
     @Basic
     @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)

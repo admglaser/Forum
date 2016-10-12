@@ -9,6 +9,8 @@ import javax.persistence.*;
 @Table(name = "topic_subscription", schema = "", catalog = "forum")
 public class TopicSubscription {
     private int id;
+    private int topicId;
+    private int memberId;
     private Member memberByMemberId;
     private Topic topicByTopicId;
 
@@ -30,17 +32,16 @@ public class TopicSubscription {
         TopicSubscription that = (TopicSubscription) o;
 
         if (id != that.id) return false;
-        if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
-            return false;
-        return !(topicByTopicId != null ? !topicByTopicId.equals(that.topicByTopicId) : that.topicByTopicId != null);
+        if (topicId != that.topicId) return false;
+        return memberId == that.memberId;
 
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
-        result = 31 * result + (topicByTopicId != null ? topicByTopicId.hashCode() : 0);
+        result = 31 * result + topicId;
+        result = 31 * result + memberId;
         return result;
     }
 
@@ -64,8 +65,6 @@ public class TopicSubscription {
         this.topicByTopicId = topicByTopicId;
     }
 
-    private int topicId;
-
     @Basic
     @Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
     public int getTopicId() {
@@ -75,8 +74,6 @@ public class TopicSubscription {
     public void setTopicId(int topicId) {
         this.topicId = topicId;
     }
-
-    private int memberId;
 
     @Basic
     @Column(name = "member_id", nullable = false, insertable = true, updatable = true)

@@ -9,6 +9,8 @@ import javax.persistence.*;
 @Table(name = "subcategory_subscription", schema = "", catalog = "forum")
 public class SubcategorySubscription {
     private int id;
+    private int subcategoryId;
+    private int memberId;
     private Member memberByMemberId;
     private Subcategory subcategoryBySubcategoryId;
 
@@ -30,17 +32,16 @@ public class SubcategorySubscription {
         SubcategorySubscription that = (SubcategorySubscription) o;
 
         if (id != that.id) return false;
-        if (memberByMemberId != null ? !memberByMemberId.equals(that.memberByMemberId) : that.memberByMemberId != null)
-            return false;
-        return !(subcategoryBySubcategoryId != null ? !subcategoryBySubcategoryId.equals(that.subcategoryBySubcategoryId) : that.subcategoryBySubcategoryId != null);
+        if (subcategoryId != that.subcategoryId) return false;
+        return memberId == that.memberId;
 
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (memberByMemberId != null ? memberByMemberId.hashCode() : 0);
-        result = 31 * result + (subcategoryBySubcategoryId != null ? subcategoryBySubcategoryId.hashCode() : 0);
+        result = 31 * result + subcategoryId;
+        result = 31 * result + memberId;
         return result;
     }
 
@@ -64,8 +65,6 @@ public class SubcategorySubscription {
         this.subcategoryBySubcategoryId = subcategoryBySubcategoryId;
     }
 
-    private int subcategoryId;
-
     @Basic
     @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)
     public int getSubcategoryId() {
@@ -75,8 +74,6 @@ public class SubcategorySubscription {
     public void setSubcategoryId(int subcategoryId) {
         this.subcategoryId = subcategoryId;
     }
-
-    private int memberId;
 
     @Basic
     @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
