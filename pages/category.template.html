@@ -18,12 +18,13 @@
 			<!-- topic -->
 			<tr ng-repeat="topic in data.topics">
 				<td class="text-center">
-				<div ng-if="topic.unread">
-					<i class="fa fa-circle fa-2x text-primary"></i>
-				</div>
-				<div ng-if="!topic.unread">
-					<i class="fa fa-circle-o fa-2x text-primary"></i>
-				</div></td>
+					<div ng-if="topic.unread">
+						<i class="fa fa-circle fa-2x text-primary"></i>
+					</div>
+					<div ng-if="!topic.unread">
+						<i class="fa fa-circle-o fa-2x text-primary"></i>
+					</div>
+				</td>
 				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a>
 				<br>
 				<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a> <i class="fa fa-clock-o"></i> {{topic.startDate}} </small></td>
@@ -49,37 +50,25 @@
 	<!-- end of topics -->
 
 	<div style="margin-top: 25px;">
+		
+		<!-- new topic button -->
 		<div class="btn-group pull-right">
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startNewTopicModalForm">
 				Start New Topic
 			</button>
 		</div>
+		<!-- end of new topic button -->
 
+		<!-- pagination -->
 		<div class="btn-group ">
 			<ul class="pagination" style="margin: 0;">
-				<li>
-					<a href="">«</a>
-				</li>
-				<li class="active">
-					<a href="">1</a>
-				</li>
-				<li>
-					<a href="">2</a>
-				</li>
-				<li>
-					<a href="">3</a>
-				</li>
-				<li>
-					<a href="">4</a>
-				</li>
-				<li>
-					<a href="">5</a>
-				</li>
-				<li>
-					<a href="">»</a>
+				<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
+					<a href="{{page.link}}">{{page.text}}</a>
 				</li>
 			</ul>
 		</div>
+		<!-- end of pagination -->
+		
 	</div>
 </div>
 

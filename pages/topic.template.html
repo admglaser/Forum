@@ -70,39 +70,24 @@
 		<!-- end of posts -->
 
 		<div style="margin-top: 25px;">
+			<!-- new reply button -->
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm">
 					New Reply
 				</button>
 			</div>
+			<!-- end of new reply button -->
 
+			<!-- pagination -->
 			<div class="btn-group ">
 				<ul class="pagination" style="margin: 0;">
-					<li>
-						<a href="">«</a>
-					</li>
-					<li class="active">
-						<a href="">1</a>
-					</li>
-					<li>
-						<a href="">2</a>
-					</li>
-					<li>
-						<a href="">3</a>
-					</li>
-					<li>
-						<a href="">4</a>
-					</li>
-					<li>
-						<a href="">5</a>
-					</li>
-					<li>
-						<a href="">»</a>
+					<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
+						<a href="{{page.link}}">{{page.text}}</a>
 					</li>
 				</ul>
 			</div>
+			<!-- end of pagination -->
 		</div>
-
 	</div>
 </div>
 
