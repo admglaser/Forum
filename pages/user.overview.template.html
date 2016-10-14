@@ -1,0 +1,75 @@
+<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+
+	<div class="container">
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="col-xs-2 text-center">
+						<img class="img-thumbnail" src="images/user.png"></img>
+					</div>
+					<div class="col-xs-10">
+						<h2>{{data.name}}</h2>
+						<h6>Member since {{data.joined}}</h6>
+						<h6>Last active {{data.active}}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="panel with-nav-tabs panel-default">
+				<div class="panel-heading">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a href="#/user/{{data.id}}">Overview</a>
+						</li>
+						<li>
+							<a href="#/user/{{data.id}}/topics">Topics</a>
+						</li>
+						<li>
+							<a href="#/user/{{data.id}}/posts">Posts</a>
+						</li>
+						<li>
+							<a href="#/user/{{data.id}}/likes">Likes</a>
+						</li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<!-- overview -->
+						<div class="tab-pane active">
+							<table class="table">
+								<tr>
+									<td>Group</td>
+									<td>{{data.group}}</td>
+								</tr>
+								<tr>
+									<td>Topics</td>
+									<td>{{data.topics}}</td>
+								</tr>
+								<tr>
+									<td>Posts</td>
+									<td>{{data.posts}}</td>
+								</tr>
+								<tr>
+									<td>Profile views</td>
+									<td>{{data.views}}</td>
+								</tr>
+								<tr>
+									<td>Birthday</td>
+									<td>{{data.birthday}}</td>
+								</tr>
+								<tr>
+									<td>Email</td>
+									<td>{{data.email}}</td>
+								</tr>
+							</table>
+						</div>
+						<!-- end of overview -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

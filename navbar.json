@@ -1,6 +1,7 @@
 {
 	"loggedIn": true,
 	"username": "William",
+	"userLink": "#/user/28",
 	"notificationsUnread": true,
 	"notifications": [
 		{

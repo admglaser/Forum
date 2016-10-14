@@ -18,6 +18,26 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/topic.template.html',
 			controller: 'topicController'
 		})
+		.when('/members', {
+			templateUrl : 'pages/members.template.html',
+			controller: 'membersController'
+		})
+		.when('/user/:userId', {
+			templateUrl : 'pages/user.overview.template.html',
+			controller: 'userOverviewController'
+		})
+		.when('/user/:userId/topics', {
+			templateUrl : 'pages/user.topics.template.html',
+			controller: 'userTopicsController'
+		})
+		.when('/user/:userId/posts', {
+			templateUrl : 'pages/user.posts.template.html',
+			controller: 'userPostsController'
+		})
+		.when('/user/:userId/likes', {
+			templateUrl : 'pages/user.likes.template.html',
+			controller: 'userLikesController'
+		})
 		/* .otherwise({
 			redirectTo: '/'
 		}) */
@@ -25,7 +45,7 @@ app.config(function($routeProvider) {
 });
 
 app.controller('homeController', function($scope, $http) {
-	$http.get('http://54.69.96.56:8080/ForumApp/rest/categories_summary')
+	$http.get('home.json')
 	   .then(function(res){
 			$scope.data = res.data;
 		}
@@ -34,7 +54,7 @@ app.controller('homeController', function($scope, $http) {
 
 app.controller('categoryController', function($scope, $http, $routeParams) {
 	$categoryId = $routeParams.categoryId;
-	$http.get('category' + $categoryId + '.json')
+	$http.get('category.json')
 		.then(function(res) {
 			$scope.data = res.data;
 		}
@@ -55,17 +75,82 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce) {
 					addInLineBreaks : false
 				});
 				post.text = $sce.trustAsHtml(result.html);
-				console.log(result.html);
 			}
 		}
 	);
 });
 
 app.controller('navbarController', function($scope, $http) {
-//	$http.get('http://54.69.96.56:8080/ForumApp/rest/navbar')
 	$http.get('navbar.json')
 		.then(function(res) {
 			$scope.data = res.data;
+		}
+	);
+});
+
+app.controller('membersController', function($scope, $http) {
+	$http.get('members.json')
+		.then(function(res) {
+			$scope.data = res.data;
+		}
+	);
+});
+
+app.controller('userOverviewController', function($scope, $http) {
+	$http.get('user.overview.json')
+		.then(function(res) {
+			$scope.data = res.data;
+		}
+	);
+});
+
+app.controller('userTopicsController', function($scope, $http, $sce) {
+	$http.get('user.topics.json')
+		.then(function(res) {
+			$scope.data = res.data;
+			for (var i = 0; i < $scope.data.topics.length; i++) {
+				var topic = $scope.data.topics[i];
+				var result = XBBCODE.process({
+					text : topic.text,
+					removeMisalignedTags : false,
+					addInLineBreaks : false
+				});
+				topic.text = $sce.trustAsHtml(result.html);
+			}
+		}
+	);
+});
+
+app.controller('userPostsController', function($scope, $http, $sce) {
+	$http.get('user.posts.json')
+		.then(function(res) {
+			$scope.data = res.data;
+			for (var i = 0; i < $scope.data.posts.length; i++) {
+				var post = $scope.data.posts[i];
+				var result = XBBCODE.process({
+					text : post.text,
+					removeMisalignedTags : false,
+					addInLineBreaks : false
+				});
+				post.text = $sce.trustAsHtml(result.html);
+			}
+		}
+	);
+});
+
+app.controller('userLikesController', function($scope, $http, $sce) {
+	$http.get('user.likes.json')
+		.then(function(res) {
+			$scope.data = res.data;
+			for (var i = 0; i < $scope.data.posts.length; i++) {
+				var post = $scope.data.posts[i];
+				var result = XBBCODE.process({
+					text : post.text,
+					removeMisalignedTags : false,
+					addInLineBreaks : false
+				});
+				post.text = $sce.trustAsHtml(result.html);
+			}
 		}
 	);
 });
