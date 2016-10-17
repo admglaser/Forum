@@ -61,7 +61,7 @@ app.controller('categoryController', function($scope, $http, $routeParams) {
 	);
 });
 
-app.controller('topicController', function($scope, $http, $routeParams, $sce) {
+app.controller('topicController', function($scope, $http, $routeParams, $sce, $location, $anchorScroll) {
 	$topicId = $routeParams.topicId;
 	$postId = $routeParams.postId;
 	$http.get('topic.json')
@@ -69,15 +69,11 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
 				var post = $scope.data.posts[i];
-				var result = XBBCODE.process({
-					text : post.text,
-					removeMisalignedTags : false,
-					addInLineBreaks : false
-				});
-				post.text = $sce.trustAsHtml(result.html);
+				post.text = convertBBCode(post.text, $sce);
 			}
 		}
 	);
+	$location.hash("test");
 });
 
 app.controller('navbarController', function($scope, $http) {
@@ -110,12 +106,7 @@ app.controller('userTopicsController', function($scope, $http, $sce) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.topics.length; i++) {
 				var topic = $scope.data.topics[i];
-				var result = XBBCODE.process({
-					text : topic.text,
-					removeMisalignedTags : false,
-					addInLineBreaks : false
-				});
-				topic.text = $sce.trustAsHtml(result.html);
+				topic.text = convertBBCode(topic.text, $sce);
 			}
 		}
 	);
@@ -127,12 +118,7 @@ app.controller('userPostsController', function($scope, $http, $sce) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
 				var post = $scope.data.posts[i];
-				var result = XBBCODE.process({
-					text : post.text,
-					removeMisalignedTags : false,
-					addInLineBreaks : false
-				});
-				post.text = $sce.trustAsHtml(result.html);
+				post.text = convertBBCode(post.text, $sce);
 			}
 		}
 	);
@@ -144,13 +130,17 @@ app.controller('userLikesController', function($scope, $http, $sce) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
 				var post = $scope.data.posts[i];
-				var result = XBBCODE.process({
-					text : post.text,
-					removeMisalignedTags : false,
-					addInLineBreaks : false
-				});
-				post.text = $sce.trustAsHtml(result.html);
+				post.text = convertBBCode(post.text, $sce);
 			}
 		}
 	);
 });
+
+function convertBBCode(text, $sce) {
+	var result = XBBCODE.process({
+		text : text,
+		removeMisalignedTags : false,
+		addInLineBreaks : false
+	});
+	return $sce.trustAsHtml(result.html);
+}

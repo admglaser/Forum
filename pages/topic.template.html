@@ -16,15 +16,14 @@
 
 	<div class="container">
 		<!-- posts -->
-		<div ng-repeat="post in data.posts" class="panel-group">
+		<div ng-repeat="post in data.posts" id="post{{post}}" class="panel-group">
 
 			<div class="panel panel-default">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="container">
 							<div class="pull-left small">
-
-								<h4><a href="">{{post.username}}</a></h4>
+								<h4><a href="{{post.userLink}}">{{post.username}}</a></h4>
 								<small>{{post.time}}</small>
 							</div>
 							<div class="pull-right small">
@@ -69,7 +68,7 @@
 		</div>
 		<!-- end of posts -->
 
-		<div style="margin-top: 25px;">
+		<div id="test" style="margin-top: 25px;">
 			<!-- new reply button -->
 			<div class="btn-group pull-right">
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm">
@@ -91,21 +90,24 @@
 	</div>
 </div>
 
-<div id="newPostModalForm" class="modal fade" role="dialog">
+<div id="newPostModalForm" class="modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="form-signin-heading">New reply</h2>
+				<h2>New reply</h2>
 			</div>
 			<div class="modal-body">
 				<form id="newPostForm">
 					<div class="form-group">
 						<label for="bbcodeEditor" class="control-label">Text</label>
-						<textarea name="bbcodeEditor" id="bbcodeEditor" class="form-control"></textarea>
+						<textarea rows="25" name="bbcodeEditor" id="bbcodeEditor" class="form-control"></textarea>
+						<div id="previewDiv" class="panel panel-default">
+							<div class="panel-heading">Preview</div>
+							<div id="previewHtml" class="panel-body"></div>
+						</div>
 					</div>
-					<button type="submit" class="btn btn-primary btn-block">
-						Post
-					</button>
+					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
+					<button type="submit" class="btn btn-primary pull-right">Post</button>
 				</form>
 			</div>
 		</div>
@@ -114,26 +116,60 @@
 
 <script>
 	$(document).ready(function() {
-		$("#bbcodeEditor").sceditor({
-			plugins : 'bbcode',
-			style : "lib/sceditor/minified/jquery.sceditor.default.min.css",
-			width: "100%",
-			height: "100%",
-			resizeEnabled: false
-		});
-		$(".sceditor-container").css("width", "100%");
-		$(".sceditor-container").css("height", "500px");
-		$("iframe").css("width", "99%");
+		$("#previewDiv").hide();
 	});
-	$('#newPostModalForm').on('shown.bs.modal', function() {
-		setIframe();
-   	});
-	function setIframe() {
-		var containerHeight = $(".sceditor-container").height();
-		var toolbarHeight = $(".sceditor-toolbar").height();
-		console.log(containerHeight);
-		console.log(toolbarHeight);
-		$("iframe").css("height", (containerHeight-toolbarHeight-20) + "px");
-		$("iframe html").css("height", (containerHeight-toolbarHeight-20) + "px");
-	};
+	
+	function togglePreview() {
+		var text = $("#previewButton").html();
+		if (text == "Preview") {
+			preview();
+		} else {
+			edit();
+		}
+	}
+	
+	function preview() {
+		$("#previewButton").html("Edit");
+		$("#bbcodeEditor").hide();
+		$("#previewDiv").show();
+	
+		var text = $("#bbcodeEditor").val();
+		text = text.replace(/\n/g, "[br][/br]");
+		var result = XBBCODE.process({
+			text : text,
+			removeMisalignedTags : false,
+			addInLineBreaks : false
+		});
+		$("#previewHtml").html(result.html);
+	}
+	
+	function edit() {
+		$("#previewButton").html("Preview");
+		$("#previewDiv").hide();
+		$("#bbcodeEditor").show();
+	}
+
+// 	$(document).ready(function() {
+// 		$("#bbcodeEditor").sceditor({
+// 			plugins : 'bbcode',
+// 			style : "lib/sceditor/minified/jquery.sceditor.default.min.css",
+// 			width: "100%",
+// 			height: "100%",
+// 			resizeEnabled: false
+// 		});
+// 		$(".sceditor-container").css("width", "100%");
+// 		$(".sceditor-container").css("height", "500px");
+// 		$("iframe").css("width", "99%");
+// 	});
+// 	$('#newPostModalForm').on('shown.bs.modal', function() {
+// 		setIframe();
+//    	});
+// 	function setIframe() {
+// 		var containerHeight = $(".sceditor-container").height();
+// 		var toolbarHeight = $(".sceditor-toolbar").height();
+// 		console.log(containerHeight);
+// 		console.log(toolbarHeight);
+// 		$("iframe").css("height", (containerHeight-toolbarHeight-20) + "px");
+// 		$("iframe html").css("height", (containerHeight-toolbarHeight-20) + "px");
+// 	};
 </script>

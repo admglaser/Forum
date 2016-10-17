@@ -1,16 +1,17 @@
-<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+<div class="well"
+	style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
 
 	<!-- topics -->
 	<table class="table forum table-striped">
 		<thead>
 			<tr>
 				<th class="cell-stat"></th>
-				<th><h3> {{data.title}} </h3></th>
+				<th><h3>{{data.title}}</h3></th>
 				<th class="cell-stat hidden-xs"></th>
 				<th class="cell-stat-2x">Last Post
-				<button type="button" class="btn btn-xs btn-primary pull-right">
-					Follow
-				</button></th>
+					<button type="button" class="btn btn-xs btn-primary pull-right">
+						Follow</button>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,25 +26,25 @@
 						<i class="fa fa-circle-o fa-2x text-primary"></i>
 					</div>
 				</td>
-				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a>
-				<br>
-				<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a> <i class="fa fa-clock-o"></i> {{topic.startDate}} </small></td>
-				<td class="hidden-xs"><small> {{topic.postCount}} replies
-					<br>
-					{{topic.viewCount}} views </small></td>
+				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a> <br>
+					<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a>
+						<i class="fa fa-clock-o"></i> {{topic.startDate}}
+				</small></td>
+				<td class="hidden-xs"><small> {{topic.postCount}}
+						replies <br> {{topic.viewCount}} views
+				</small></td>
 				<td>
-				<div class="row">
-					<div class="col-xs-3">
-						<img class="user-icon img-thumbnail" src="images/user.png">
+					<div class="row">
+						<div class="col-xs-3">
+							<img class="user-icon img-thumbnail" src="images/user.png">
+						</div>
+						<div class="col-xs-9">
+							<small> By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
+								<br> <a href="{{topic.postLink}}">{{topic.lastDate}}</a>
+							</small>
+						</div>
 					</div>
-					<div class="col-xs-9">
-						<small>
-							By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
-							<br>
-							<a href="{{topic.postLink}}">{{topic.lastDate}}</a>
-						</small>
-					</div>
-				</div></td>
+				</td>
 			</tr>
 			<!-- end of topic -->
 
@@ -52,47 +53,50 @@
 	<!-- end of topics -->
 
 	<div style="margin-top: 25px;">
-		
+
 		<!-- new topic button -->
 		<div class="btn-group pull-right">
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#startNewTopicModalForm">
-				Start New Topic
-			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#startNewTopicModalForm">Start New Topic</button>
 		</div>
 		<!-- end of new topic button -->
 
 		<!-- pagination -->
 		<div class="btn-group ">
 			<ul class="pagination" style="margin: 0;">
-				<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
-					<a href="{{page.link}}">{{page.text}}</a>
+				<li ng-repeat="page in data.pages"
+					ng-class="{active: page.active==true}"><a href="{{page.link}}">{{page.text}}</a>
 				</li>
 			</ul>
 		</div>
 		<!-- end of pagination -->
-		
+
 	</div>
 </div>
 
-<div id="startNewTopicModalForm" class="modal fade" role="dialog">
+<div id="startNewTopicModalForm" class="modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2 class="form-signin-heading">Start new topic</h2>
+				<h2>Start new topic</h2>
 			</div>
 			<div class="modal-body">
 				<form id="startNewTopicForm">
 					<div class="form-group">
 						<label for="title" class="control-label">Title</label>
-						<input type="text" class="form-control" id="title" name="title" value="" required="true" title="Please enter the topic title">
+						<input type="text" class="form-control" id="title" name="title" value="" title="Please enter the topic title">
 					</div>
 					<div class="form-group">
 						<label for="bbcodeEditor" class="control-label">Text</label>
-						<textarea name="bbcodeEditor" id="bbcodeEditor" class="form-control"></textarea>
+						<textarea rows="25" name="bbcodeEditor" id="bbcodeEditor"
+							class="form-control"></textarea>
+						<div id="previewDiv" class="panel panel-default">
+							<div class="panel-heading">Preview</div>
+							<div id="previewHtml" class="panel-body"></div>
+						</div>
 					</div>
-					<button type="submit" class="btn btn-primary btn-block">
-						Post
-					</button>
+					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
+					<button type="submit" class="btn btn-primary pull-right">Post</button>
 				</form>
 			</div>
 		</div>
@@ -101,26 +105,60 @@
 
 <script>
 	$(document).ready(function() {
-		$("#bbcodeEditor").sceditor({
-			plugins : 'bbcode',
-			style : "lib/sceditor/minified/jquery.sceditor.default.min.css",
-			width: "100%",
-			height: "100%",
-			resizeEnabled: false
-		});
-		$(".sceditor-container").css("width", "100%");
-		$(".sceditor-container").css("height", "500px");
-		$("iframe").css("width", "99%");
+		$("#previewDiv").hide();
 	});
-	$('#startNewTopicModalForm').on('shown.bs.modal', function() {
-		setIframe();
-   	});
-	function setIframe() {
-		var containerHeight = $(".sceditor-container").height();
-		var toolbarHeight = $(".sceditor-toolbar").height();
-		console.log(containerHeight);
-		console.log(toolbarHeight);
-		$("iframe").css("height", (containerHeight-toolbarHeight-20) + "px");
-		$("iframe html").css("height", (containerHeight-toolbarHeight-20) + "px");
-	};
+	
+	function togglePreview() {
+		var text = $("#previewButton").html();
+		if (text == "Preview") {
+			preview();
+		} else {
+			edit();
+		}
+	}
+
+	function preview() {
+		$("#previewButton").html("Edit");
+		$("#bbcodeEditor").hide();
+		$("#previewDiv").show();
+
+		var text = $("#bbcodeEditor").val();
+		text = text.replace(/\n/g, "[br][/br]");
+		var result = XBBCODE.process({
+			text : text,
+			removeMisalignedTags : false,
+			addInLineBreaks : false
+		});
+		$("#previewHtml").html(result.html);
+	}
+
+	function edit() {
+		$("#previewButton").html("Preview");
+		$("#previewDiv").hide();
+		$("#bbcodeEditor").show();
+	}
+
+	// 	$(document).ready(function() {
+	// 		$("#bbcodeEditor").sceditor({
+	// 			plugins : 'bbcode',
+	// 			style : "lib/sceditor/minified/jquery.sceditor.default.min.css",
+	// 			width: "100%",
+	// 			height: "100%",
+	// 			resizeEnabled: false
+	// 		});
+	// 		$(".sceditor-container").css("width", "100%");
+	// 		$(".sceditor-container").css("height", "500px");
+	// 		$("iframe").css("width", "99%");
+	// 	});
+	// 	$('#startNewTopicModalForm').on('shown.bs.modal', function() {
+	// 		setIframe();
+	//    	});
+	// 	function setIframe() {
+	// 		var containerHeight = $(".sceditor-container").height();
+	// 		var toolbarHeight = $(".sceditor-toolbar").height();
+	// 		console.log(containerHeight);
+	// 		console.log(toolbarHeight);
+	// 		$("iframe").css("height", (containerHeight-toolbarHeight-20) + "px");
+	// 		$("iframe html").css("height", (containerHeight-toolbarHeight-20) + "px");
+	// 	};
 </script>
