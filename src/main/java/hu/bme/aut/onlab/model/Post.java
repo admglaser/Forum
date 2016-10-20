@@ -17,6 +17,8 @@ public class Post {
     private Collection<Like> likesById;
     private Topic topicByTopicId;
     private Member memberByMemberId;
+    private int topicId;
+    private int memberId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -114,10 +116,8 @@ public class Post {
         this.memberByMemberId = memberByMemberId;
     }
 
-    private int topicId;
-
     @Basic
-    @Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
     public int getTopicId() {
         return topicId;
     }
@@ -126,10 +126,8 @@ public class Post {
         this.topicId = topicId;
     }
 
-    private int memberId;
-
     @Basic
-    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }

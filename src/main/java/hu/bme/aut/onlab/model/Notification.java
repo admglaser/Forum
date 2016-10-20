@@ -79,7 +79,7 @@ public class Notification {
     }
 
     @Basic
-    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }
@@ -89,7 +89,7 @@ public class Notification {
     }
 
     @Basic
-    @Column(name = "notification_event_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "notification_event_id", nullable = false, insertable = false, updatable = false)
     public int getNotificationEventId() {
         return notificationEventId;
     }

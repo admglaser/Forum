@@ -92,7 +92,7 @@ public class Message {
     }
 
     @Basic
-    @Column(name = "conversation_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "conversation_id", nullable = false, insertable = false, updatable = false)
     public int getConversationId() {
         return conversationId;
     }

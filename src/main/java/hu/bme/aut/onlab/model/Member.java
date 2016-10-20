@@ -239,7 +239,7 @@ public class Member {
     }
 
     @Basic
-    @Column(name = "member_group_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_group_id", nullable = false, insertable = false, updatable = false)
     public int getMemberGroupId() {
         return memberGroupId;
     }

@@ -66,7 +66,7 @@ public class SubcategorySubscription {
     }
 
     @Basic
-    @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "subcategory_id", nullable = false, insertable = false, updatable = false)
     public int getSubcategoryId() {
         return subcategoryId;
     }
@@ -76,7 +76,7 @@ public class SubcategorySubscription {
     }
 
     @Basic
-    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }

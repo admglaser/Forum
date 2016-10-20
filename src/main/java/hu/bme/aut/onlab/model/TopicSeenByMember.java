@@ -13,6 +13,11 @@ import java.sql.Timestamp;
 @javax.persistence.Table(name = "topic_seen_by_member", schema = "", catalog = "forum")
 public class TopicSeenByMember {
     private int id;
+    private Timestamp seenTime;
+    private int topicId;
+    private int memberId;
+    private Member memberByMemberId;
+    private Topic topicByTopicId;
 
     @Id
     @javax.persistence.Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -24,8 +29,6 @@ public class TopicSeenByMember {
         this.id = id;
     }
 
-    private Timestamp seenTime;
-
     @Basic
     @javax.persistence.Column(name = "seen_time", nullable = false, insertable = true, updatable = true)
     public Timestamp getSeenTime() {
@@ -36,10 +39,8 @@ public class TopicSeenByMember {
         this.seenTime = seenTime;
     }
 
-    private int topicId;
-
     @Basic
-    @javax.persistence.Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
+    @javax.persistence.Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
     public int getTopicId() {
         return topicId;
     }
@@ -48,10 +49,8 @@ public class TopicSeenByMember {
         this.topicId = topicId;
     }
 
-    private int memberId;
-
     @Basic
-    @javax.persistence.Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @javax.persistence.Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }
@@ -84,8 +83,6 @@ public class TopicSeenByMember {
         return result;
     }
 
-    private Member memberByMemberId;
-
     @ManyToOne
     @javax.persistence.JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     public Member getMemberByMemberId() {
@@ -95,8 +92,6 @@ public class TopicSeenByMember {
     public void setMemberByMemberId(Member memberByMemberId) {
         this.memberByMemberId = memberByMemberId;
     }
-
-    private Topic topicByTopicId;
 
     @ManyToOne
     @javax.persistence.JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)

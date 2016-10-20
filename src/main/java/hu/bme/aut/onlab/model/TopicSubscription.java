@@ -66,7 +66,7 @@ public class TopicSubscription {
     }
 
     @Basic
-    @Column(name = "topic_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
     public int getTopicId() {
         return topicId;
     }
@@ -76,7 +76,7 @@ public class TopicSubscription {
     }
 
     @Basic
-    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }

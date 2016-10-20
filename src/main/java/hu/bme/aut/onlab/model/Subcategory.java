@@ -16,6 +16,7 @@ public class Subcategory {
     private Category categoryByCategoryId;
     private Collection<SubcategorySubscription> subcategorySubscriptionsById;
     private Collection<Topic> topicsById;
+    private int categoryId;
 
     @Id
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
@@ -107,10 +108,8 @@ public class Subcategory {
         this.topicsById = topicsById;
     }
 
-    private int categoryId;
-
     @Basic
-    @Column(name = "category_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "category_id", nullable = false, insertable = false, updatable = false)
     public int getCategoryId() {
         return categoryId;
     }

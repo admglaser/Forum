@@ -66,7 +66,7 @@ public class Like {
     }
 
     @Basic
-    @Column(name = "member_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
     public int getMemberId() {
         return memberId;
     }
@@ -76,7 +76,7 @@ public class Like {
     }
 
     @Basic
-    @Column(name = "post_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
     public int getPostId() {
         return postId;
     }

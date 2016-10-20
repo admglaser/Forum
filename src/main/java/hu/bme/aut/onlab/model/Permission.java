@@ -103,7 +103,7 @@ public class Permission {
     }
 
     @Basic
-    @Column(name = "subcategory_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "subcategory_id", nullable = false, insertable = false, updatable = false)
     public int getSubcategoryId() {
         return subcategoryId;
     }
