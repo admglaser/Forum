@@ -42,8 +42,8 @@ public class HomeRs  {
                 JSONObject subcategoryJson = new JSONObject();
 
                 if (! subcategory.getTopicsById().isEmpty() ) {
-                    Topic lastTopic = topicBean.getTopicWithLastPostPerSubcategory(subcategory.getId());
-                    Post lastPost = postBean.getLastPostPerTopic(lastTopic.getId());
+                    Topic lastTopic = topicBean.getTopicWithLastPostFromSubcategory(subcategory.getId());
+                    Post lastPost = postBean.getLastPostFromTopic(lastTopic.getId());
                     Member memberOfLastPost = lastPost.getMemberByMemberId();
 
                     subcategoryJson.put("postCount", lastTopic.getPostsById().size());
