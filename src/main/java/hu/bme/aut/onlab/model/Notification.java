@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Table(name = "notification")
 public class Notification {
     private int id;
+    private int notificationNumber;
     private byte seen;
     private Member memberByMemberId;
     private NotificationEvent notificationEventByNotificationEventId;
@@ -23,6 +24,16 @@ public class Notification {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "notification_number", nullable = false, insertable = true, updatable = true)
+    public int getNotificationNumber() {
+        return notificationNumber;
+    }
+
+    public void setNotificationNumber(int notificationNumber) {
+        this.notificationNumber = notificationNumber;
     }
 
     @Basic

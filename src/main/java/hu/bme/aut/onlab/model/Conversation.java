@@ -11,6 +11,7 @@ import java.util.Set;
 @Table(name = "conversation")
 public class Conversation {
     private int id;
+    private int conversationNumber;
     private String title;
     private int messageCount;
     private Collection<Message> messagesById;
@@ -25,6 +26,16 @@ public class Conversation {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "conversation_number", nullable = false, insertable = true, updatable = true)
+    public int getConversationNumber() {
+        return conversationNumber;
+    }
+
+    public void setConversationNumber(int conversationNumber) {
+        this.conversationNumber = conversationNumber;
     }
 
     @Basic
