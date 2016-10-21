@@ -3,14 +3,15 @@ package hu.bme.aut.onlab.util;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * Created by N. Vilagos.
  */
 public class Formatter {
 
-	private static DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a");
-	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+	private static DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a", Locale.ENGLISH);
+	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
 	private static final String TODAY = "Today, ";
 	private static final String YESTERDAY = "Yesterday, ";
 	
