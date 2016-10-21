@@ -34,7 +34,7 @@ public class TopicBean extends BaseBean<Topic> {
         return entityManager;
     }
 
-    public Topic getTopicWithLastPostPerSubcategory(long subcategoryId) {
+    public Topic getTopicWithLastPostFromSubcategory(long subcategoryId) {
         CriteriaHelper<Topic> topicCriteriaHelper = createQueryHelper();
         Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
         CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();

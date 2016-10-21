@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
 
 /**
  * Created by N. Vilagos.
@@ -32,7 +31,7 @@ public class PostBean extends BaseBean<Post> {
         return entityManager;
     }
 
-    public Post getLastPostPerTopic(long topicId) {
+    public Post getLastPostFromTopic(long topicId) {
         CriteriaHelper<Post> postCriteriaHelper = createQueryHelper();
         Root<Post> root = postCriteriaHelper.getRootEntity();
         CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
@@ -41,16 +40,5 @@ public class PostBean extends BaseBean<Post> {
         criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.topicId), topicId));
         criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Post_.time)));
         return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
-    }
-
-    public List<Post> getAllLastPostPerTopic(long topicId) {
-        CriteriaHelper<Post> postCriteriaHelper = createQueryHelper();
-        Root<Post> root = postCriteriaHelper.getRootEntity();
-        CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
-        CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
-
-        criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.topicId), topicId));
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Post_.time)));
-        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }
