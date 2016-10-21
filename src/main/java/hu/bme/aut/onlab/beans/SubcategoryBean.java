@@ -2,16 +2,16 @@ package hu.bme.aut.onlab.beans;
 
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
 import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.Subcategory_;
+import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.model.Category_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ public class SubcategoryBean extends BaseBean<Subcategory> {
 
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public SubcategoryBean() {
         super(Subcategory.class);

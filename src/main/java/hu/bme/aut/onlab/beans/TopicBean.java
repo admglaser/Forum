@@ -23,7 +23,7 @@ import javax.persistence.criteria.Root;
 public class TopicBean extends BaseBean<Topic> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public TopicBean() {
         super(Topic.class);
@@ -34,7 +34,7 @@ public class TopicBean extends BaseBean<Topic> {
         return entityManager;
     }
 
-    public Topic getTopicWithLastPostPerSubcategory(long subcategoryId) {
+    public Topic getTopicWithLastPostFromSubcategory(long subcategoryId) {
         CriteriaHelper<Topic> topicCriteriaHelper = createQueryHelper();
         Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
         CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();

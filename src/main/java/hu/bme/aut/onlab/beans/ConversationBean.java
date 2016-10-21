@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class ConversationBean extends BaseBean<Conversation> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public ConversationBean() {
         super(Conversation.class);

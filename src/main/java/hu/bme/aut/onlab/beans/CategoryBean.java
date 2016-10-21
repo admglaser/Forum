@@ -24,7 +24,7 @@ import java.util.List;
 public class CategoryBean extends BaseBean<Category> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public CategoryBean() {
         super(Category.class);

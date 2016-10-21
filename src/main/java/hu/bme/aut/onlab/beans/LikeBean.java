@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class LikeBean extends BaseBean<Like> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public LikeBean() {
         super(Like.class);
