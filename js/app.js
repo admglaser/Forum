@@ -42,9 +42,9 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/conversations.template.html',
 			controller: 'conversationsController'
 		})
-		.when('/conversation/:conversationId', {
-			templateUrl : 'pages/conversation.template.html',
-			controller: 'conversationController'
+		.when('/messages/:conversationId', {
+			templateUrl : 'pages/messages.template.html',
+			controller: 'messagesController'
 		})
 		.when('/notifications', {
 			templateUrl : 'pages/notifications.template.html',
@@ -159,8 +159,8 @@ app.controller('conversationsController', function($scope, $http, $sce) {
 	);
 });
 
-app.controller('conversationController', function($scope, $http, $sce) {
-	$http.get('conversation.json')
+app.controller('messagesController', function($scope, $http, $sce) {
+	$http.get('messages.json')
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.messages.length; i++) {
