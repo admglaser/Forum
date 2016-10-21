@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class MemberGroupBean extends BaseBean<MemberGroup> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public MemberGroupBean() {
         super(MemberGroup.class);

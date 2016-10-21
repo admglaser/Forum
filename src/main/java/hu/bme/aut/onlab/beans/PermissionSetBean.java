@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class PermissionSetBean extends BaseBean<PermissionSet> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public PermissionSetBean() {
         super(PermissionSet.class);

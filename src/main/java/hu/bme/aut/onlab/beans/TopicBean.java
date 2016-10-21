@@ -23,7 +23,7 @@ import javax.persistence.criteria.Root;
 public class TopicBean extends BaseBean<Topic> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public TopicBean() {
         super(Topic.class);

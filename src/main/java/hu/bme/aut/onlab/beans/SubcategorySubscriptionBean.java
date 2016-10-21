@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class SubcategorySubscriptionBean extends BaseBean<SubcategorySubscription> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public SubcategorySubscriptionBean() {
         super(SubcategorySubscription.class);

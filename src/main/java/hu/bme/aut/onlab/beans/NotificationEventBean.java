@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 public class NotificationEventBean extends BaseBean<NotificationEvent> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public NotificationEventBean() {
         super(NotificationEvent.class);

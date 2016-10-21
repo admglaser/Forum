@@ -20,7 +20,7 @@ import javax.persistence.criteria.Root;
 public class PostBean extends BaseBean<Post> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public PostBean() {
         super(Post.class);
