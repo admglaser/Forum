@@ -38,6 +38,22 @@ app.config(function($routeProvider) {
 			templateUrl : 'pages/user.likes.template.html',
 			controller: 'userLikesController'
 		})
+		.when('/conversations', {
+			templateUrl : 'pages/conversations.template.html',
+			controller: 'conversationsController'
+		})
+		.when('/conversation/:conversationId', {
+			templateUrl : 'pages/conversation.template.html',
+			controller: 'conversationController'
+		})
+		.when('/notifications', {
+			templateUrl : 'pages/notifications.template.html',
+			controller: 'notificationsController'
+		})
+		.when('/notifications/:notificationId', {
+			templateUrl : 'pages/notifications.template.html',
+			controller: 'notificationsController'
+		})
 		/* .otherwise({
 			redirectTo: '/'
 		}) */
@@ -73,7 +89,6 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce, $l
 			}
 		}
 	);
-	$location.hash("test");
 });
 
 app.controller('navbarController', function($scope, $http) {
@@ -135,6 +150,35 @@ app.controller('userLikesController', function($scope, $http, $sce) {
 		}
 	);
 });
+
+app.controller('conversationsController', function($scope, $http, $sce) {
+	$http.get('conversations.json')
+		.then(function(res) {
+			$scope.data = res.data;
+		}
+	);
+});
+
+app.controller('conversationController', function($scope, $http, $sce) {
+	$http.get('conversation.json')
+		.then(function(res) {
+			$scope.data = res.data;
+			for (var i = 0; i < $scope.data.messages.length; i++) {
+				var message = $scope.data.messages[i];
+				message.text = convertBBCode(message.text, $sce);
+			}
+		}
+	);
+});
+
+app.controller('notificationsController', function($scope, $http, $sce) {
+	$http.get('notifications.json')
+		.then(function(res) {
+			$scope.data = res.data;
+		}
+	);
+});
+
 
 function convertBBCode(text, $sce) {
 	var result = XBBCODE.process({

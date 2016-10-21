@@ -5,62 +5,31 @@
 	<table class="table forum table-striped">
 		<thead>
 			<tr>
-				<th class="cell-stat"></th>
-				<th><h3>{{data.title}}</h3></th>
-				<th class="cell-stat hidden-xs"></th>
-				<th class="cell-stat-2x">Last Post
-					<button type="button" class="btn btn-xs btn-primary pull-right">
-						Follow</button>
-				</th>
+				<th class=""><h3>My Notifications</h3></th>
+				<th class="cell-stat-2x"></th>
 			</tr>
 		</thead>
 		<tbody>
-
-			<!-- topic -->
-			<tr ng-repeat="topic in data.topics">
-				<td class="text-center">
-					<div ng-if="topic.unread">
-						<i class="fa fa-circle fa-2x text-primary"></i>
-					</div>
-					<div ng-if="!topic.unread">
-						<i class="fa fa-circle-o fa-2x text-primary"></i>
-					</div>
-				</td>
-				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a> <br>
-					<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a>
-						<i class="fa fa-clock-o"></i> {{topic.startDate}}
-				</small></td>
-				<td class="hidden-xs"><small> {{topic.postCount}}
-						replies <br> {{topic.viewCount}} views
-				</small></td>
+			<!-- notification -->
+			<tr ng-repeat="notification in data.notifications">
 				<td>
-					<div class="row">
-						<div class="col-xs-3">
-							<img class="user-icon img-thumbnail" src="images/user.png">
-						</div>
-						<div class="col-xs-9">
-							<small> By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
-								<br> <a href="{{topic.postLink}}">{{topic.lastDate}}</a>
-							</small>
-						</div>
-					</div>
+					<a href="{{notification.link}}">{{notification.type}}</a> 
+					<br>
+					<small>
+					 	{{notification.text}} 
+					</small>
+				</td>
+				<td>
+					{{notification.time}}
 				</td>
 			</tr>
-			<!-- end of topic -->
+			<!-- end of notification -->
 
 		</tbody>
 	</table>
 	<!-- end of topics -->
 
 	<div style="margin-top: 25px;">
-
-		<!-- new topic button -->
-		<div class="btn-group pull-right">
-			<button type="button" class="btn btn-primary" data-toggle="modal"
-				data-target="#startNewTopicModalForm">Start New Topic</button>
-		</div>
-		<!-- end of new topic button -->
-
 		<!-- pagination -->
 		<div class="btn-group ">
 			<ul class="pagination" style="margin: 0;">
@@ -70,21 +39,24 @@
 			</ul>
 		</div>
 		<!-- end of pagination -->
-
 	</div>
 </div>
 
-<div id="startNewTopicModalForm" class="modal" role="dialog">
+<div id="newMessageModalForm" class="modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h2>Start New Topic</h2>
+				<h2>Send New Message</h2>
 			</div>
 			<div class="modal-body">
 				<form id="startNewTopicForm">
 					<div class="form-group">
-						<label for="title" class="control-label">Title</label>
-						<input type="text" class="form-control" id="title" name="title" value="" title="Please enter the topic title">
+						<label for="subject" class="control-label">Subject</label>
+						<input type="text" class="form-control" id="subject" name="subject" value="" title="Please enter the message subject">
+					</div>
+					<div class="form-group">
+						<label for="recipients" class="control-label">Recipients</label>
+						<input type="text" class="form-control" id="recipients" name="recipients" value="" title="Please enter the recipients seperated with ';'>
 					</div>
 					<div class="form-group">
 						<label for="bbcodeEditor" class="control-label">Text</label>
@@ -96,7 +68,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Post</button>
+					<button type="submit" class="btn btn-primary pull-right">Send</button>
 				</form>
 			</div>
 		</div>

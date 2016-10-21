@@ -3,68 +3,40 @@
 	<div class="container">
 		<div class="pull-left">
 			<h3>{{data.title}}</h3>
-			<h6>Started by {{data.startedByText}}</h6>
-		</div>
-		<div class="pull-right">
-
-			<h3>
-			<button type="button" class="btn btn-primary">
-				Follow
-			</button></h3>
+			<h6>Started by {{data.starter}}, {{data.startDate}}</h6>
 		</div>
 	</div>
 
 	<div class="container">
 		<!-- posts -->
-		<div ng-repeat="post in data.posts" id="post{{post}}" class="panel-group">
+		<div ng-repeat="message in data.messages" id="messageId" class="panel-group">
 
 			<div class="panel panel-default">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="container">
 							<div class="pull-left small">
-								<h4><a href="{{post.userLink}}">{{post.username}}</a></h4>
-								<small>{{post.time}}</small>
+								<h4><a href="{{message.userLink}}">{{message.userName}}</a></h4>
+								<small>{{message.time}}</small>
 							</div>
 							<div class="pull-right small">
-								<h5><a href="{{post.postLink}}">{{post.postNumber}}</a></h5>
+								<h5><a href="{{message.messageLink}}">{{message.messageNumber}}</a></h5>
 							</div>
 						</div>
 					</div>
 					<div class="panel-body">
 						<div class="col-xs-2 text-center">
-							<img class="img-thumbnail" src="images/user.png"></img>
-
-							<h5>{{post.memberGroup}}</h5>
-							<h6>{{post.postCount}} posts</h6>
+							<img class="img-thumbnail" src="{{message.userImageLink}}"></img>
+							<h5>{{message.memberGroup}}</h5>
+							<h6>{{message.posts}} posts</h6>
 						</div>
 						<div class="col-xs-10 text-center">
 							<div class="container">
-								<div class="post-text" ng-bind-html="post.text"></div>
+								<div class="post-text pull-left" ng-bind-html="message.text"></div>
 							</div>
 						</div>
 					</div>
-					<div class="panel-footer">
-						<div class="container">
-							<div class="pull-left">
-								<button type="button" class="btn btn-sm btn-primary">
-									Edit
-								</button>
-								<button type="button" class="btn btn-sm btn-primary">
-									Delete
-								</button>
-								
-								<button type="button" class="btn btn-sm btn-primary">
-									Quote
-								</button>
-								<button type="button" class="btn btn-sm btn-primary">
-									Like
-								</button>
-							</div>
-							<div class="pull-right">
-								<a>15 likes</a>
-							</div>
-						</div>
+					<div class="panel-footer user-panel-footer">
 					</div>
 				</div>
 			</div>
@@ -75,7 +47,7 @@
 		<div id="test" style="margin-top: 25px;">
 			<!-- new reply button -->
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newReplyModalForm">
 					New Reply
 				</button>
 			</div>
@@ -94,7 +66,7 @@
 	</div>
 </div>
 
-<div id="newPostModalForm" class="modal" role="dialog">
+<div id="newReplyModalForm" class="modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -111,7 +83,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Post</button>
+					<button type="submit" class="btn btn-primary pull-right">Send</button>
 				</form>
 			</div>
 		</div>

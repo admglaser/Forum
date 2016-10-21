@@ -24,6 +24,7 @@ html, body {
 	max-width: 1200px;
 	padding: 0 15px;
 }
+
 .container .text-muted {
 	margin: 20px 0;
 }
@@ -35,7 +36,7 @@ html, body {
 	max-height: 40px;
 }
 
-.forum.table > tbody > tr > td {
+.forum.table>tbody>tr>td {
 	vertical-align: middle;
 }
 
@@ -60,59 +61,123 @@ html, body {
 .navbar-top-links {
 	margin-right: 0;
 }
+
 .navbar-top-links li {
 	display: inline-block;
 }
+
 .navbar-top-links li:last-child {
 	margin-right: 15px;
 }
+
 .navbar-top-links li a {
 	padding: 15px;
 	min-height: 50px;
 }
+
 .navbar-top-links .dropdown-menu li {
 	display: block;
 }
+
 .navbar-top-links .dropdown-menu li:last-child {
 	margin-right: 0;
 }
+
 .navbar-top-links .dropdown-menu li a {
 	padding: 3px 20px;
 	min-height: 0;
 }
+
 .navbar-top-links .dropdown-menu li a div {
 	white-space: normal;
 }
-.navbar-top-links .dropdown-messages, .navbar-top-links .dropdown-tasks, .navbar-top-links .dropdown-alerts {
+
+.navbar-top-links .dropdown-messages, .navbar-top-links .dropdown-tasks,
+	.navbar-top-links .dropdown-alerts {
 	width: 310px;
 	min-width: 0;
 }
+
 .navbar-top-links .dropdown-messages {
 	margin-left: 5px;
 }
+
 .navbar-top-links .dropdown-tasks {
 	margin-left: -59px;
 }
+
 .navbar-top-links .dropdown-alerts {
 	margin-left: -123px;
 }
+
 .navbar-top-links .dropdown-user {
 	right: 0;
 	left: auto;
 }
 
-#startNewTopicModalForm .modal-dialog {
-	width: 80%;
-	min-width: 80%;
+#startNewTopicModalForm
+ 
+.modal-dialog
+,
+#newPostModalForm
+ 
+.modal-dialog
+,
+#newMessageModalForm
+ 
+.modal-dialog
+,
+#newReplyModalForm
+ 
+.modal-dialog
+,
+{
+width
+:
+ 
+80%;
+min-width
+:
+ 
+80%;
+}
+{
+width
+:
+ 
+80%;
+min-width
+:
+ 
+80%;
 }
 
-#newPostModalForm .modal-dialog {
-	width: 80%;
-	min-width: 80%;
+.post-text {
+	text-align: left;
 }
-
 .post-text img {
 	display: block;
 	max-width: 100%;
 	height: auto;
+}
+
+.user-panel-footer {
+	background-color: initial;
+}
+
+.textarea-bbcode {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box; /* For IE and modern versions of Chrome */
+	-moz-box-sizing: border-box; /* For Firefox                          */
+	-webkit-box-sizing: border-box;	/* For Safari                           */
+	
+	border: none;
+	overflow: auto;
+	outline: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	
+	resize: none;
 }
