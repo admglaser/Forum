@@ -3,12 +3,10 @@ package hu.bme.aut.onlab.rest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.naming.OperationNotSupportedException;
 import javax.persistence.Tuple;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by N. Vilagos.
@@ -98,6 +96,177 @@ public class BaseRs {
         }
         notListFields.removeAll(valuesToRemove);
         return notListFields;
+    }
+
+    private static <T> boolean isGivenValueContained(T[] searchableIterable, T valueToSearch) {
+        return isGivenValueContained(Arrays.asList(searchableIterable), valueToSearch);
+    }
+
+    private static <T> boolean isGivenValueContained(Iterable<T> searchableIterable, T valueToSearch) {
+        for (T fieldToCompare : searchableIterable) {
+            if (fieldToCompare.equals(valueToSearch)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static JSONArray addJSONValues(JSONArray data, List<String> toId, String key, List<Object> values, List<Boolean> writtenValues, EnumJSONConditions condition, Object conditionValue) {
+        if (toId != null) {
+            // Only search if value is given and search is necessary
+            if (writtenValues != null && values.size() == writtenValues.size()) {
+                for (Object subData : data) {
+                    if (subData instanceof JSONObject) {
+                        JSONObject castedSubData = (JSONObject) subData;
+                        if (toId.size() > 0) {
+                            // Search for the given field
+                            String fieldToSearch = toId.get(0);
+                            if ( isGivenValueContained(JSONObject.getNames(castedSubData), fieldToSearch) ) {
+                                Object fieldValue = castedSubData.get(fieldToSearch);
+                                // Search for further fields recursively
+                                if (fieldValue instanceof JSONArray) {
+                                    JSONArray castedArrayCandidate = (JSONArray) fieldValue;
+                                    List<String> newToId = new ArrayList<>(toId);
+                                    newToId.remove(0);
+                                    addJSONValues(castedArrayCandidate, newToId, key, values, writtenValues, condition, conditionValue);
+                                }
+                            }
+                        } else {
+                            if ( (condition != EnumJSONConditions.IS_FIELD_IN_JSON_OBJECT)
+                                  ||  isGivenValueContained(JSONObject.getNames(castedSubData), conditionValue)) {
+                                // Actual add will be performed
+                                int valueIndex = 0;
+                                boolean isFound = false;
+                                while ((!isFound) && valueIndex < writtenValues.size()) {
+                                    // Searches for the first false value in the writtenValues list.
+                                    //   Thus this means that that value with the same index has not been added to the given JSONArray yet.
+                                    Object valueToPut = values.get(valueIndex);
+                                    Boolean hasWritten = writtenValues.get(valueIndex);
+                                    if (hasWritten.equals(Boolean.FALSE)) {
+                                        // If the false value has been found:
+                                        //    1. Change the value from false to true in the writtenValues list.
+                                        writtenValues.set(valueIndex, Boolean.TRUE);
+                                        //    2. Put the values to the appropriate JSONObject.
+                                        castedSubData.put(key, valueToPut);
+                                        //    3. Finish the while loop.
+                                        isFound = true;
+                                    }
+                                    valueIndex++;
+                                }
+                                if (!isFound) {
+                                    // Not enough values to put has been given.
+                                    throw new IndexOutOfBoundsException("Not enough values has been given to put. Size: " + values.size());
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("The following argument is illegal: " + "writtenValues" + ". It must not be null and the size of it must be the same as size of the following List: " + "values" + ".");
+            }
+        } else {
+            throw new IllegalArgumentException("The given ID list must not be null. Use empty List to add value to the root.");
+        }
+
+        return data;
+    }
+
+    private static List<Object> operationOnJSONFields(JSONArray data, List<String> fromId, EnumJSONFieldOperationType operationType) throws OperationNotSupportedException {
+        // Declarations
+        //   Only used upon EnumJSONFieldOperationType.GET
+        List<Object> result = new ArrayList<>();
+
+        if (operationType == EnumJSONFieldOperationType.COUNT) {
+            result.add(0);
+        }
+
+        if (fromId != null && fromId.size() > 0) {
+            String fieldToSearch = fromId.get(0);
+            // Only search if value is given and search is necessary
+            for (Object subData : data) {
+                if (subData instanceof JSONObject) {
+                    JSONObject castedSubData = (JSONObject) subData;
+                    // Search for the given field
+                    for (String fieldName : JSONObject.getNames(castedSubData)) {
+                        if (fieldName.equals(fieldToSearch)) {
+                            Object fieldValue = castedSubData.get(fieldName);
+                            if (fromId.size() > 1) {
+                                // Search for further fields recursively
+                                if (fieldValue instanceof JSONArray) {
+                                    JSONArray castedArrayCandidate = (JSONArray) fieldValue;
+                                    List<String> newToId = new ArrayList<>(fromId);
+                                    newToId.remove(0);
+                                    for (Object searchedValues : operationOnJSONFields(castedArrayCandidate, newToId, operationType)) {
+                                        result.add(searchedValues);
+                                    }
+                                }
+                            } else {
+                                if (operationType == EnumJSONFieldOperationType.GET) {
+                                    // Actual add will be performed
+                                    result.add(fieldValue);
+                                } else if (operationType == EnumJSONFieldOperationType.COUNT) {
+                                    // Actual counting will be performed
+                                    result.set(0, ((Integer) result.get(0)) + 1);
+                                } else if (operationType == EnumJSONFieldOperationType.DELETE) {
+                                    // Actual delete will be performed
+                                    castedSubData.remove(fieldToSearch);
+                                } else {
+                                    // No other operation is implemented
+                                    throw new OperationNotSupportedException("No such operation is supported: " + operationType);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("The given ID list must contain element(s).");
+        }
+
+        return result;
+    }
+
+    protected static JSONArray addJSONValues(JSONArray data, List<String> toId, String key, List<Object> values) {
+        return addJSONValues(data, toId, key, values, EnumJSONConditions.NONE, null);
+    }
+
+    protected static JSONArray addJSONValues(JSONArray data, List<String> toId, String key, List<Object> values, EnumJSONConditions condition, Object conditionValue) {
+        // Boolean: is written yet?
+        List<Boolean> writtenValues = new ArrayList<>();
+        for (Object object : values)
+        {
+            writtenValues.add(Boolean.FALSE);
+        }
+        return addJSONValues(data, toId, key, values, writtenValues, condition, conditionValue);
+    }
+
+    protected static List<Object> getJSONValues(JSONArray data, List<String> fromId) {
+        try {
+            return operationOnJSONFields(data, fromId, EnumJSONFieldOperationType.GET);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException("Could not execute the operation.", e);
+        }
+    }
+
+    protected static Integer countJSONField(JSONArray data, List<String> id) {
+        try {
+            List<Object> result = operationOnJSONFields(data, id, EnumJSONFieldOperationType.COUNT);
+            Integer count = 0;
+            for (Object level_count : result) {
+                count += (Integer) level_count;
+            }
+            return count;
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException("Could not execute the operation.", e);
+        }
+    }
+
+    protected static void deleteJSONFields(JSONArray data, List<String> id) {
+        try {
+            operationOnJSONFields(data, id, EnumJSONFieldOperationType.DELETE);
+        } catch (OperationNotSupportedException e) {
+            throw new RuntimeException("Could not execute the operation.", e);
+        }
     }
 
     /**
@@ -215,13 +384,6 @@ public class BaseRs {
     }
 
     protected static List<List<Object>> generateListOfObjects(List<Tuple> tupleList) {
-/*        List<List<Object>> result = new ArrayList<>();
-        int index = 0;
-        for (Tuple tuple : tupleList) {
-            result.add(index++,
-                    new ArrayList<Object>( tuple.getElements()) );
-        }
-        return result;*/
         List<List<Object>> result = new ArrayList<>();
         int index = 0;
         for (Tuple tuple : tupleList) {
@@ -254,5 +416,17 @@ public class BaseRs {
             result.add(index++, listOfFields);
         }
         return result;
+    }
+
+
+    private enum EnumJSONFieldOperationType {
+        GET,
+        COUNT,
+        DELETE;
+    }
+
+    public enum EnumJSONConditions {
+        NONE,
+        IS_FIELD_IN_JSON_OBJECT
     }
 }

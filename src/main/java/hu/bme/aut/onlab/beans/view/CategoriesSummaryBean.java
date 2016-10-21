@@ -39,15 +39,19 @@ public class CategoriesSummaryBean extends BaseBean<CategoriesSummary> {
         CriteriaQuery<Tuple> criteria = categoryCriteriaHelper.getCriteriaTupleQuery();
 
         criteria.multiselect(
-              rootEntity.get(CategoriesSummary_.categoryId)
-            , rootEntity.get(CategoriesSummary_.categoryTitle)
-            , rootEntity.get(CategoriesSummary_.subcategoryTitle)
-            , rootEntity.get(CategoriesSummary_.subcategoryDescription)
-            , rootEntity.get(CategoriesSummary_.topicCount)
-            , rootEntity.get(CategoriesSummary_.postCount)
-            , rootEntity.get(CategoriesSummary_.lastPostTopicTitle)
-            , rootEntity.get(CategoriesSummary_.lastPostMemberName)
-            , rootEntity.get(CategoriesSummary_.lastPostPostTime)
+                rootEntity.get(CategoriesSummary_.categoryId),
+                rootEntity.get(CategoriesSummary_.categoryTitle),
+                rootEntity.get(CategoriesSummary_.subcategoryId),
+                rootEntity.get(CategoriesSummary_.subcategoryTitle),
+                rootEntity.get(CategoriesSummary_.subcategoryDescription),
+                rootEntity.get(CategoriesSummary_.topicCount),
+                rootEntity.get(CategoriesSummary_.postCount),
+                rootEntity.get(CategoriesSummary_.lastPostTopicId),
+                rootEntity.get(CategoriesSummary_.lastPostTopicTitle),
+                rootEntity.get(CategoriesSummary_.lastPostPostId),
+                rootEntity.get(CategoriesSummary_.lastPostMemberId),
+                rootEntity.get(CategoriesSummary_.lastPostMemberName),
+                rootEntity.get(CategoriesSummary_.lastPostPostTime)
         );
 
         return executeTupleQuery(categoryCriteriaHelper);
