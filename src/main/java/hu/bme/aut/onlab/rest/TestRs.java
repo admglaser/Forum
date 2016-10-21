@@ -21,7 +21,7 @@ import java.util.*;
  * Created by N. Vilagos.
  */
 @Path("/test")
-public class TestRs extends BaseRs {
+public class TestRs {
 
 
     @EJB
@@ -80,58 +80,6 @@ public class TestRs extends BaseRs {
             jsonObject.put("topics", object.get(3));
             result.put(jsonObject);
         }
-
-        return result.toString();
-    }
-
-    @GET
-    @Path("/category_combined")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedCategory() {
-        List<Tuple> data = categoryBean.testJoinedFind();
-        List<List<Object>> dataAsFieldValues = generateListOfObjects(data);
-
-        List<Integer> subcategories = Arrays.asList(2, 3);
-        List<List<Object>> correctedData = formatResultList(dataAsFieldValues, 0, subcategories, true);
-
-        Map<Integer, List<String>> fields = new HashMap<>();
-        fields.put(0, Arrays.asList("title", "subcategories"));
-        fields.put(1, Arrays.asList("subcat_title", "subcat_desc"));
-        JSONArray result = generateJson(fields, correctedData);
-
-        return result.toString();
-    }
-
-    @GET
-    @Path("/modified_category_combined")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listModifiedRemoteCombinedCategory() {
-        List<Tuple> data = categoryBean.testJoinedFind();
-        List<List<Object>> dataAsFieldValues = generateListOfObjects(data);
-
-        List<Integer> subcategories = Arrays.asList(2, 3);
-        List<List<Object>> correctedData = formatResultList(dataAsFieldValues, 0, subcategories, true);
-
-        Map<Integer, List<String>> fields = new HashMap<>();
-        fields.put(0, Arrays.asList("title", "subcategories"));
-        fields.put(1, Arrays.asList("subcat_title", "subcat_desc"));
-        JSONArray result = generateJson(fields, correctedData);
-
-        // Get the titles of the subcategories
-        List<Object> subcategoryTitles = getJSONValues(result, Arrays.asList("subcategories", "subcat_title"));
-
-        // Add the given titles with new key ("cloned_title" in "subcategories")
-        addJSONValues(result, Arrays.asList("subcategories"), "cloned_title", subcategoryTitles);
-
-        // Delete the original key + value pairs (key: "title" in "subcategories")
-        deleteJSONFields(result, Arrays.asList("subcategories", "subcat_title"));
-
-        // Count the subcategories in the JSON file
-        Integer countSubcategories = countJSONField(result, Arrays.asList("subcategories", "cloned_title"));
-        //   And add the result to the JSON
-        result.put(
-                ( new JSONObject() ).put("number_of_subcategories", countSubcategories)
-        );
 
         return result.toString();
     }

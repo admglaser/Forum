@@ -11,7 +11,7 @@ import java.util.Collection;
 @Table(name = "post")
 public class Post {
     private int id;
-    private Integer postId;
+    private Integer postNumber;
     private String text;
     private Timestamp time;
     private Collection<Like> likesById;
@@ -31,17 +31,17 @@ public class Post {
     }
 
     @Basic
-    @Column(name = "postId", nullable = true, insertable = true, updatable = true)
-    public Integer getPostId() {
-        return postId;
+    @Column(name = "post_number", nullable = false, insertable = true, updatable = true)
+    public Integer getPostNumber() {
+        return postNumber;
     }
 
-    public void setPostId(Integer postId) {
-        this.postId = postId;
+    public void setPostNumber(Integer postId) {
+        this.postNumber = postId;
     }
 
     @Basic
-    @Column(name = "text", nullable = true, insertable = true, updatable = true, length = 255)
+    @Column(name = "text", nullable = false, insertable = true, updatable = true, length = 255)
     public String getText() {
         return text;
     }
@@ -70,7 +70,7 @@ public class Post {
         if (id != post.id) return false;
         if (topicId != post.topicId) return false;
         if (memberId != post.memberId) return false;
-        if (postId != null ? !postId.equals(post.postId) : post.postId != null) return false;
+        if (postNumber != null ? !postNumber.equals(post.postNumber) : post.postNumber != null) return false;
         if (text != null ? !text.equals(post.text) : post.text != null) return false;
         return !(time != null ? !time.equals(post.time) : post.time != null);
 
@@ -79,7 +79,7 @@ public class Post {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (postId != null ? postId.hashCode() : 0);
+        result = 31 * result + (postNumber != null ? postNumber.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + topicId;
