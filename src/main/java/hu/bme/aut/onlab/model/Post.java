@@ -14,7 +14,7 @@ public class Post {
     private Integer postNumber;
     private String text;
     private Timestamp time;
-    private Collection<Like> likesById;
+    private Collection<MemberLike> likesById;
     private Topic topicByTopicId;
     private Member memberByMemberId;
     private int topicId;
@@ -88,11 +88,11 @@ public class Post {
     }
 
     @OneToMany(mappedBy = "postByPostId")
-    public Collection<Like> getLikesById() {
+    public Collection<MemberLike> getLikesById() {
         return likesById;
     }
 
-    public void setLikesById(Collection<Like> likesById) {
+    public void setLikesById(Collection<MemberLike> likesById) {
         this.likesById = likesById;
     }
 

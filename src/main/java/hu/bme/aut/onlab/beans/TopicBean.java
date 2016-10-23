@@ -10,12 +10,15 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by N. Vilagos.
@@ -63,5 +66,26 @@ public class TopicBean extends BaseBean<Topic> {
     public boolean hasUnreadPosts(int topicId, int memberId) {
         Timestamp lastSeenTimeOfTopic = topicSeenByMemberBean.getLastSeenTimeOfMember(topicId, memberId);
         return postBean.hasTopicUnreadPost(topicId, lastSeenTimeOfTopic);
+    }
+
+    public List<Topic> getCreatedTopicByMember(int memberId) {
+        CriteriaHelper<Topic> topicCriteriaHelper = createQueryHelper();
+        Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
+        CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
+        CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
+
+        Join<Topic, Post> postJoin = topicRoot.join(Topic_.postsById);
+
+        criteriaQuery.where(criteriaBuilder.and(
+                criteriaBuilder.equal(postJoin.get(Post_.memberId), memberId),
+                criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1))
+        );
+
+        try {
+            return getEntityManager().createQuery(criteriaQuery).getResultList();
+        } catch (NoResultException e) {
+            // Has no created Topic.
+            return Collections.emptyList();
+        }
     }
 }

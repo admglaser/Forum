@@ -6,8 +6,8 @@ import javax.persistence.*;
  * Created by N. Vilagos.
  */
 @Entity
-@Table(name = "like")
-public class Like {
+@Table(name = "member_like")
+public class MemberLike {
     private int id;
     private Post postByPostId;
     private Member memberByMemberId;
@@ -29,11 +29,11 @@ public class Like {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Like like = (Like) o;
+        MemberLike memberLike = (MemberLike) o;
 
-        if (id != like.id) return false;
-        if (memberId != like.memberId) return false;
-        return postId == like.postId;
+        if (id != memberLike.id) return false;
+        if (memberId != memberLike.memberId) return false;
+        return postId == memberLike.postId;
 
     }
 

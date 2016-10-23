@@ -1,17 +1,19 @@
 package hu.bme.aut.onlab.beans;
 
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
+import hu.bme.aut.onlab.model.MemberLike;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Post_;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by N. Vilagos.
@@ -73,6 +75,27 @@ public class PostBean extends BaseBean<Post> {
         }
 
         return true;
+    }
+
+    public List<Post> getLikedPostsOfMember(int memberId) {
+        CriteriaHelper<Post> postCriteriaHelper = createQueryHelper();
+        Root<Post> root = postCriteriaHelper.getRootEntity();
+        CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
+        CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
+
+        // Posts that has no like will not be included
+        Join<Post, MemberLike> likeJoin = root.join(Post_.likesById, JoinType.INNER);
+
+        criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.memberId), memberId));
+
+        criteriaQuery.select(root).distinct(true);
+
+        try {
+            return getEntityManager().createQuery(criteriaQuery).getResultList();
+        } catch (NoResultException e) {
+            // Has no likes.
+            return Collections.emptyList();
+        }
     }
 
     private enum OrderingEnum {

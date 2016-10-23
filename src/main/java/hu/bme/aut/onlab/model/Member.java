@@ -21,7 +21,7 @@ public class Member {
     private int likesCount;
     private int profileViewsCount;
     private Date birthday;
-    private Collection<Like> likesById;
+    private Collection<MemberLike> likesById;
     private MemberGroup memberGroupByMemberGroupId;
     private Collection<Notification> notificationsById;
     private Collection<Post> postsById;
@@ -125,11 +125,11 @@ public class Member {
     }
 
     @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<Like> getLikesById() {
+    public Collection<MemberLike> getLikesById() {
         return likesById;
     }
 
-    public void setLikesById(Collection<Like> likesById) {
+    public void setLikesById(Collection<MemberLike> likesById) {
         this.likesById = likesById;
     }
 

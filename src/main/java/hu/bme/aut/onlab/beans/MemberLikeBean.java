@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.beans;
 
-import hu.bme.aut.onlab.model.Like;
+import hu.bme.aut.onlab.model.MemberLike;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -12,13 +12,13 @@ import javax.persistence.PersistenceContext;
  */
 @LocalBean
 @Stateless
-public class LikeBean extends BaseBean<Like> {
+public class MemberLikeBean extends BaseBean<MemberLike> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public LikeBean() {
-        super(Like.class);
+    public MemberLikeBean() {
+        super(MemberLike.class);
     }
 
     @Override
