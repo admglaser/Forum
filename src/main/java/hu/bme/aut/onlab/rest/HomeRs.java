@@ -5,6 +5,8 @@ import hu.bme.aut.onlab.beans.MemberBean;
 import hu.bme.aut.onlab.beans.PostBean;
 import hu.bme.aut.onlab.beans.TopicBean;
 import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.util.Formatter;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -53,7 +55,7 @@ public class HomeRs  {
                     subcategoryJson.put("postCount", lastTopic.getPostsById().size());
                     subcategoryJson.put("lastTitle", lastTopic.getTitle());
                     subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
-                    subcategoryJson.put("lastDate", lastPost.getTime());
+                    subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
                     subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
                     subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                     subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
