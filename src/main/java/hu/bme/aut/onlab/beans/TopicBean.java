@@ -6,6 +6,7 @@ import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.model.Subcategory_;
 import hu.bme.aut.onlab.model.Topic_;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import java.sql.Timestamp;
 
 /**
  * Created by N. Vilagos.
@@ -25,6 +27,12 @@ public class TopicBean extends BaseBean<Topic> {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @EJB
+    private TopicSeenByMemberBean topicSeenByMemberBean;
+
+    @EJB
+    private PostBean postBean;
+
     public TopicBean() {
         super(Topic.class);
     }
@@ -34,7 +42,7 @@ public class TopicBean extends BaseBean<Topic> {
         return entityManager;
     }
 
-    public Topic getTopicWithLastPostFromSubcategory(long subcategoryId) {
+    public Topic getTopicWithLastPostFromSubcategory(int subcategoryId) {
         CriteriaHelper<Topic> topicCriteriaHelper = createQueryHelper();
         Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
         CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
@@ -50,5 +58,10 @@ public class TopicBean extends BaseBean<Topic> {
         criteriaQuery.select(topicRoot);
 
         return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+    }
+
+    public boolean hasUnreadPosts(int topicId, int memberId) {
+        Timestamp lastSeenTimeOfTopic = topicSeenByMemberBean.getLastSeenTimeOfMember(topicId, memberId);
+        return postBean.hasTopicUnreadPost(topicId, lastSeenTimeOfTopic);
     }
 }

@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.beans;
 
-import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.ConversationSeenByMember;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -12,22 +12,17 @@ import javax.persistence.PersistenceContext;
  */
 @LocalBean
 @Stateless
-public class MemberBean extends BaseBean<Member> {
+public class ConversationSeenByMemberBean extends BaseBean<ConversationSeenByMember> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public MemberBean() {
-        super(Member.class);
+    public ConversationSeenByMemberBean() {
+        super(ConversationSeenByMember.class);
     }
 
     @Override
     protected EntityManager getEntityManager() {
         return entityManager;
-    }
-
-    public Member getCurrentMember() {
-        // TODO Impement the logic
-        return findAllEntity().get(0);
     }
 }

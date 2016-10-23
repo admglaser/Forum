@@ -54,6 +54,7 @@ public class Notification {
         Notification that = (Notification) o;
 
         if (id != that.id) return false;
+        if (notificationNumber != that.notificationNumber) return false;
         if (seen != that.seen) return false;
         if (memberId != that.memberId) return false;
         return notificationEventId == that.notificationEventId;
@@ -63,6 +64,7 @@ public class Notification {
     @Override
     public int hashCode() {
         int result = id;
+        result = 31 * result + notificationNumber;
         result = 31 * result + (int) seen;
         result = 31 * result + memberId;
         result = 31 * result + notificationEventId;

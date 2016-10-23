@@ -66,6 +66,7 @@ public class Conversation {
         Conversation that = (Conversation) o;
 
         if (id != that.id) return false;
+        if (conversationNumber != that.conversationNumber) return false;
         if (messageCount != that.messageCount) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
 
@@ -75,6 +76,7 @@ public class Conversation {
     @Override
     public int hashCode() {
         int result = id;
+        result = 31 * result + conversationNumber;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + messageCount;
         return result;

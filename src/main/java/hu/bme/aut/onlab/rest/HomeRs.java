@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.rest;
 
 import hu.bme.aut.onlab.beans.CategoryBean;
+import hu.bme.aut.onlab.beans.MemberBean;
 import hu.bme.aut.onlab.beans.PostBean;
 import hu.bme.aut.onlab.beans.TopicBean;
 import hu.bme.aut.onlab.model.*;
@@ -28,6 +29,9 @@ public class HomeRs  {
     @EJB
     private TopicBean topicBean;
 
+    @EJB
+    private MemberBean memberBean;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String listRemoteCombinedCategory() {
@@ -53,6 +57,7 @@ public class HomeRs  {
                     subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
                     subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                     subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
+                    subcategoryJson.put("unread", topicBean.hasUnreadPosts(lastTopic.getId(), memberBean.getCurrentMember().getId()));
                 }
 
                 subcategoryJson.put("title", subcategory.getTitle());
