@@ -61,12 +61,13 @@ public abstract class BaseBean<E> {
     }
 
     /**
-     * Find an entity with the given ID.
-     * @param field     The field of the ID. Using metamodel class's field is recommend
-     * @param id        The value of the ID.
-     * @return          The entity with the given ID.
+     * Find entities that have equality with the given value on the given field.
+     *   Can be used for join field condition.
+     * @param field     The field to check the equality on. Using metamodel class's field is recommend.
+     * @param value     The value to equal with.
+     * @return          The entity with the given equality.
      */
-    public E findEntityById(SingularAttribute<E, ? extends Object> field, Object id){
+    public List<E> findEntitiesByEquality(SingularAttribute<E, ? extends Object> field, Object value){
         EntityManager entityManager = getEntityManager();
 
         // Initialize components
@@ -79,10 +80,20 @@ public abstract class BaseBean<E> {
         criteria.select(criteriaHelper.getRootEntity());
 
         // Set the where term
-        criteria.where( criteriaBuilder.equal(rootEntity.get( field ) , id) );
+        criteria.where( criteriaBuilder.equal(rootEntity.get( field ) , value) );
 
         // Execute the select and return with the result
-        return entityManager.createQuery(criteria).getSingleResult();
+        return entityManager.createQuery(criteria).getResultList();
+    }
+
+    /**
+     * Find entity with the given ID.
+     * @param field     The field of the ID. Using metamodel class's field is recommend.
+     * @param id        The value of the ID.
+     * @return          The entity with the given ID.
+     */
+    public E findEntityById(SingularAttribute<E, ? extends Object> field, Object id) {
+        return findEntitiesByEquality(field, id).get(0);
     }
 
     public List<E> findAllEntity() {

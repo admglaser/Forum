@@ -32,15 +32,30 @@ public class PostBean extends BaseBean<Post> {
         return entityManager;
     }
 
-    public Post getLastPostFromTopic(int topicId) {
+    private Post getExtremePostFromTopic(int topicId, OrderingEnum ordering) {
         CriteriaHelper<Post> postCriteriaHelper = createQueryHelper();
         Root<Post> root = postCriteriaHelper.getRootEntity();
         CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
         CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
 
         criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.topicId), topicId));
-        criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Post_.time)));
+        if (ordering == OrderingEnum.ASC) {
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Post_.time)));
+        } else if (ordering == OrderingEnum.DESC) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Post_.time)));
+        } else {
+            throw new IllegalArgumentException("Unknown ordering as parameter.");
+        }
+
         return entityManager.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+    }
+
+    public Post getFirstPostFromTopic(int topicId) {
+        return getExtremePostFromTopic(topicId, OrderingEnum.ASC);
+    }
+
+    public Post getLastPostFromTopic(int topicId) {
+        return getExtremePostFromTopic(topicId, OrderingEnum.DESC);
     }
 
     public boolean hasTopicUnreadPost(int topicId, Timestamp lastRead) {
@@ -58,5 +73,10 @@ public class PostBean extends BaseBean<Post> {
         }
 
         return true;
+    }
+
+    private enum OrderingEnum {
+        ASC,
+        DESC
     }
 }
