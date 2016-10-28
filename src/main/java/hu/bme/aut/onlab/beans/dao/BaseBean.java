@@ -1,14 +1,16 @@
-package hu.bme.aut.onlab.beans;
+package hu.bme.aut.onlab.beans.dao;
 
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.List;
+
+import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
 
 /**
  * The base class for entity beans.
@@ -16,33 +18,34 @@ import java.util.List;
  */
 public abstract class BaseBean<E> {
 
-    private final Class<E> entityType;
+    protected Class<E> entityType;
+    
+    @PersistenceContext
+	private EntityManager em;
 
     public BaseBean(Class<E> entityType) {
         super();
-        this.entityType = entityType;
+		this.entityType = entityType;
     }
 
-    protected abstract EntityManager getEntityManager();
-
     public CriteriaHelper<E> createQueryHelper(){
-        return new CriteriaHelper<>(entityType, getEntityManager(), CriteriaHelper.CriteriaType.SELECT);
+        return new CriteriaHelper<E>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
     }
 
     public List<E> executeQuery(CriteriaHelper<E> criteriaHelper) {
-        return getEntityManager().createQuery(criteriaHelper.getCriteriaQuery()).getResultList();
+        return em.createQuery(criteriaHelper.getCriteriaQuery()).getResultList();
     }
 
     public CriteriaHelper<E> createTupleQueryHelper(){
-        return new CriteriaHelper<>(entityType, getEntityManager(), CriteriaHelper.CriteriaType.TUPLE_SELECT);
+        return new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.TUPLE_SELECT);
     }
 
     public List<Tuple> executeTupleQuery(CriteriaHelper<E> criteriaHelper) {
-        return getEntityManager().createQuery(criteriaHelper.getCriteriaTupleQuery()).getResultList();
+        return em.createQuery(criteriaHelper.getCriteriaTupleQuery()).getResultList();
     }
 
     public E findEntities(SingularAttribute<E, ? extends Object> field, Object value){
-        EntityManager entityManager = getEntityManager();
+        EntityManager entityManager = em;
 
         // Initialize components
         CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);
@@ -68,7 +71,7 @@ public abstract class BaseBean<E> {
      * @return          The entity with the given equality.
      */
     public List<E> findEntitiesByEquality(SingularAttribute<E, ? extends Object> field, Object value){
-        EntityManager entityManager = getEntityManager();
+        EntityManager entityManager = em;
 
         // Initialize components
         CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);
@@ -88,16 +91,15 @@ public abstract class BaseBean<E> {
 
     /**
      * Find entity with the given ID.
-     * @param field     The field of the ID. Using metamodel class's field is recommend.
      * @param id        The value of the ID.
      * @return          The entity with the given ID.
      */
-    public E findEntityById(SingularAttribute<E, ? extends Object> field, Object id) {
-        return findEntitiesByEquality(field, id).get(0);
+    public E findEntityById(Object id) {
+        return em.find(entityType, id);
     }
 
     public List<E> findAllEntity() {
-        EntityManager entityManager = getEntityManager();
+        EntityManager entityManager = em;
 
         // Initialize components
         CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);

@@ -1,41 +1,75 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "member")
 public class Member {
-    private int id;
-    private String userName;
-    private String password;
-    private String email;
-    private String displayName;
-    private int postCount;
-    private int likesCount;
-    private int profileViewsCount;
-    private Date birthday;
-    private Collection<MemberLike> likesById;
-    private MemberGroup memberGroupByMemberGroupId;
-    private Collection<Notification> notificationsById;
-    private Collection<Post> postsById;
-    private Collection<SubcategorySubscription> subcategorySubscriptionsById;
-    private Collection<TopicSubscription> topicSubscriptionsById;
-    private Set<Conversation> conversations;
-    private Timestamp registerTime;
-    private int memberGroupId;
-    private String pictureId;
-    private Collection<ConversationSeenByMember> conversationSeenByMembersById;
-    private Collection<TopicSeenByMember> topicSeenByMembersById;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+	@Id
+	@Column(name = "id")
+    private int id;
+    
+	private String userName;
+    
+	private String password;
+    
+	private String email;
+    
+	private String displayName;
+    
+	private int postCount;
+    
+	private int likesCount;
+    
+	private int profileViewsCount;
+    
+	private Date birthday;
+    
+    @OneToMany(mappedBy = "member")
+	private List<MemberLike> likes;
+    
+    @ManyToOne
+    @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false)
+	private MemberGroup memberGroup;
+    
+    @OneToMany(mappedBy = "member")
+	private List<Notification> notifications;
+    
+    @OneToMany(mappedBy = "member")
+	private List<Post> posts;
+    
+    @OneToMany(mappedBy = "member")
+	private List<SubcategorySubscription> subcategorySubscriptions;
+    
+    @OneToMany(mappedBy = "member")
+	private List<TopicSubscription> topicSubscriptions;
+    
+    @ManyToMany(mappedBy = "members")
+    private List<Conversation> conversations;
+    
+	private Timestamp registerTime;
+    
+	private String pictureId;
+    
+	@OneToMany(mappedBy = "member")
+    private List<ConversationSeenByMember> conversationSeenByMembers;
+    
+	@OneToMany(mappedBy = "member")
+	private List<TopicSeenByMember> topicSeenByMembers;
+
+	
     public int getId() {
         return id;
     }
@@ -44,8 +78,6 @@ public class Member {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "user_name", nullable = false, insertable = true, updatable = true, length = 255)
     public String getUserName() {
         return userName;
     }
@@ -54,8 +86,6 @@ public class Member {
         this.userName = userName;
     }
 
-    @Basic
-    @Column(name = "password", nullable = false, insertable = true, updatable = true, length = 255)
     public String getPassword() {
         return password;
     }
@@ -64,8 +94,6 @@ public class Member {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "email", nullable = false, insertable = true, updatable = true, length = 255)
     public String getEmail() {
         return email;
     }
@@ -74,8 +102,6 @@ public class Member {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "display_name", nullable = false, insertable = true, updatable = true, length = 255)
     public String getDisplayName() {
         return displayName;
     }
@@ -84,8 +110,6 @@ public class Member {
         this.displayName = displayName;
     }
 
-    @Basic
-    @Column(name = "post_count", nullable = false, insertable = true, updatable = true)
     public int getPostCount() {
         return postCount;
     }
@@ -94,8 +118,6 @@ public class Member {
         this.postCount = postCount;
     }
 
-    @Basic
-    @Column(name = "likes_count", nullable = false, insertable = true, updatable = true)
     public int getLikesCount() {
         return likesCount;
     }
@@ -104,8 +126,6 @@ public class Member {
         this.likesCount = likesCount;
     }
 
-    @Basic
-    @Column(name = "profile_views_count", nullable = false, insertable = true, updatable = true)
     public int getProfileViewsCount() {
         return profileViewsCount;
     }
@@ -114,8 +134,6 @@ public class Member {
         this.profileViewsCount = profileViewsCount;
     }
 
-    @Basic
-    @Column(name = "birthday", nullable = true, insertable = true, updatable = true)
     public Date getBirthday() {
         return birthday;
     }
@@ -124,112 +142,62 @@ public class Member {
         this.birthday = birthday;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<MemberLike> getLikesById() {
-        return likesById;
+    public List<MemberLike> getLikes() {
+        return likes;
     }
 
-    public void setLikesById(Collection<MemberLike> likesById) {
-        this.likesById = likesById;
+    public void setLikes(List<MemberLike> likes) {
+        this.likes = likes;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false)
-    public MemberGroup getMemberGroupByMemberGroupId() {
-        return memberGroupByMemberGroupId;
+    public MemberGroup getMemberGroup() {
+        return memberGroup;
     }
 
-    public void setMemberGroupByMemberGroupId(MemberGroup memberGroupByMemberGroupId) {
-        this.memberGroupByMemberGroupId = memberGroupByMemberGroupId;
+    public void setMemberGroup(MemberGroup memberGroup) {
+        this.memberGroup = memberGroup;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<Notification> getNotificationsById() {
-        return notificationsById;
+    public List<Notification> getNotifications() {
+        return notifications;
     }
 
-    public void setNotificationsById(Collection<Notification> notificationsById) {
-        this.notificationsById = notificationsById;
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+    
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<Post> getPostsById() {
-        return postsById;
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
-    public void setPostsById(Collection<Post> postsById) {
-        this.postsById = postsById;
+    public List<SubcategorySubscription> getSubcategorySubscriptions() {
+        return subcategorySubscriptions;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<SubcategorySubscription> getSubcategorySubscriptionsById() {
-        return subcategorySubscriptionsById;
+    public void setSubcategorySubscriptions(List<SubcategorySubscription> subcategorySubscriptions) {
+        this.subcategorySubscriptions = subcategorySubscriptions;
     }
 
-    public void setSubcategorySubscriptionsById(Collection<SubcategorySubscription> subcategorySubscriptionsById) {
-        this.subcategorySubscriptionsById = subcategorySubscriptionsById;
+    public List<TopicSubscription> getTopicSubscriptions() {
+        return topicSubscriptions;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<TopicSubscription> getTopicSubscriptionsById() {
-        return topicSubscriptionsById;
+    public void setTopicSubscriptions(List<TopicSubscription> topicSubscriptions) {
+        this.topicSubscriptions = topicSubscriptions;
     }
 
-    public void setTopicSubscriptionsById(Collection<TopicSubscription> topicSubscriptionsById) {
-        this.topicSubscriptionsById = topicSubscriptionsById;
-    }
-
-    @ManyToMany(mappedBy = "members")
-    public Set<Conversation> getConversations() {
+    public List<Conversation> getConversations() {
         return conversations;
     }
 
-    public void setConversations(Set<Conversation> conversations) {
+    public void setConversations(List<Conversation> conversations) {
         this.conversations = conversations;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Member member = (Member) o;
-
-        if (id != member.id) return false;
-        if (postCount != member.postCount) return false;
-        if (likesCount != member.likesCount) return false;
-        if (profileViewsCount != member.profileViewsCount) return false;
-        if (memberGroupId != member.memberGroupId) return false;
-        if (userName != null ? !userName.equals(member.userName) : member.userName != null) return false;
-        if (password != null ? !password.equals(member.password) : member.password != null) return false;
-        if (email != null ? !email.equals(member.email) : member.email != null) return false;
-        if (displayName != null ? !displayName.equals(member.displayName) : member.displayName != null) return false;
-        if (birthday != null ? !birthday.equals(member.birthday) : member.birthday != null) return false;
-        if (registerTime != null ? !registerTime.equals(member.registerTime) : member.registerTime != null)
-            return false;
-        return !(pictureId != null ? !pictureId.equals(member.pictureId) : member.pictureId != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + postCount;
-        result = 31 * result + likesCount;
-        result = 31 * result + profileViewsCount;
-        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-        result = 31 * result + (registerTime != null ? registerTime.hashCode() : 0);
-        result = 31 * result + memberGroupId;
-        result = 31 * result + (pictureId != null ? pictureId.hashCode() : 0);
-        return result;
-    }
-
-    @Basic
-    @Column(name = "register_time", nullable = false, insertable = true, updatable = true)
     public Timestamp getRegisterTime() {
         return registerTime;
     }
@@ -238,18 +206,6 @@ public class Member {
         this.registerTime = registerTime;
     }
 
-    @Basic
-    @Column(name = "member_group_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberGroupId() {
-        return memberGroupId;
-    }
-
-    public void setMemberGroupId(int memberGroupId) {
-        this.memberGroupId = memberGroupId;
-    }
-
-    @Basic
-    @Column(name = "picture_id", nullable = true, insertable = true, updatable = true, length = 255)
     public String getPictureId() {
         return pictureId;
     }
@@ -258,21 +214,20 @@ public class Member {
         this.pictureId = pictureId;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<ConversationSeenByMember> getConversationSeenByMembersById() {
-        return conversationSeenByMembersById;
+    public List<ConversationSeenByMember> getConversationSeenByMembers() {
+        return conversationSeenByMembers;
     }
 
-    public void setConversationSeenByMembersById(Collection<ConversationSeenByMember> conversationSeenByMembersById) {
-        this.conversationSeenByMembersById = conversationSeenByMembersById;
+    public void setConversationSeenByMembers(List<ConversationSeenByMember> conversationSeenByMembers) {
+        this.conversationSeenByMembers = conversationSeenByMembers;
     }
 
-    @OneToMany(mappedBy = "memberByMemberId")
-    public Collection<TopicSeenByMember> getTopicSeenByMembersById() {
-        return topicSeenByMembersById;
+    public List<TopicSeenByMember> getTopicSeenByMembers() {
+        return topicSeenByMembers;
     }
 
-    public void setTopicSeenByMembersById(Collection<TopicSeenByMember> topicSeenByMembersById) {
-        this.topicSeenByMembersById = topicSeenByMembersById;
+    public void setTopicSeenByMembers(List<TopicSeenByMember> topicSeenByMembers) {
+        this.topicSeenByMembers = topicSeenByMembers;
     }
+    
 }

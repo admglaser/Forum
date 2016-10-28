@@ -1,23 +1,32 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-/**
- * Created by N. Vilagos.
- */
 @Entity
 @Table(name = "notification")
 public class Notification {
-    private int id;
-    private int notificationNumber;
-    private byte seen;
-    private Member memberByMemberId;
-    private NotificationEvent notificationEventByNotificationEventId;
-    private int memberId;
-    private int notificationEventId;
+   
+	@Id
+	@Column(name = "id")
+	private int id;
+    
+	private int notificationNumber;
+    
+	private boolean seen;
+    
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    private Member member;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+    @ManyToOne
+    @JoinColumn(name = "notification_event_id", referencedColumnName = "id", nullable = false)
+	private NotificationEvent notificationEvent;
+    
     public int getId() {
         return id;
     }
@@ -26,8 +35,6 @@ public class Notification {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "notification_number", nullable = false, insertable = true, updatable = true)
     public int getNotificationNumber() {
         return notificationNumber;
     }
@@ -36,78 +43,28 @@ public class Notification {
         this.notificationNumber = notificationNumber;
     }
 
-    @Basic
-    @Column(name = "seen", nullable = false, insertable = true, updatable = true)
-    public byte getSeen() {
+    public boolean isSeen() {
         return seen;
     }
 
-    public void setSeen(byte seen) {
+    public void setSeen(boolean seen) {
         this.seen = seen;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Notification that = (Notification) o;
-
-        if (id != that.id) return false;
-        if (notificationNumber != that.notificationNumber) return false;
-        if (seen != that.seen) return false;
-        if (memberId != that.memberId) return false;
-        return notificationEventId == that.notificationEventId;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + notificationNumber;
-        result = 31 * result + (int) seen;
-        result = 31 * result + memberId;
-        result = 31 * result + notificationEventId;
-        return result;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     public Member getMemberByMemberId() {
-        return memberByMemberId;
+        return member;
     }
 
     public void setMemberByMemberId(Member memberByMemberId) {
-        this.memberByMemberId = memberByMemberId;
+        this.member = memberByMemberId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "notification_event_id", referencedColumnName = "id", nullable = false)
-    public NotificationEvent getNotificationEventByNotificationEventId() {
-        return notificationEventByNotificationEventId;
+    public NotificationEvent getNotificationEvent() {
+        return notificationEvent;
     }
 
-    public void setNotificationEventByNotificationEventId(NotificationEvent notificationEventByNotificationEventId) {
-        this.notificationEventByNotificationEventId = notificationEventByNotificationEventId;
+    public void setNotificationEvent(NotificationEvent notificationEvent) {
+        this.notificationEvent = notificationEvent;
     }
 
-    @Basic
-    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
-
-    @Basic
-    @Column(name = "notification_event_id", nullable = false, insertable = false, updatable = false)
-    public int getNotificationEventId() {
-        return notificationEventId;
-    }
-
-    public void setNotificationEventId(int notificationEventId) {
-        this.notificationEventId = notificationEventId;
-    }
 }

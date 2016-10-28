@@ -1,23 +1,34 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-/**
- * Created by N. Vilagos.
- */
-@Entity
-@Table(name = "notification_event", schema = "", catalog = "forum")
-public class NotificationEvent {
-    private int id;
-    private int type;
-    private Timestamp time;
-    private String link;
-    private Collection<Notification> notificationsById;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+@Entity
+@Table(name = "notification_event")
+public class NotificationEvent {
+  
+	@Id
+	@Column(name = "id")
+	private int id;
+    
+	private int type;
+    
+	private Timestamp time;
+    
+	private String link;
+    
+	@OneToMany(mappedBy = "notificationEvent")
+	private Collection<Notification> notifications;
+    
+	private String text;
+
+	
     public int getId() {
         return id;
     }
@@ -26,8 +37,6 @@ public class NotificationEvent {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "type", nullable = false, insertable = true, updatable = true)
     public int getType() {
         return type;
     }
@@ -36,8 +45,6 @@ public class NotificationEvent {
         this.type = type;
     }
 
-    @Basic
-    @Column(name = "time", nullable = false, insertable = true, updatable = true)
     public Timestamp getTime() {
         return time;
     }
@@ -46,8 +53,6 @@ public class NotificationEvent {
         this.time = time;
     }
 
-    @Basic
-    @Column(name = "link", nullable = false, insertable = true, updatable = true, length = 255)
     public String getLink() {
         return link;
     }
@@ -56,40 +61,20 @@ public class NotificationEvent {
         this.link = link;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        NotificationEvent that = (NotificationEvent) o;
-
-        if (id != that.id) return false;
-        if (type != that.type) return false;
-        if (time != null ? !time.equals(that.time) : that.time != null) return false;
-        if (link != null ? !link.equals(that.link) : that.link != null) return false;
-        return !(notificationsById != null ? !notificationsById.equals(that.notificationsById) : that.notificationsById != null);
-
+    public Collection<Notification> getNotifications() {
+        return notifications;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + type;
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + (link != null ? link.hashCode() : 0);
-        result = 31 * result + (notificationsById != null ? notificationsById.hashCode() : 0);
-        return result;
+    public void setNotifications(Collection<Notification> notifications) {
+        this.notifications = notifications;
     }
 
+	public String getText() {
+		return text;
+	}
 
-
-    @OneToMany(mappedBy = "notificationEventByNotificationEventId")
-    public Collection<Notification> getNotificationsById() {
-        return notificationsById;
-    }
-
-    public void setNotificationsById(Collection<Notification> notificationsById) {
-        this.notificationsById = notificationsById;
-    }
+	public void setText(String text) {
+		this.text = text;
+	}
 
 }

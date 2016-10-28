@@ -1,105 +1,61 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 @Entity
-@javax.persistence.Table(name = "topic_seen_by_member", schema = "", catalog = "forum")
+@javax.persistence.Table(name = "topic_seen_by_member")
 public class TopicSeenByMember {
-    private int id;
-    private Timestamp seenTime;
-    private int topicId;
-    private int memberId;
-    private Member memberByMemberId;
-    private Topic topicByTopicId;
 
-    @Id
-    @javax.persistence.Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@Column(name = "id")
+	private int id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	private Timestamp seenTime;
 
-    @Basic
-    @javax.persistence.Column(name = "seen_time", nullable = false, insertable = true, updatable = true)
-    public Timestamp getSeenTime() {
-        return seenTime;
-    }
+	@ManyToOne
+	@JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+	private Member member;
 
-    public void setSeenTime(Timestamp seenTime) {
-        this.seenTime = seenTime;
-    }
+	@ManyToOne
+	@JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+	private Topic topic;
 
-    @Basic
-    @javax.persistence.Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
-    public int getTopicId() {
-        return topicId;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    @Basic
-    @javax.persistence.Column(name = "member_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberId() {
-        return memberId;
-    }
+	public Timestamp getSeenTime() {
+		return seenTime;
+	}
 
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
+	public void setSeenTime(Timestamp seenTime) {
+		this.seenTime = seenTime;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public Member getMember() {
+		return member;
+	}
 
-        TopicSeenByMember that = (TopicSeenByMember) o;
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-        if (id != that.id) return false;
-        if (topicId != that.topicId) return false;
-        if (memberId != that.memberId) return false;
-        if (seenTime != null ? !seenTime.equals(that.seenTime) : that.seenTime != null) return false;
+	public Topic getTopic() {
+		return topic;
+	}
 
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (seenTime != null ? seenTime.hashCode() : 0);
-        result = 31 * result + topicId;
-        result = 31 * result + memberId;
-        return result;
-    }
-
-    @ManyToOne
-    @javax.persistence.JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
-    public Member getMemberByMemberId() {
-        return memberByMemberId;
-    }
-
-    public void setMemberByMemberId(Member memberByMemberId) {
-        this.memberByMemberId = memberByMemberId;
-    }
-
-    @ManyToOne
-    @javax.persistence.JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
-    public Topic getTopicByTopicId() {
-        return topicByTopicId;
-    }
-
-    public void setTopicByTopicId(Topic topicByTopicId) {
-        this.topicByTopicId = topicByTopicId;
-    }
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
+	
 }

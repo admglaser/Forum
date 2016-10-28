@@ -1,21 +1,28 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-/**
- * Created by N. Vilagos.
- */
 @Entity
 @Table(name = "member_like")
 public class MemberLike {
-    private int id;
-    private Post postByPostId;
-    private Member memberByMemberId;
-    private int memberId;
-    private int postId;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+	@Id
+	@Column(name = "id")
+	private int id;
+    
+	@ManyToOne
+	@JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
+	private Post post;
+    
+	@ManyToOne
+	@JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+	private Member member;
+    
     public int getId() {
         return id;
     }
@@ -24,64 +31,20 @@ public class MemberLike {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MemberLike memberLike = (MemberLike) o;
-
-        if (id != memberLike.id) return false;
-        if (memberId != memberLike.memberId) return false;
-        return postId == memberLike.postId;
-
+    public Post getPost() {
+        return post;
     }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + memberId;
-        result = 31 * result + postId;
-        return result;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
-    public Post getPostByPostId() {
-        return postByPostId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setPostByPostId(Post postByPostId) {
-        this.postByPostId = postByPostId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
-    public Member getMemberByMemberId() {
-        return memberByMemberId;
-    }
-
-    public void setMemberByMemberId(Member memberByMemberId) {
-        this.memberByMemberId = memberByMemberId;
-    }
-
-    @Basic
-    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
-
-    @Basic
-    @Column(name = "post_id", nullable = false, insertable = false, updatable = false)
-    public int getPostId() {
-        return postId;
-    }
-
-    public void setPostId(int postId) {
-        this.postId = postId;
-    }
 }

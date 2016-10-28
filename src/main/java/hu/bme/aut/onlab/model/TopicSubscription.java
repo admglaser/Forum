@@ -1,87 +1,50 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-/**
- * Created by N. Vilagos.
- */
 @Entity
-@Table(name = "topic_subscription", schema = "", catalog = "forum")
+@Table(name = "topic_subscription")
 public class TopicSubscription {
-    private int id;
-    private int topicId;
-    private int memberId;
-    private Member memberByMemberId;
-    private Topic topicByTopicId;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@Column(name = "id")
+	private int id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+	private Member member;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@ManyToOne
+	@JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+	private Topic topic;
 
-        TopicSubscription that = (TopicSubscription) o;
+	public int getId() {
+		return id;
+	}
 
-        if (id != that.id) return false;
-        if (topicId != that.topicId) return false;
-        return memberId == that.memberId;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    }
+	public Member getMember() {
+		return member;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + topicId;
-        result = 31 * result + memberId;
-        return result;
-    }
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
-    public Member getMemberByMemberId() {
-        return memberByMemberId;
-    }
+	public Topic getTopic() {
+		return topic;
+	}
 
-    public void setMemberByMemberId(Member memberByMemberId) {
-        this.memberByMemberId = memberByMemberId;
-    }
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
-    public Topic getTopicByTopicId() {
-        return topicByTopicId;
-    }
-
-    public void setTopicByTopicId(Topic topicByTopicId) {
-        this.topicByTopicId = topicByTopicId;
-    }
-
-    @Basic
-    @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
-    public int getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
-
-    @Basic
-    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
 }

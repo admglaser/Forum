@@ -1,64 +1,48 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "category")
 public class Category {
-    private int id;
-    private String title;
-    private Collection<Subcategory> subcategoriesById;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@Column(name = "id")
+	private int id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	private String title;
 
-    @Basic
-    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
-    public String getTitle() {
-        return title;
-    }
+	@OneToMany(mappedBy = "category")
+	private List<Subcategory> subcategories;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public int getId() {
+		return id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-        Category category = (Category) o;
+	public String getTitle() {
+		return title;
+	}
 
-        if (id != category.id) return false;
-        if (title != null ? !title.equals(category.title) : category.title != null) return false;
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-        return true;
-    }
+	public List<Subcategory> getSubcategories() {
+		return subcategories;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        return result;
-    }
-
-    @OneToMany(mappedBy = "categoryByCategoryId")
-    public Collection<Subcategory> getSubcategoriesById() {
-        return subcategoriesById;
-    }
-
-    public void setSubcategoriesById(Collection<Subcategory> subcategoriesById) {
-        this.subcategoriesById = subcategoriesById;
-    }
+	public void setSubcategories(List<Subcategory> subcategories) {
+		this.subcategories = subcategories;
+	}
+	
 }

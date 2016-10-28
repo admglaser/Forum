@@ -1,25 +1,44 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "conversation")
 public class Conversation {
-    private int id;
-    private int conversationNumber;
-    private String title;
-    private int messageCount;
-    private Collection<Message> messagesById;
-    private Set<Member> members;
-    private Collection<ConversationSeenByMember> conversationSeenByMembersById;
+    
+	@Id
+	@Column(name = "id")
+	private int id;
+    
+	private int conversationNumber;
+    
+	private String title;
+    
+	private int messageCount;
+    
+	@OneToMany(mappedBy = "conversation")
+	private List<Message> messages;
+    
+	@ManyToMany
+	@JoinTable(name = "conversation_to_member",
+		joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id", nullable = false), 
+		inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false))
+	private List<Member> members;
+    
+	@OneToMany(mappedBy = "conversation")
+	private List<ConversationSeenByMember> conversationSeenByMembers;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+	
     public int getId() {
         return id;
     }
@@ -28,8 +47,6 @@ public class Conversation {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "conversation_number", nullable = false, insertable = true, updatable = true)
     public int getConversationNumber() {
         return conversationNumber;
     }
@@ -38,8 +55,6 @@ public class Conversation {
         this.conversationNumber = conversationNumber;
     }
 
-    @Basic
-    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
     public String getTitle() {
         return title;
     }
@@ -48,8 +63,6 @@ public class Conversation {
         this.title = title;
     }
 
-    @Basic
-    @Column(name = "message_count", nullable = false, insertable = true, updatable = true)
     public int getMessageCount() {
         return messageCount;
     }
@@ -58,55 +71,28 @@ public class Conversation {
         this.messageCount = messageCount;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Conversation that = (Conversation) o;
-
-        if (id != that.id) return false;
-        if (conversationNumber != that.conversationNumber) return false;
-        if (messageCount != that.messageCount) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + conversationNumber;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + messageCount;
-        return result;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "conversation_to_member", catalog = "forum", schema = "", joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false))
-    public Set<Member> getMembers() {
+    public List<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<Member> members) {
+    public void setMembers(List<Member> members) {
         this.members = members;
     }
 
-    @OneToMany(mappedBy = "conversationByConversationId")
-    public Collection<Message> getMessagesById() {
-        return messagesById;
+    public Collection<Message> getMessages() {
+        return messages;
     }
 
-    public void setMessagesById(Collection<Message> messagesById) {
-        this.messagesById = messagesById;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
-    @OneToMany(mappedBy = "conversationByConversationId")
-    public Collection<ConversationSeenByMember> getConversationSeenByMembersById() {
-        return conversationSeenByMembersById;
+    public Collection<ConversationSeenByMember> getConversationSeenByMembers() {
+        return conversationSeenByMembers;
     }
 
-    public void setConversationSeenByMembersById(Collection<ConversationSeenByMember> conversationSeenByMembersById) {
-        this.conversationSeenByMembersById = conversationSeenByMembersById;
+    public void setConversationSeenByMembers(List<ConversationSeenByMember> conversationSeenByMembers) {
+        this.conversationSeenByMembers = conversationSeenByMembers;
     }
+    
 }

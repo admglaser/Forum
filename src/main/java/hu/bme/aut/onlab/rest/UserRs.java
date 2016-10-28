@@ -1,14 +1,6 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.beans.MemberBean;
-import hu.bme.aut.onlab.beans.MemberGroupBean;
-import hu.bme.aut.onlab.beans.PostBean;
-import hu.bme.aut.onlab.beans.TopicBean;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.model.Member_;
-import hu.bme.aut.onlab.model.Post_;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
@@ -16,140 +8,159 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
-@Path("/user")
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.beans.ForumReadService;
+import hu.bme.aut.onlab.beans.LoginService;
+import hu.bme.aut.onlab.beans.dao.CategoryBean;
+import hu.bme.aut.onlab.beans.dao.MemberBean;
+import hu.bme.aut.onlab.beans.dao.PostBean;
+import hu.bme.aut.onlab.beans.dao.SubcategoryBean;
+import hu.bme.aut.onlab.beans.dao.TopicBean;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Topic;
+
 public class UserRs {
 
-    @EJB
-    private MemberBean memberBean;
+	@EJB
+	private ForumReadService forumReadService;
 
-    @EJB
-    private TopicBean topicBean;
+	@EJB
+	private LoginService loginService;
+	
+	@EJB
+	private CategoryBean categoryBean;
 
-    @EJB
-    private PostBean postBean;
+	@EJB
+	private SubcategoryBean subcategoryBean;
 
-    @EJB
-    private MemberGroupBean memberGroupBean;
+	@EJB
+	private TopicBean topicBean;
 
-    private JSONObject generateBase(Member member) {
-        JSONObject result = new JSONObject();
+	@EJB
+	private PostBean postBean;
 
-        result.put("id", member.getId());
-        result.put("name", member.getDisplayName());
-        result.put("joined", member.getRegisterTime());
-        // TODO: missing from model?
-        result.put("active", member.getRegisterTime());
-        // TODO: implement image working
-        result.put("imageLink", "");
+	@EJB
+	private MemberBean memberBean;
 
-        return result;
-    }
+	private JSONObject generateBase(Member member) {
+		JSONObject result = new JSONObject();
 
-    @GET
-    @Path("{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedUserOverview(@PathParam("userId") int userId) {
-        Member member = memberBean.findEntityById(Member_.id, userId);
+		result.put("id", member.getId());
+		result.put("name", member.getDisplayName());
+		result.put("joined", member.getRegisterTime());
+		// TODO: missing from model?
+		result.put("active", member.getRegisterTime());
+		// TODO: implement image working
+		result.put("imageLink", "");
 
-        JSONObject result = generateBase(member);
+		return result;
+	}
 
-        List<Topic> createdTopics  = topicBean.getCreatedTopicByMember(userId);
-        MemberGroup memberGroup = member.getMemberGroupByMemberGroupId();
+	@GET
+	@Path("{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listRemoteCombinedUserOverview(@PathParam("userId") int userId) {
+		Member member = memberBean.findEntityById(userId);
 
-        result.put("memberGroup", memberGroup.getTitle());
-        result.put("topics", createdTopics.size());
-        /* TODO: Discuss 2 options:
-            1. member.getPostCount();
-            2. postBean.findEntitiesByEquality(Post_.memberId, userId).size();
-          */
-        result.put("posts", member.getPostCount());
-        result.put("views", member.getProfileViewsCount());
-        result.put("birthday", member.getBirthday());
-        result.put("email", member.getEmail());
+		JSONObject result = generateBase(member);
 
-        return result.toString();
-    }
+		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member);
+		MemberGroup memberGroup = member.getMemberGroup();
 
-    @GET
-    @Path("{userId}/likes")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedUserLikes(@PathParam("userId") int userId) {
-        Member member = memberBean.findEntityById(Member_.id, userId);
-        JSONObject result = generateBase(member);
-        JSONArray likedPostsJsonArray = new JSONArray();
+		result.put("memberGroup", memberGroup.getTitle());
+		result.put("topics", createdTopics.size());
+		/*
+		 * TODO: Discuss 2 options: 1. member.getPostCount(); 2.
+		 * postBean.findEntitiesByEquality(Post_.memberId, userId).size();
+		 */
+		result.put("posts", member.getPostCount());
+		result.put("views", member.getProfileViewsCount());
+		result.put("birthday", member.getBirthday());
+		result.put("email", member.getEmail());
 
-        List<Post> likedPosts = postBean.getLikedPostsOfMember(userId);
-        for (Post likedPost : likedPosts) {
-            JSONObject likedPostJsonObject = new JSONObject();
+		return result.toString();
+	}
 
-            Topic topic = likedPost.getTopicByTopicId();
+	@GET
+	@Path("{userId}/likes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listRemoteCombinedUserLikes(@PathParam("userId") int userId) {
+		Member member = memberBean.findEntityById(userId);
+		JSONObject result = generateBase(member);
+		JSONArray likedPostsJsonArray = new JSONArray();
 
-            likedPostJsonObject.put("title", topic.getTitle());
-            likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + likedPost.getPostNumber());
-            likedPostJsonObject.put("date", likedPost.getTime());
-            likedPostJsonObject.put("text", likedPost.getText());
+		List<Post> likedPosts = forumReadService.getLikedPostsOfMember(member);
+		for (Post likedPost : likedPosts) {
+			JSONObject likedPostJsonObject = new JSONObject();
 
-            likedPostsJsonArray.put(likedPostJsonObject);
-        }
+			Topic topic = likedPost.getTopic();
 
-        result.put("posts", likedPostsJsonArray);
-        return result.toString();
-    }
+			likedPostJsonObject.put("title", topic.getTitle());
+			likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + likedPost.getPostNumber());
+			likedPostJsonObject.put("date", likedPost.getTime());
+			likedPostJsonObject.put("text", likedPost.getText());
 
-    @GET
-    @Path("{userId}/topics")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedUserTopics(@PathParam("userId") int userId) {
-        Member member = memberBean.findEntityById(Member_.id, userId);
-        JSONObject result = generateBase(member);
-        JSONArray topicsJsonArray = new JSONArray();
+			likedPostsJsonArray.put(likedPostJsonObject);
+		}
 
-        List<Topic> createdTopics  = topicBean.getCreatedTopicByMember(userId);
-        for (Topic createdTopic : createdTopics) {
-            JSONObject createdTopicJson = new JSONObject();
-            Post firstPost = postBean.getFirstPostFromTopic(createdTopic.getId());
+		result.put("posts", likedPostsJsonArray);
+		return result.toString();
+	}
 
-            createdTopicJson.put("title", createdTopic.getTitle());
-            createdTopicJson.put("link", "#/topic/" + createdTopic.getId());
-            createdTopicJson.put("date", firstPost.getTime());
-            createdTopicJson.put("text", firstPost.getText());
+	@GET
+	@Path("{userId}/topics")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listRemoteCombinedUserTopics(@PathParam("userId") int userId) {
+		Member member = memberBean.findEntityById(userId);
+		JSONObject result = generateBase(member);
+		JSONArray topicsJsonArray = new JSONArray();
 
-            topicsJsonArray.put(createdTopicJson);
-        }
+		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member);
+		for (Topic createdTopic : createdTopics) {
+			JSONObject createdTopicJson = new JSONObject();
+			Post firstPost = forumReadService.getFirstPostFromTopic(createdTopic);
 
-        result.put("topics", topicsJsonArray);
-        return result.toString();
-    }
+			createdTopicJson.put("title", createdTopic.getTitle());
+			createdTopicJson.put("link", "#/topic/" + createdTopic.getId());
+			createdTopicJson.put("date", firstPost.getTime());
+			createdTopicJson.put("text", firstPost.getText());
 
-    @GET
-    @Path("{userId}/posts")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedUserPosts(@PathParam("userId") int userId) {
-        Member member = memberBean.findEntityById(Member_.id, userId);
-        JSONObject result = generateBase(member);
-        JSONArray createdPostsJsonArray = new JSONArray();
+			topicsJsonArray.put(createdTopicJson);
+		}
 
-        List<Post> createdPosts  = postBean.findEntitiesByEquality(Post_.memberId, userId);
-        for (Post createdPost : createdPosts) {
-            JSONObject createdPostJson = new JSONObject();
+		result.put("topics", topicsJsonArray);
+		return result.toString();
+	}
 
-            Topic topic = createdPost.getTopicByTopicId();
+	@GET
+	@Path("{userId}/posts")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listRemoteCombinedUserPosts(@PathParam("userId") int userId) {
+		Member member = memberBean.findEntityById(userId);
+		JSONObject result = generateBase(member);
+		JSONArray createdPostsJsonArray = new JSONArray();
 
-            createdPostJson.put("title", topic.getTitle());
-            createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + createdPost.getPostNumber());
-            createdPostJson.put("date", createdPost.getTime());
-            createdPostJson.put("text", createdPost.getText());
+		List<Post> createdPosts = postBean.findEntitiesByEquality(Post_.memberId, userId);
+		for (Post createdPost : createdPosts) {
+			JSONObject createdPostJson = new JSONObject();
 
-            createdPostsJsonArray.put(createdPostJson);
-        }
+			Topic topic = createdPost.getTopic();
 
+			createdPostJson.put("title", topic.getTitle());
+			createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + createdPost.getPostNumber());
+			createdPostJson.put("date", createdPost.getTime());
+			createdPostJson.put("text", createdPost.getText());
 
-        result.put("posts", createdPostsJsonArray);
-        return result.toString();
-    }
+			createdPostsJsonArray.put(createdPostJson);
+		}
+
+		result.put("posts", createdPostsJsonArray);
+		return result.toString();
+	}
 }

@@ -59,7 +59,6 @@ public class CriteriaHelper<E> {
         // Set final variables
         this.criteriaType = criteriaType;
         this.entityType = entityType;
-
         // Execute the common part of the different kinds of the criteria
         criteriaBuilder = entityManager.getCriteriaBuilder();
 

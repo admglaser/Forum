@@ -1,120 +1,94 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "subcategory")
 public class Subcategory {
-    private int id;
-    private String title;
-    private String desc;
-    private Collection<Permission> permissionsById;
-    private Category categoryByCategoryId;
-    private Collection<SubcategorySubscription> subcategorySubscriptionsById;
-    private Collection<Topic> topicsById;
-    private int categoryId;
+	
+	@Id
+	@Column(name = "id")
+	private int id;
+	
+	private String title;
+	
+	private String desc;
+	
+	@OneToMany(mappedBy = "subcategory")
+	private List<Permission> permissions;
+	
+	@ManyToOne
+	@JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+	private Category category;
+	
+	@OneToMany(mappedBy = "subcategory")
+	private List<SubcategorySubscription> subcategorySubscriptions;
+	
+	@OneToMany(mappedBy = "subcategory")
+	private List<Topic> topics;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    @Basic
-    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @Basic
-    @Column(name = "desc", nullable = true, insertable = true, updatable = true, length = 255)
-    public String getDesc() {
-        return desc;
-    }
+	public String getDesc() {
+		return desc;
+	}
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
 
-        Subcategory that = (Subcategory) o;
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
 
-        if (id != that.id) return false;
-        if (categoryId != that.categoryId) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        return !(desc != null ? !desc.equals(that.desc) : that.desc != null);
+	public Category getCategory() {
+		return category;
+	}
 
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (desc != null ? desc.hashCode() : 0);
-        result = 31 * result + categoryId;
-        return result;
-    }
+	public List<SubcategorySubscription> getSubcategorySubscriptions() {
+		return subcategorySubscriptions;
+	}
 
-    @OneToMany(mappedBy = "subcategoryBySubcategoryId")
-    public Collection<Permission> getPermissionsById() {
-        return permissionsById;
-    }
+	public void setSubcategorySubscriptions(List<SubcategorySubscription> subcategorySubscriptions) {
+		this.subcategorySubscriptions = subcategorySubscriptions;
+	}
 
-    public void setPermissionsById(Collection<Permission> permissionsById) {
-        this.permissionsById = permissionsById;
-    }
+	public List<Topic> getTopics() {
+		return topics;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
-    public Category getCategoryByCategoryId() {
-        return categoryByCategoryId;
-    }
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
+	}
 
-    public void setCategoryByCategoryId(Category categoryByCategoryId) {
-        this.categoryByCategoryId = categoryByCategoryId;
-    }
-
-    @OneToMany(mappedBy = "subcategoryBySubcategoryId")
-    public Collection<SubcategorySubscription> getSubcategorySubscriptionsById() {
-        return subcategorySubscriptionsById;
-    }
-
-    public void setSubcategorySubscriptionsById(Collection<SubcategorySubscription> subcategorySubscriptionsById) {
-        this.subcategorySubscriptionsById = subcategorySubscriptionsById;
-    }
-
-    @OneToMany(mappedBy = "subcategoryBySubcategoryId")
-    public Collection<Topic> getTopicsById() {
-        return topicsById;
-    }
-
-    public void setTopicsById(Collection<Topic> topicsById) {
-        this.topicsById = topicsById;
-    }
-
-    @Basic
-    @Column(name = "category_id", nullable = false, insertable = false, updatable = false)
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
 }

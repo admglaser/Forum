@@ -1,108 +1,84 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "topic")
 public class Topic {
-    private int id;
-    private String title;
-    private int subcategoryId;
-    private Collection<Post> postsById;
-    private Subcategory subcategoryBySubcategoryId;
-    private Collection<TopicSubscription> topicSubscriptionsById;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@Column(name = "id")
+	private int id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	private String title;
 
-    @Basic
-    @Column(name = "title", nullable = false, insertable = true, updatable = true, length = 255)
-    public String getTitle() {
-        return title;
-    }
+	@OneToMany(mappedBy = "topic")
+	private List<Post> posts;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	@ManyToOne
+	@JoinColumn(name = "subcategory_id", referencedColumnName = "id", nullable = false)
+	private Subcategory subcategory;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	@OneToMany(mappedBy = "topic")
+	private List<TopicSubscription> topicSubscriptions;
+	
+	@OneToMany(mappedBy = "topic")
+	private List<TopicSeenByMember> topicSeenByMembers;
 
-        Topic topic = (Topic) o;
+	public int getId() {
+		return id;
+	}
 
-        if (id != topic.id) return false;
-        if (subcategoryId != topic.subcategoryId) return false;
-        return !(title != null ? !title.equals(topic.title) : topic.title != null);
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + subcategoryId;
-        return result;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @OneToMany(mappedBy = "topicByTopicId")
-    public Collection<Post> getPostsById() {
-        return postsById;
-    }
+	public List<Post> getPosts() {
+		return posts;
+	}
 
-    public void setPostsById(Collection<Post> postsById) {
-        this.postsById = postsById;
-    }
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "subcategory_id", referencedColumnName = "id", nullable = false)
-    public Subcategory getSubcategoryBySubcategoryId() {
-        return subcategoryBySubcategoryId;
-    }
+	public Subcategory getSubcategory() {
+		return subcategory;
+	}
 
-    public void setSubcategoryBySubcategoryId(Subcategory subcategoryBySubcategoryId) {
-        this.subcategoryBySubcategoryId = subcategoryBySubcategoryId;
-    }
+	public void setSubcategory(Subcategory subcategory) {
+		this.subcategory = subcategory;
+	}
 
-    @OneToMany(mappedBy = "topicByTopicId")
-    public Collection<TopicSubscription> getTopicSubscriptionsById() {
-        return topicSubscriptionsById;
-    }
+	public List<TopicSubscription> getTopicSubscriptions() {
+		return topicSubscriptions;
+	}
 
-    public void setTopicSubscriptionsById(Collection<TopicSubscription> topicSubscriptionsById) {
-        this.topicSubscriptionsById = topicSubscriptionsById;
-    }
+	public void setTopicSubscriptions(List<TopicSubscription> topicSubscriptions) {
+		this.topicSubscriptions = topicSubscriptions;
+	}
 
-    @Basic
-    @Column(name = "subcategory_id", nullable = false, insertable = false, updatable = false)
-    public int getSubcategoryId() {
-        return subcategoryId;
-    }
+	public List<TopicSeenByMember> getTopicSeenByMembers() {
+		return topicSeenByMembers;
+	}
 
-    public void setSubcategoryId(int subcategoryId) {
-        this.subcategoryId = subcategoryId;
-    }
-
-    private Collection<TopicSeenByMember> topicSeenByMembersById;
-
-    @OneToMany(mappedBy = "topicByTopicId")
-    public Collection<TopicSeenByMember> getTopicSeenByMembersById() {
-        return topicSeenByMembersById;
-    }
-
-    public void setTopicSeenByMembersById(Collection<TopicSeenByMember> topicSeenByMembersById) {
-        this.topicSeenByMembersById = topicSeenByMembersById;
-    }
+	public void setTopicSeenByMembers(List<TopicSeenByMember> topicSeenByMembers) {
+		this.topicSeenByMembers = topicSeenByMembers;
+	}
+	
 }

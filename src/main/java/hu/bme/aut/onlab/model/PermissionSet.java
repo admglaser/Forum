@@ -1,21 +1,34 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 @Entity
-@Table(name = "permission_set", schema = "", catalog = "forum")
+@Table(name = "permission_set")
 public class PermissionSet {
-    private int id;
-    private int permissionId;
-    private Set<MemberGroup> memberGroups;
-    private Set<Permission> permissions;
-
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+  
+	@Id
+	@Column(name = "id")
+	private int id;
+    
+	private String title;
+    
+    @ManyToMany
+    @JoinTable(name = "permission_set_to_member_group", 
+    	joinColumns = @JoinColumn(name = "permission_set_id", referencedColumnName = "id", nullable = false), 
+    	inverseJoinColumns = @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false))
+	private List<MemberGroup> memberGroups;
+    
+    @ManyToMany(mappedBy = "permissionSets")
+	private List<Permission> permissions;
+	
     public int getId() {
         return id;
     }
@@ -24,51 +37,28 @@ public class PermissionSet {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PermissionSet that = (PermissionSet) o;
-
-        if (id != that.id) return false;
-        return permissionId == that.permissionId;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + permissionId;
-        return result;
-    }
-
-    @ManyToMany
-    @JoinTable(name = "permission_set_to_member_group", catalog = "forum", schema = "", joinColumns = @JoinColumn(name = "permission_set_id", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "member_group_id", referencedColumnName = "id", nullable = false))
-    public Set<MemberGroup> getMemberGroups() {
+    public List<MemberGroup> getMemberGroups() {
         return memberGroups;
     }
 
-    public void setMemberGroups(Set<MemberGroup> memberGroups) {
+    public void setMemberGroups(List<MemberGroup> memberGroups) {
         this.memberGroups = memberGroups;
     }
 
-    @ManyToMany(mappedBy = "permissionSets")
-    public Set<Permission> getPermissions() {
+    public List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<Permission> permissions) {
+    public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
     }
 
-    @Basic
-    @Column(name = "permission_id", nullable = false, insertable = true, updatable = true)
-    public int getPermissionId() {
-        return permissionId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPermissionId(int permissionId) {
-        this.permissionId = permissionId;
+    public void setTitle(String title) {
+        this.title = title;
     }
+    
 }

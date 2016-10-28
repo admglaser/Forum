@@ -1,38 +1,46 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.beans.CategoryBean;
-import hu.bme.aut.onlab.beans.MemberBean;
-import hu.bme.aut.onlab.beans.PostBean;
-import hu.bme.aut.onlab.beans.TopicBean;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.util.Formatter;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.Collection;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.beans.ForumReadService;
+import hu.bme.aut.onlab.beans.LoginService;
+import hu.bme.aut.onlab.beans.dao.CategoryBean;
+import hu.bme.aut.onlab.beans.dao.PostBean;
+import hu.bme.aut.onlab.beans.dao.TopicBean;
+import hu.bme.aut.onlab.model.Category;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.util.Formatter;
+
 @Path("/home")
 public class HomeRs  {
+   
+    @EJB
+    private ForumReadService forumReadService;
+    
+    @EJB 
+    private LoginService loginService;
+    
     @EJB
     private CategoryBean categoryBean;
-
-    @EJB
-    private PostBean postBean;
-
+    
     @EJB
     private TopicBean topicBean;
-
+    
     @EJB
-    private MemberBean memberBean;
+    private PostBean postBean;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -44,34 +52,39 @@ public class HomeRs  {
 
             JSONArray subcategoriesJsonArray = new JSONArray();
 
-            for (Subcategory subcategory : category.getSubcategoriesById()) {
+            categoryJson.put("title", category.getTitle());
+            categoryJson.put("subcategories", subcategoriesJsonArray);
+            for (Subcategory subcategory : category.getSubcategories()) {
                 JSONObject subcategoryJson = new JSONObject();
+                Collection<Topic> topics = subcategory.getTopics();
 
-                if (! subcategory.getTopicsById().isEmpty() ) {
-                    Topic lastTopic = topicBean.getTopicWithLastPostFromSubcategory(subcategory.getId());
-                    Post lastPost = postBean.getLastPostFromTopic(lastTopic.getId());
-                    Member memberOfLastPost = lastPost.getMemberByMemberId();
+                int totalPosts = 0;
+                for (Topic topic : topics) {
+                	totalPosts += topic.getPosts().size();
+                }
+                
+                subcategoryJson.put("title", subcategory.getTitle());
+                subcategoryJson.put("desc", subcategory.getDesc());
+                subcategoryJson.put("topicCount", topics.size());
+                subcategoryJson.put("postCount", totalPosts);
+                subcategoryJson.put("hasLasTopic", ! topics.isEmpty());
 
-                    subcategoryJson.put("postCount", lastTopic.getPostsById().size());
+                if (!topics.isEmpty() ) {
+                    Topic lastTopic = forumReadService.getTopicWithLastPostFromSubcategory(subcategory);
+                    Post lastPost = forumReadService.getLastPostFromTopic(lastTopic);
+                    Member memberOfLastPost = lastPost.getMember();
+
                     subcategoryJson.put("lastTitle", lastTopic.getTitle());
                     subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
                     subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
                     subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
                     subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                     subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
-                    subcategoryJson.put("unread", topicBean.hasUnreadPosts(lastTopic.getId(), memberBean.getCurrentMember().getId()));
+                    subcategoryJson.put("unread", forumReadService.hasTopicUnreadPostsByMember(lastTopic, loginService.getCurrentMember()));
                 }
-
-                subcategoryJson.put("title", subcategory.getTitle());
-                subcategoryJson.put("desc", subcategory.getDesc());
-                subcategoryJson.put("topicCount", subcategory.getTopicsById().size());
-                subcategoryJson.put("hasLasTopic", ! subcategory.getTopicsById().isEmpty());
 
                 subcategoriesJsonArray.put(subcategoryJson);
             }
-
-            categoryJson.put("title", category.getTitle());
-            categoryJson.put("subcategories", subcategoriesJsonArray);
 
             result.put(categoryJson);
         }

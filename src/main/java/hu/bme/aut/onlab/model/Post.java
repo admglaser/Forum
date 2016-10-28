@@ -1,138 +1,95 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
+import java.util.List;
 
-/**
- * Created by N. Vilagos.
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @Entity
 @Table(name = "post")
 public class Post {
-    private int id;
-    private Integer postNumber;
-    private String text;
-    private Timestamp time;
-    private Collection<MemberLike> likesById;
-    private Topic topicByTopicId;
-    private Member memberByMemberId;
-    private int topicId;
-    private int memberId;
 
-    @Id
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
-    public int getId() {
-        return id;
-    }
+	@Id
+	@Column(name = "id")
+	private int id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	private Integer postNumber;
 
-    @Basic
-    @Column(name = "post_number", nullable = false, insertable = true, updatable = true)
-    public Integer getPostNumber() {
-        return postNumber;
-    }
+	private String text;
 
-    public void setPostNumber(Integer postId) {
-        this.postNumber = postId;
-    }
+	private Timestamp time;
 
-    @Basic
-    @Column(name = "text", nullable = false, insertable = true, updatable = true, length = 255)
-    public String getText() {
-        return text;
-    }
+	@OneToMany(mappedBy = "post")
+	private List<MemberLike> likes;
 
-    public void setText(String text) {
-        this.text = text;
-    }
+	@ManyToOne
+	@JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
+	private Topic topic;
 
-    @Basic
-    @Column(name = "time", nullable = false, insertable = true, updatable = true)
-    public Timestamp getTime() {
-        return time;
-    }
+	@ManyToOne
+	@JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+	private Member member;
 
-    public void setTime(Timestamp time) {
-        this.time = time;
-    }
+	public int getId() {
+		return id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setId(int id) {
+		this.id = id;
+	}
 
-        Post post = (Post) o;
+	public Integer getPostNumber() {
+		return postNumber;
+	}
 
-        if (id != post.id) return false;
-        if (topicId != post.topicId) return false;
-        if (memberId != post.memberId) return false;
-        if (postNumber != null ? !postNumber.equals(post.postNumber) : post.postNumber != null) return false;
-        if (text != null ? !text.equals(post.text) : post.text != null) return false;
-        return !(time != null ? !time.equals(post.time) : post.time != null);
+	public void setPostNumber(Integer postId) {
+		this.postNumber = postId;
+	}
 
-    }
+	public String getText() {
+		return text;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (postNumber != null ? postNumber.hashCode() : 0);
-        result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + topicId;
-        result = 31 * result + memberId;
-        return result;
-    }
+	public void setText(String text) {
+		this.text = text;
+	}
 
-    @OneToMany(mappedBy = "postByPostId")
-    public Collection<MemberLike> getLikesById() {
-        return likesById;
-    }
+	public Timestamp getTime() {
+		return time;
+	}
 
-    public void setLikesById(Collection<MemberLike> likesById) {
-        this.likesById = likesById;
-    }
+	public void setTime(Timestamp time) {
+		this.time = time;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
-    public Topic getTopicByTopicId() {
-        return topicByTopicId;
-    }
+	public List<MemberLike> getLikes() {
+		return likes;
+	}
 
-    public void setTopicByTopicId(Topic topicByTopicId) {
-        this.topicByTopicId = topicByTopicId;
-    }
+	public void setLikes(List<MemberLike> likes) {
+		this.likes = likes;
+	}
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
-    public Member getMemberByMemberId() {
-        return memberByMemberId;
-    }
+	public Topic getTopic() {
+		return topic;
+	}
 
-    public void setMemberByMemberId(Member memberByMemberId) {
-        this.memberByMemberId = memberByMemberId;
-    }
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
 
-    @Basic
-    @Column(name = "topic_id", nullable = false, insertable = false, updatable = false)
-    public int getTopicId() {
-        return topicId;
-    }
+	public Member getMember() {
+		return member;
+	}
 
-    public void setTopicId(int topicId) {
-        this.topicId = topicId;
-    }
+	public void setMember(Member member) {
+		this.member = member;
+	}
 
-    @Basic
-    @Column(name = "member_id", nullable = false, insertable = false, updatable = false)
-    public int getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
 }
