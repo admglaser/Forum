@@ -15,13 +15,15 @@ import javax.persistence.Table;
 public class MemberGroup {
 	
 	@Id
-	@Column(name = "id")
     private int id;
     
+	@Column(name = "title")
     private String title;
     
+	@Column(name = "prefix")
     private String prefix;
     
+	@Column(name = "postfix")
     private String postfix;
     
     @OneToMany(mappedBy = "memberGroup")

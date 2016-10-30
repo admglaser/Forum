@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ExcludeSuperclassListeners;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -11,18 +12,21 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "permission")
 public class Permission {
 
 	@Id
-	@Column(name = "id")
 	private int id;
-    
+
+	@Column(name = "read_allowed")
 	private boolean readAllowed;
     
+	@Column(name = "reply_allowed")
 	private boolean replyAllowed;
     
+	@Column(name = "start_allowed")
 	private boolean startAllowed;
     
     @ManyToOne
@@ -34,6 +38,9 @@ public class Permission {
     	joinColumns = @JoinColumn(name = "permission_id", referencedColumnName = "id", nullable = false), 
     	inverseJoinColumns = @JoinColumn(name = "permission_set_id", referencedColumnName = "id", nullable = false))
 	private List<PermissionSet> permissionSets;
+    
+    @Column(name = "subcategory_id", insertable = false, updatable = false)
+    protected int subcategoryId;
     
     public int getId() {
         return id;
@@ -82,5 +89,13 @@ public class Permission {
     public void setPermissionSets(List<PermissionSet> permissionSets) {
         this.permissionSets = permissionSets;
     }
+
+	private int getSubcategoryId() {
+		return subcategoryId;
+	}
+
+	private void setSubcategoryId(int subcategoryId) {
+		this.subcategoryId = subcategoryId;
+	}
 
 }

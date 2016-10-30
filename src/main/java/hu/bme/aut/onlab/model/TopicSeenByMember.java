@@ -7,15 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@SuppressWarnings("unused")
 @Entity
-@javax.persistence.Table(name = "topic_seen_by_member")
+@Table(name = "topic_seen_by_member")
 public class TopicSeenByMember {
 
 	@Id
-	@Column(name = "id")
 	private int id;
 
+	@Column(name = "seen_time")
 	private Timestamp seenTime;
 
 	@ManyToOne
@@ -25,6 +27,12 @@ public class TopicSeenByMember {
 	@ManyToOne
 	@JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
 	private Topic topic;
+	
+	@Column(name = "member_id", insertable = false, updatable = false)
+	protected int memberId;
+	
+	@Column(name = "topic_id", insertable = false, updatable = false)
+	protected int topicId;
 
 	public int getId() {
 		return id;
@@ -56,6 +64,22 @@ public class TopicSeenByMember {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
+	}
+
+	private int getMemberId() {
+		return memberId;
+	}
+
+	private void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+	private int getTopicId() {
+		return topicId;
+	}
+
+	private void setTopicId(int topicId) {
+		this.topicId = topicId;
 	}
 	
 }

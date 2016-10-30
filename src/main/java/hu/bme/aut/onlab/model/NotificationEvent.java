@@ -14,20 +14,22 @@ import javax.persistence.Table;
 public class NotificationEvent {
   
 	@Id
-	@Column(name = "id")
 	private int id;
-    
+
+	@Column(name = "type")
 	private int type;
     
+	@Column(name = "time")
 	private Timestamp time;
     
+	@Column(name = "link")
 	private String link;
     
 	@OneToMany(mappedBy = "notificationEvent")
 	private Collection<Notification> notifications;
     
+	@Column(name = "text")
 	private String text;
-
 	
     public int getId() {
         return id;

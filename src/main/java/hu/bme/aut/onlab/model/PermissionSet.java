@@ -15,9 +15,9 @@ import javax.persistence.Table;
 public class PermissionSet {
   
 	@Id
-	@Column(name = "id")
 	private int id;
     
+	@Column(name = "title")
 	private String title;
     
     @ManyToMany

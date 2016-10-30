@@ -13,28 +13,37 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "member")
 public class Member {
 
 	@Id
-	@Column(name = "id")
     private int id;
     
+	@Column(name = "user_name")
 	private String userName;
     
+	@Column(name = "password")
 	private String password;
     
+	@Column(name = "email")
 	private String email;
     
+	@Column(name = "display_name")
+	
 	private String displayName;
     
+	@Column(name = "post_count")
 	private int postCount;
     
+	@Column(name = "likes_count")
 	private int likesCount;
     
+	@Column(name = "profile_views_count")
 	private int profileViewsCount;
     
+	@Column(name = "birthday")
 	private Date birthday;
     
     @OneToMany(mappedBy = "member")
@@ -59,8 +68,10 @@ public class Member {
     @ManyToMany(mappedBy = "members")
     private List<Conversation> conversations;
     
+    @Column(name = "register_time")
 	private Timestamp registerTime;
     
+    @Column(name = "picture_id")
 	private String pictureId;
     
 	@OneToMany(mappedBy = "member")
@@ -69,6 +80,8 @@ public class Member {
 	@OneToMany(mappedBy = "member")
 	private List<TopicSeenByMember> topicSeenByMembers;
 
+	@Column(name = "member_group_id", insertable = false, updatable = false)
+	protected int memberGroupId;
 	
     public int getId() {
         return id;
@@ -229,5 +242,13 @@ public class Member {
     public void setTopicSeenByMembers(List<TopicSeenByMember> topicSeenByMembers) {
         this.topicSeenByMembers = topicSeenByMembers;
     }
+
+	private int getMemberGroupId() {
+		return memberGroupId;
+	}
+
+	private void setMemberGroupId(int memberGroupId) {
+		this.memberGroupId = memberGroupId;
+	}
     
 }

@@ -17,13 +17,15 @@ import javax.persistence.Table;
 public class Conversation {
     
 	@Id
-	@Column(name = "id")
 	private int id;
     
+	@Column(name = "conversation_number")
 	private int conversationNumber;
     
+	@Column(name = "title")
 	private String title;
     
+	@Column(name = "message_count")
 	private int messageCount;
     
 	@OneToMany(mappedBy = "conversation")
@@ -37,7 +39,6 @@ public class Conversation {
     
 	@OneToMany(mappedBy = "conversation")
 	private List<ConversationSeenByMember> conversationSeenByMembers;
-
 	
     public int getId() {
         return id;

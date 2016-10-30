@@ -13,9 +13,9 @@ import javax.persistence.Table;
 public class Category {
 
 	@Id
-	@Column(name = "id")
 	private int id;
 
+	@Column(name = "title")
 	private String title;
 
 	@OneToMany(mappedBy = "category")

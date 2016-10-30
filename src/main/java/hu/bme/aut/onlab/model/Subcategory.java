@@ -10,16 +10,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "subcategory")
 public class Subcategory {
 	
 	@Id
-	@Column(name = "id")
 	private int id;
 	
+	@Column(name = "title")
 	private String title;
 	
+	@Column(name = "desc")
 	private String desc;
 	
 	@OneToMany(mappedBy = "subcategory")
@@ -34,6 +36,9 @@ public class Subcategory {
 	
 	@OneToMany(mappedBy = "subcategory")
 	private List<Topic> topics;
+	
+	@Column(name = "category_id", insertable = false, updatable = false)
+	protected int categoryId;
 
 	public int getId() {
 		return id;
@@ -89,6 +94,14 @@ public class Subcategory {
 
 	public void setTopics(List<Topic> topics) {
 		this.topics = topics;
+	}
+
+	private int getCategoryId() {
+		return categoryId;
+	}
+
+	private void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
 	}
 
 }

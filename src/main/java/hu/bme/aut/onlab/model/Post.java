@@ -11,18 +11,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@SuppressWarnings("unused")
 @Entity
 @Table(name = "post")
 public class Post {
 
 	@Id
-	@Column(name = "id")
 	private int id;
 
-	private Integer postNumber;
+	@Column(name = "post_number")
+	private int postNumber;
 
+	@Column(name = "text")
 	private String text;
 
+	@Column(name = "time")
 	private Timestamp time;
 
 	@OneToMany(mappedBy = "post")
@@ -35,6 +38,12 @@ public class Post {
 	@ManyToOne
 	@JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
 	private Member member;
+	
+	@Column(name = "member_id", insertable = false, updatable = false)
+	protected int memberId;
+	
+	@Column(name = "topic_id", insertable = false, updatable = false)
+	protected int topicId;
 
 	public int getId() {
 		return id;
@@ -44,12 +53,12 @@ public class Post {
 		this.id = id;
 	}
 
-	public Integer getPostNumber() {
+	public int getPostNumber() {
 		return postNumber;
 	}
 
-	public void setPostNumber(Integer postId) {
-		this.postNumber = postId;
+	public void setPostNumber(int postNumber) {
+		this.postNumber = postNumber;
 	}
 
 	public String getText() {
@@ -90,6 +99,22 @@ public class Post {
 
 	public void setMember(Member member) {
 		this.member = member;
+	}
+
+	private int getMemberId() {
+		return memberId;
+	}
+
+	private void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+	private int getTopicId() {
+		return topicId;
+	}
+
+	private void setTopicId(int topicId) {
+		this.topicId = topicId;
 	}
 
 }

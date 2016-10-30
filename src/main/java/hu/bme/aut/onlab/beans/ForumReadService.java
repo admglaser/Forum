@@ -47,8 +47,11 @@ public class ForumReadService {
 		CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
 
 		criteriaQuery.where(
-				criteriaBuilder.and(criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.memberId), member.getId()),
-						criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.topicId), topic.getId())));
+				criteriaBuilder.and(
+						criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.memberId), member.getId()),
+						criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.topicId), topic.getId())
+				)
+		);
 
 		criteriaQuery.select(rootEntity);
 
@@ -68,8 +71,8 @@ public class ForumReadService {
 		CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
 		CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
 
-		Join<Topic, Subcategory> subcategoryJoin = topicRoot.join(Topic_.subcategoryBySubcategoryId);
-		Join<Topic, Post> postJoin = topicRoot.join(Topic_.postsById);
+		Join<Topic, Subcategory> subcategoryJoin = topicRoot.join(Topic_.subcategory);
+		Join<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 
 		criteriaQuery.groupBy(subcategoryJoin.get(Subcategory_.id));
 		criteriaQuery.where(criteriaBuilder.equal(subcategoryJoin.get(Subcategory_.id), subcategory.getId()));
@@ -103,7 +106,7 @@ public class ForumReadService {
 		CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
 		CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
 
-		Join<Topic, Post> postJoin = topicRoot.join(Topic_.postsById);
+		Join<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 
 		criteriaQuery.where(criteriaBuilder.and(criteriaBuilder.equal(postJoin.get(Post_.memberId), member.getId()),
 				criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1)));
@@ -149,7 +152,7 @@ public class ForumReadService {
 		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
 
 		// Posts that has no like will not be included
-		Join<Post, MemberLike> likeJoin = root.join(Post_.likesById, JoinType.INNER);
+		Join<Post, MemberLike> likeJoin = root.join(Post_.likes, JoinType.INNER);
 
 		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.memberId), member.getId()));
 
