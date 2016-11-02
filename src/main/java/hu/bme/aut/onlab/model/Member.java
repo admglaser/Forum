@@ -36,10 +36,16 @@ public class Member {
     
 	@Column(name = "post_count")
 	private int postCount;
+	
+	@Column(name = "topic_count")
+	private int topicCount;
     
 	@Column(name = "likes_count")
 	private int likesCount;
-    
+
+	@Column(name = "views_count")
+	private int viewsCount;
+	
 	@Column(name = "profile_views_count")
 	private int profileViewsCount;
     
@@ -130,6 +136,14 @@ public class Member {
     public void setPostCount(int postCount) {
         this.postCount = postCount;
     }
+    
+    public int getTopicCount() {
+        return topicCount;
+    }
+
+    public void setTopicCount(int topicCount) {
+        this.topicCount = topicCount;
+    }
 
     public int getLikesCount() {
         return likesCount;
@@ -137,6 +151,14 @@ public class Member {
 
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
+    }
+    
+    public int getViewsCount() {
+        return viewsCount;
+    }
+
+    public void setViewsCount(int viewsCount) {
+        this.viewsCount = viewsCount;
     }
 
     public int getProfileViewsCount() {

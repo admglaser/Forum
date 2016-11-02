@@ -25,6 +25,7 @@ import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.model.Topic;
 
+@Path("/user")
 public class UserRs {
 
 	@EJB
@@ -65,7 +66,7 @@ public class UserRs {
 	@GET
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listRemoteCombinedUserOverview(@PathParam("userId") int userId) {
+	public String getUserOverview(@PathParam("userId") int userId) {
 		Member member = memberBean.findEntityById(userId);
 
 		JSONObject result = generateBase(member);
@@ -90,7 +91,7 @@ public class UserRs {
 	@GET
 	@Path("{userId}/likes")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listRemoteCombinedUserLikes(@PathParam("userId") int userId) {
+	public String getUserLikes(@PathParam("userId") int userId) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray likedPostsJsonArray = new JSONArray();
@@ -116,7 +117,7 @@ public class UserRs {
 	@GET
 	@Path("{userId}/topics")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listRemoteCombinedUserTopics(@PathParam("userId") int userId) {
+	public String getUserTopics(@PathParam("userId") int userId) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray topicsJsonArray = new JSONArray();
@@ -137,11 +138,11 @@ public class UserRs {
 		result.put("topics", topicsJsonArray);
 		return result.toString();
 	}
-
+	
 	@GET
 	@Path("{userId}/posts")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listRemoteCombinedUserPosts(@PathParam("userId") int userId) {
+	public String getUserPosts(@PathParam("userId") int userId) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray createdPostsJsonArray = new JSONArray();

@@ -5,7 +5,6 @@ import javax.ejb.Stateless;
 
 import hu.bme.aut.onlab.model.Member;
 
-
 @LocalBean
 @Stateless
 public class MemberBean extends BaseBean<Member> {

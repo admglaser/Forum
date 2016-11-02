@@ -5,7 +5,6 @@ import javax.ejb.Stateless;
 
 import hu.bme.aut.onlab.model.Category;
 
-
 @LocalBean
 @Stateless
 public class CategoryBean extends BaseBean<Category> {

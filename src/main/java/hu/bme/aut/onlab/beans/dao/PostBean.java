@@ -5,7 +5,6 @@ import javax.ejb.Stateless;
 
 import hu.bme.aut.onlab.model.Post;
 
-
 @LocalBean
 @Stateless
 public class PostBean extends BaseBean<Post> {

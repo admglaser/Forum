@@ -5,7 +5,6 @@ import javax.ejb.Stateless;
 
 import hu.bme.aut.onlab.model.Topic;
 
-
 @LocalBean
 @Stateless
 public class TopicBean extends BaseBean<Topic> {

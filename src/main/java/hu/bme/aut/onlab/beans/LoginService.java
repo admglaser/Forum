@@ -47,7 +47,7 @@ public class LoginService {
 		}
 	}
 
-	public Member login(String username, String password) {
+	public String login(String username, String password) {
 		CriteriaHelper<Member> criteriaHelper = new CriteriaHelper<>(Member.class, em, CriteriaType.SELECT);
 		CriteriaQuery<Member> criteriaQuery = criteriaHelper.getCriteriaQuery();
 		Root<Member> rootEntity = criteriaHelper.getRootEntity();
@@ -66,7 +66,7 @@ public class LoginService {
 			Member member = em.createQuery(criteriaQuery).getSingleResult();
 			String uuid = UUID.randomUUID().toString();
 			membersMap.put(uuid, member.getId());
-			return member;
+			return uuid;
 		} catch (NoResultException e) {
 			return null;
 		}

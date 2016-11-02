@@ -19,6 +19,7 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Notification;
 import hu.bme.aut.onlab.model.NotificationEvent;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationType;
 
 @Path("/notifications")
@@ -38,16 +39,22 @@ public class NotificationsRs {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getNotifications() {
+		return getNotificationsWithPage(1);
+	}
+	
+	@Path("{pageNumber}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getNotificationsWithPage(@PathParam("pageNumber") int pageNumber) {
 		JSONObject result = new JSONObject();
 
 		Member currentMember = loginService.getCurrentMember();
-
+		
 		Collection<Notification> notifications = currentMember.getNotifications();
 		JSONArray notificationsJsonArray = new JSONArray();
 		for (Notification notification : notifications) {
 			JSONObject notificationJson = new JSONObject();
 			NotificationEvent notificationEvent = notification.getNotificationEvent();
-
 			notificationJson.put("type", NotificationType.getNotificationType(notificationEvent.getType()).getString());
 			notificationJson.put("text", notificationEvent.getText());
 			notificationJson.put("time", Formatter.formatTimeStampForMessage(notificationEvent.getTime()));
@@ -56,15 +63,9 @@ public class NotificationsRs {
 			notificationsJsonArray.put(notificationJson);
 		}
 		result.put("notifications", notificationsJsonArray);
-
+		result.put("pages", NavigationUtils.getPagesJsonArray("#/notifications", pageNumber, notifications.size()));
 		return result.toString();
-	}
 
-	@Path("{notificationNumber}")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public String getNotifications(@PathParam("notificationNumber") int notificationNumber) {
-		return null;
 	}
 
 }

@@ -5,7 +5,6 @@ import javax.ejb.Stateless;
 
 import hu.bme.aut.onlab.model.Subcategory;
 
-
 @LocalBean
 @Stateless
 public class SubcategoryBean extends BaseBean<Subcategory> {

@@ -24,6 +24,7 @@ import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Subcategory;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/subcategory")
 public class SubcategoryRs {
@@ -52,7 +53,14 @@ public class SubcategoryRs {
     @GET
     @Path("{subcategoryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedSubcategory(@PathParam("subcategoryId") int subcategoryId) {
+    public String getSubcategory(@PathParam("subcategoryId") int subcategoryId) {
+    	return getSubcategoryWithPage(subcategoryId, 1);
+    }
+    
+    @GET
+    @Path("{subcategoryId}/{pageNumber}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getSubcategoryWithPage(@PathParam("subcategoryId") int subcategoryId, @PathParam("pageNumber") int pageNumber) {
         JSONObject result = new JSONObject();
         JSONArray topicJsonArray = new JSONArray();
 
@@ -85,10 +93,9 @@ public class SubcategoryRs {
             topicJsonArray.put(topicJson);
         }
 
-
         result.put("title", subcategory.getTitle());
         result.put("topics", topicJsonArray);
-
+        result.put("pages", NavigationUtils.getPagesJsonArray("#/subcategory/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         return result.toString();
     }
 }

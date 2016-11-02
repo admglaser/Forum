@@ -44,7 +44,7 @@ public class HomeRs  {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String listRemoteCombinedCategory() {
+    public String getHome() {
         JSONArray result = new JSONArray();
         List<Category> categories = categoryBean.findAllEntity();
         for (Category category : categories) {
