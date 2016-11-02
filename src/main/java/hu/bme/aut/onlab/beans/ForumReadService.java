@@ -173,7 +173,7 @@ public class ForumReadService {
 
 		try {
 			return em.createQuery(criteriaQuery)
-					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
+					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
 		} catch (NoResultException e) {
@@ -219,4 +219,21 @@ public class ForumReadService {
 		}
 	}
 
+	public List<Member> getMembersOnPage(int pageNumber) {
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
+		Root<Member> root = criteriaQuery.from(Member.class);
+
+		criteriaQuery.select(root);
+
+		try {
+			return em.createQuery(criteriaQuery)
+					.setFirstResult((pageNumber-1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			// Has no likes.
+			return Collections.emptyList();
+		}
+	}
 }

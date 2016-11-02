@@ -2,7 +2,6 @@ package hu.bme.aut.onlab.rest;
 
 import hu.bme.aut.onlab.beans.ForumReadService;
 import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.dao.MemberBean;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.util.NavigationUtils;
@@ -26,9 +25,6 @@ public class MemberRs {
     @EJB
     private LoginService loginService;
 
-    @EJB
-    private MemberBean memberBean;
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getMembers() {
@@ -41,7 +37,7 @@ public class MemberRs {
         JSONObject result = new JSONObject();
         JSONArray memberJsonArray = new JSONArray();
 
-        List<Member> members = memberBean.findAllEntity();
+        List<Member> members = forumReadService.getMembersOnPage(pageNumber);
 
         for (Member member : members) {
             JSONObject memberJson = new JSONObject();
