@@ -18,7 +18,6 @@ import javax.persistence.criteria.Root;
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberLike;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.model.Subcategory;
@@ -27,6 +26,7 @@ import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.model.TopicSeenByMember;
 import hu.bme.aut.onlab.model.TopicSeenByMember_;
 import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
@@ -99,7 +99,7 @@ public class ForumReadService {
 		return false;
 	}
 
-	public List<Topic> getCreatedTopicsByMember(Member member) {
+	public List<Topic> getCreatedTopicsByMember(Member member, int pageNumber) {
 		CriteriaHelper<Topic> topicCriteriaHelper = new CriteriaHelper<>(Topic.class, em, CriteriaType.SELECT);
 		;
 		Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
@@ -112,7 +112,10 @@ public class ForumReadService {
 				criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1)));
 
 		try {
-			return em.createQuery(criteriaQuery).getResultList();
+			return em.createQuery(criteriaQuery)
+					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
 		} catch (NoResultException e) {
 			// Has no created Topic.
 			return Collections.emptyList();
@@ -145,21 +148,24 @@ public class ForumReadService {
 		return getPostFromTopicAtPosition(topic, Position.LAST);
 	}
 
-	public List<Post> getLikedPostsOfMember(Member member) {
+	public List<Post> getLikedPostsOfMember(Member member, int pageNumber) {
 		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
 		Root<Post> root = postCriteriaHelper.getRootEntity();
 		CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
 		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
 
 		// Posts that has no like will not be included
-		Join<Post, MemberLike> likeJoin = root.join(Post_.likes, JoinType.INNER);
+		root.join(Post_.likes, JoinType.INNER);
 
 		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.memberId), member.getId()));
 
 		criteriaQuery.select(root).distinct(true);
 
 		try {
-			return em.createQuery(criteriaQuery).getResultList();
+			return em.createQuery(criteriaQuery)
+					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
 		} catch (NoResultException e) {
 			// Has no likes.
 			return Collections.emptyList();

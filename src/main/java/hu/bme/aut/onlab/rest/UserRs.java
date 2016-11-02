@@ -68,20 +68,14 @@ public class UserRs {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserOverview(@PathParam("userId") int userId) {
 		Member member = memberBean.findEntityById(userId);
-
 		JSONObject result = generateBase(member);
 
-		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member);
 		MemberGroup memberGroup = member.getMemberGroup();
 
 		result.put("memberGroup", memberGroup.getTitle());
-		result.put("topics", createdTopics.size());
-		/*
-		 * TODO: Discuss 2 options: 1. member.getPostCount(); 2.
-		 * postBean.findEntitiesByEquality(Post_.memberId, userId).size();
-		 */
+		result.put("topics", member.getTopicCount());
 		result.put("posts", member.getPostCount());
-		result.put("views", member.getProfileViewsCount());
+		result.put("views", member.getViewsCount());
 		result.put("birthday", member.getBirthday());
 		result.put("email", member.getEmail());
 
@@ -92,11 +86,18 @@ public class UserRs {
 	@Path("{userId}/likes")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserLikes(@PathParam("userId") int userId) {
+		return getUserLikesWithPage(userId, 1);
+	}
+	
+	@GET
+	@Path("{userId}/likes/{pageNumber}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getUserLikesWithPage(@PathParam("userId") int userId, @PathParam("pageNumber") int pageNumber) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray likedPostsJsonArray = new JSONArray();
 
-		List<Post> likedPosts = forumReadService.getLikedPostsOfMember(member);
+		List<Post> likedPosts = forumReadService.getLikedPostsOfMember(member, pageNumber);
 		for (Post likedPost : likedPosts) {
 			JSONObject likedPostJsonObject = new JSONObject();
 
@@ -118,11 +119,18 @@ public class UserRs {
 	@Path("{userId}/topics")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserTopics(@PathParam("userId") int userId) {
+		return getUserTopicsWithPage(userId, 1);
+	}
+	
+	@GET
+	@Path("{userId}/topics/{pageNumber}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getUserTopicsWithPage(@PathParam("userId") int userId, @PathParam("pageNumber") int pageNumber) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray topicsJsonArray = new JSONArray();
 
-		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member);
+		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member, pageNumber);
 		for (Topic createdTopic : createdTopics) {
 			JSONObject createdTopicJson = new JSONObject();
 			Post firstPost = forumReadService.getFirstPostFromTopic(createdTopic);
@@ -143,10 +151,18 @@ public class UserRs {
 	@Path("{userId}/posts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserPosts(@PathParam("userId") int userId) {
+		return getUserPostsWithPage(userId, 1);
+	}
+	
+	@GET
+	@Path("{userId}/posts/{pageNumber}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getUserPostsWithPage(@PathParam("userId") int userId, @PathParam("pageNumber") int pageNumber) {
 		Member member = memberBean.findEntityById(userId);
 		JSONObject result = generateBase(member);
 		JSONArray createdPostsJsonArray = new JSONArray();
 
+		//TODO limit, offset
 		List<Post> createdPosts = postBean.findEntitiesByEquality(Post_.memberId, userId);
 		for (Post createdPost : createdPosts) {
 			JSONObject createdPostJson = new JSONObject();

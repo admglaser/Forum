@@ -46,9 +46,6 @@ public class Member {
 	@Column(name = "views_count")
 	private int viewsCount;
 	
-	@Column(name = "profile_views_count")
-	private int profileViewsCount;
-    
 	@Column(name = "birthday")
 	private Date birthday;
     
@@ -159,14 +156,6 @@ public class Member {
 
     public void setViewsCount(int viewsCount) {
         this.viewsCount = viewsCount;
-    }
-
-    public int getProfileViewsCount() {
-        return profileViewsCount;
-    }
-
-    public void setProfileViewsCount(int profileViewsCount) {
-        this.profileViewsCount = profileViewsCount;
     }
 
     public Date getBirthday() {
