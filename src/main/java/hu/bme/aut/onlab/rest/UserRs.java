@@ -22,7 +22,6 @@ import hu.bme.aut.onlab.beans.dao.TopicBean;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.model.Topic;
 
 @Path("/user")
@@ -160,8 +159,7 @@ public class UserRs {
 		JSONObject result = generateBase(member);
 		JSONArray createdPostsJsonArray = new JSONArray();
 
-		//TODO limit, offset
-		List<Post> createdPosts = postBean.findEntitiesByEquality(Post_.memberId, userId);
+		List<Post> createdPosts = forumReadService.getPostsByMember(member, pageNumber);
 		for (Post createdPost : createdPosts) {
 			JSONObject createdPostJson = new JSONObject();
 

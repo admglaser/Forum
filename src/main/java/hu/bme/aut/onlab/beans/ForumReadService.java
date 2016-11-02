@@ -101,15 +101,18 @@ public class ForumReadService {
 
 	public List<Topic> getCreatedTopicsByMember(Member member, int pageNumber) {
 		CriteriaHelper<Topic> topicCriteriaHelper = new CriteriaHelper<>(Topic.class, em, CriteriaType.SELECT);
-		;
 		Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
 		CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
 		CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
 
 		Join<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 
-		criteriaQuery.where(criteriaBuilder.and(criteriaBuilder.equal(postJoin.get(Post_.memberId), member.getId()),
-				criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1)));
+		criteriaQuery.where(
+				criteriaBuilder.and(
+						criteriaBuilder.equal(postJoin.get(Post_.memberId), member.getId()),
+						criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1)
+				)
+		);
 
 		try {
 			return em.createQuery(criteriaQuery)
@@ -118,6 +121,27 @@ public class ForumReadService {
 					.getResultList();
 		} catch (NoResultException e) {
 			// Has no created Topic.
+			return Collections.emptyList();
+		}
+	}
+	
+	public List<Post> getPostsByMember(Member member, int pageNumber) {
+		
+		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
+		Root<Post> postRoot = postCriteriaHelper.getRootEntity();
+		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
+		CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
+
+		postRoot.join(Post_.member);
+		criteriaQuery.where(criteriaBuilder.equal(postRoot.get(Post_.memberId), member.getId()));
+
+		try {
+			return em.createQuery(criteriaQuery)
+					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			// Has no posts.
 			return Collections.emptyList();
 		}
 	}
