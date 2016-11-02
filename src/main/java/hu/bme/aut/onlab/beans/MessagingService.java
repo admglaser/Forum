@@ -25,7 +25,7 @@ public class MessagingService {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Message> getMessagesOfConversation(Conversation conversation, int pageNumber) {
+    public List<Message> getMessagesOfConversationOnPage(Conversation conversation, int pageNumber) {
         CriteriaHelper<Message> conversationCriteriaHelper = new CriteriaHelper<>(Message.class, em, CriteriaHelper.CriteriaType.SELECT);
         Root<Message> messageRoot = conversationCriteriaHelper.getRootEntity();
         CriteriaBuilder criteriaBuilder = conversationCriteriaHelper.getCriteriaBuilder();

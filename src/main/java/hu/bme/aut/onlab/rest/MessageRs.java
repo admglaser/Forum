@@ -55,37 +55,38 @@ public class MessageRs {
         JSONArray messagesJsonArray = new JSONArray();
 
         Conversation conversation = conversationBean.findEntityById(conversationNumber);
-        Message firstMessage = null;
 
         if (conversation != null) {
-            List<Message> messages = messagingService.getMessagesOfConversation(conversation, pageNumber);
-            firstMessage = messages.get(0);
+            List<Message> messages = messagingService.getMessagesOfConversationOnPage(conversation, pageNumber);
+            // messages is empty if navigated to a too high page number
+            if (! messages.isEmpty() ) {
+                Message firstMessage = messages.get(0);
 
-            for (Message message : messages) {
-                JSONObject messageJson = new JSONObject();
+                for (Message message : messages) {
+                    JSONObject messageJson = new JSONObject();
 
-                Member member = message.getMember();
-                MemberGroup memberGroup = forumReadService.getMemberGroupOfMember(member);
+                    Member member = message.getMember();
+                    MemberGroup memberGroup = member.getMemberGroup();
 
-                messageJson.put("userName", member.getDisplayName());
-                messageJson.put("userLink", "#/user/" + member.getId());
-                messageJson.put("userImageLink", member.getPictureId());
-                messageJson.put("posts", member.getPostCount());
-                messageJson.put("memberGroup", memberGroup.getTitle());
-                messageJson.put("time", Formatter.formatTimeStampForMessage(message.getTime()));
-                messageJson.put("text", message.getText());
-                messageJson.put("messageNumber", message.getMessageNumber());
-                messageJson.put("messageLink", "#/messages/" + conversation.getId() + "/" + pageNumber);
-                messagesJsonArray.put(messageJson);
+                    messageJson.put("userName", member.getDisplayName());
+                    messageJson.put("userLink", "#/user/" + member.getId());
+                    messageJson.put("userImageLink", member.getPictureId());
+                    messageJson.put("posts", member.getPostCount());
+                    messageJson.put("memberGroup", memberGroup.getTitle());
+                    messageJson.put("time", Formatter.formatTimeStampForMessage(message.getTime()));
+                    messageJson.put("text", message.getText());
+                    messageJson.put("messageNumber", message.getMessageNumber());
+                    messageJson.put("messageLink", "#/messages/" + conversation.getId() + "/" + pageNumber);
+                    messagesJsonArray.put(messageJson);
+                }
+
+                result.put("title", conversation.getTitle());
+                result.put("starter", (firstMessage != null) ? firstMessage.getMember().getDisplayName() : null);
+                result.put("startDate", (firstMessage != null) ? firstMessage.getTime() : null);
+                result.put("messages", messagesJsonArray);
+                result.put("pages", NavigationUtils.getPagesJsonArray("#/message/" + conversation.getId(), pageNumber, messagingService.getMessagesCountOfConversation(conversation)));
             }
-
         }
-
-        result.put("title",     (conversation != null) ? conversation.getTitle()                   : null);
-        result.put("starter",   (firstMessage != null) ? firstMessage.getMember().getDisplayName() : null);
-        result.put("startDate", (firstMessage != null) ? firstMessage.getTime()                    : null);
-        result.put("messages",  messagesJsonArray);
-        result.put("pages", NavigationUtils.getPagesJsonArray("#/message/" + conversation.getId(), pageNumber, messagingService.getMessagesCountOfConversation(conversation)));
         return result.toString();
     }
 }

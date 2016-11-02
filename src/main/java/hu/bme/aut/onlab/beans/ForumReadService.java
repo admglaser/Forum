@@ -3,6 +3,11 @@ package hu.bme.aut.onlab.beans;
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
 import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.Conversation_;
+import hu.bme.aut.onlab.model.Message_;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory_;
+import hu.bme.aut.onlab.model.Topic_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
 import javax.ejb.LocalBean;
@@ -200,25 +205,6 @@ public class ForumReadService {
 		}
 	}
 
-	public MemberGroup getMemberGroupOfMember(Member member) {
-		CriteriaHelper<MemberGroup> memberGroupCriteriaHelper = new CriteriaHelper<>(MemberGroup.class, em, CriteriaType.SELECT);
-		Root<MemberGroup> root = memberGroupCriteriaHelper.getRootEntity();
-		CriteriaBuilder criteriaBuilder = memberGroupCriteriaHelper.getCriteriaBuilder();
-		CriteriaQuery<MemberGroup> criteriaQuery = memberGroupCriteriaHelper.getCriteriaQuery();
-
-		Join<MemberGroup, Member> memberJoin = root.join(MemberGroup_.members);
-
-		criteriaQuery.where(criteriaBuilder.equal(memberJoin.get(Member_.id), member.getId()));
-
-		criteriaQuery.select(root);
-
-		try {
-			return em.createQuery(criteriaQuery).getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-	}
-
 	public List<Member> getMembersOnPage(int pageNumber) {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Member> criteriaQuery = criteriaBuilder.createQuery(Member.class);
@@ -228,12 +214,53 @@ public class ForumReadService {
 
 		try {
 			return em.createQuery(criteriaQuery)
-					.setFirstResult((pageNumber-1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
 		} catch (NoResultException e) {
 			// Has no likes.
 			return Collections.emptyList();
+		}
+	}
+
+	public List<Post> getPostsOfTopicOnPage(Topic topic, int pageNumber) {
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> query = criteriaBuilder.createQuery(Post.class);
+		Root<Post> root = query.from(Post.class);
+
+		Join<Post, Topic> topicJoin = root.join(Post_.topic);
+
+		query.where(criteriaBuilder.and(criteriaBuilder.equal(topicJoin.get(Topic_.id), topic.getId())));
+
+		query.orderBy(criteriaBuilder.asc(root.get(Post_.time)));
+
+		query.select(root);
+
+		try {
+			return em.createQuery(query)
+					.setFirstResult((pageNumber-1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public int getPostsCountOfTopic(Topic topic) {
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+		Root<Post> root = query.from(Post.class);
+
+		Join<Post, Topic> topicJoin = root.join(Post_.topic);
+
+		query.where(criteriaBuilder.and(criteriaBuilder.equal(topicJoin.get(Topic_.id), topic.getId())));
+
+		query.select(criteriaBuilder.count(root));
+
+		try {
+			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
 		}
 	}
 }

@@ -43,7 +43,7 @@ public class MemberRs {
             JSONObject memberJson = new JSONObject();
 
             int memberId = member.getId();
-            MemberGroup memberGroup = forumReadService.getMemberGroupOfMember(member);
+            MemberGroup memberGroup = member.getMemberGroup();
             String memberGroupTitle = "";
             if (memberGroup != null) {
                 memberGroupTitle = memberGroup.getTitle();
