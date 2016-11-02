@@ -171,12 +171,11 @@ public class ForumReadService {
 	public Post getLastPostFromTopic(Topic topic) {
 		return getPostFromTopicAtPosition(topic, Position.LAST);
 	}
-
+	
 	public List<Post> getLikedPostsOfMember(Member member, int pageNumber) {
-		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
-		Root<Post> root = postCriteriaHelper.getRootEntity();
-		CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
-		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
+		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> criteriaQuery = criteriaBuilder.createQuery(Post.class);
+		Root<Post> root = criteriaQuery.from(Post.class);
 
 		// Posts that has no like will not be included
 		root.join(Post_.likes, JoinType.INNER);
@@ -193,6 +192,24 @@ public class ForumReadService {
 		} catch (NoResultException e) {
 			// Has no likes.
 			return Collections.emptyList();
+		}
+	}
+	
+	public int getLikedPostsCountOfMember(Member member) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		Root<Post> postRoot = query.from(Post.class);
+
+		// Posts that has no like will not be included
+		postRoot.join(Post_.likes, JoinType.INNER);		
+
+		query.select(builder.count(query.from(Post.class)));
+		query.where(builder.equal(postRoot.get(Post_.memberId), member.getId()));
+		
+		try {
+			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
 		}
 	}
 

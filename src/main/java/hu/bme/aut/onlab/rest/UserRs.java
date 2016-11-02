@@ -23,6 +23,7 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/user")
 public class UserRs {
@@ -109,6 +110,7 @@ public class UserRs {
 		}
 
 		result.put("posts", likedPostsJsonArray);
+		result.put("pages", NavigationUtils.getPagesJsonArray("#/user/" + userId + "/likes", pageNumber, forumReadService.getLikedPostsCountOfMember(member)));
 		return result.toString();
 	}
 
@@ -141,6 +143,7 @@ public class UserRs {
 		}
 
 		result.put("topics", topicsJsonArray);
+		result.put("pages", NavigationUtils.getPagesJsonArray("#/user/" + userId + "/topics", pageNumber, member.getTopicCount()));
 		return result.toString();
 	}
 	
@@ -174,6 +177,8 @@ public class UserRs {
 		}
 
 		result.put("posts", createdPostsJsonArray);
+		result.put("pages", NavigationUtils.getPagesJsonArray("#/user/" + userId + "/posts", pageNumber, member.getPostCount()));
 		return result.toString();
 	}
+	
 }
