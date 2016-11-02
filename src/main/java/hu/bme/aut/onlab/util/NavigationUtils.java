@@ -20,7 +20,7 @@ public class NavigationUtils {
 	public static JSONArray getPagesJsonArray(String link, int currentPage, int elementCount) {
 		JSONArray pagesJsonArray = new JSONArray();
 		
-		int lastPage = elementCount / ELEMENTS_PER_PAGE;
+		int lastPage = (int) Math.ceil(elementCount / ((double) ELEMENTS_PER_PAGE));
 		
 		pagesJsonArray.put(getPageJsonObject(FIRST_PAGE_TEXT, link, false));
 		

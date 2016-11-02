@@ -1,9 +1,9 @@
 package hu.bme.aut.onlab.beans.dao;
 
+import hu.bme.aut.onlab.model.Member;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-
-import hu.bme.aut.onlab.model.Member;
 
 @LocalBean
 @Stateless
