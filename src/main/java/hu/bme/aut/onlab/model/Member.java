@@ -74,6 +74,9 @@ public class Member {
     @Column(name = "register_time")
 	private Timestamp registerTime;
     
+    @Column(name = "active_time")
+    private Timestamp activeTime;
+    
     @Column(name = "picture_id")
 	private String pictureId;
     
@@ -228,6 +231,14 @@ public class Member {
 
     public void setRegisterTime(Timestamp registerTime) {
         this.registerTime = registerTime;
+    }
+    
+    public Timestamp getActiveTime() {
+        return activeTime;
+    }
+
+    public void setActiveTime(Timestamp activeTime) {
+        this.activeTime = activeTime;
     }
 
     public String getPictureId() {

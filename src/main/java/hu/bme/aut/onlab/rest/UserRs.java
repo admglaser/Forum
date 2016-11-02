@@ -55,9 +55,7 @@ public class UserRs {
 		result.put("id", member.getId());
 		result.put("name", member.getDisplayName());
 		result.put("joined", member.getRegisterTime());
-		// TODO: missing from model?
-		result.put("active", member.getRegisterTime());
-		// TODO: implement image working
+		result.put("active", member.getActiveTime());
 		result.put("imageLink", "");
 
 		return result;
