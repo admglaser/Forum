@@ -44,25 +44,6 @@ public abstract class BaseBean<E> {
         return em.createQuery(criteriaHelper.getCriteriaTupleQuery()).getResultList();
     }
 
-    public E findEntities(SingularAttribute<E, ? extends Object> field, Object value){
-        EntityManager entityManager = em;
-
-        // Initialize components
-        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);
-        CriteriaQuery<E> criteria = criteriaHelper.getCriteriaQuery();
-        CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
-        Root<E> rootEntity = criteriaHelper.getRootEntity();
-
-        // Set the appropriate select (the whole entity)
-        criteria.select(criteriaHelper.getRootEntity());
-
-        // Set the where term
-        criteria.where( criteriaBuilder.equal(rootEntity.get( field ) , value) );
-
-        // Execute the select and return with the result
-        return entityManager.createQuery(criteria).getSingleResult();
-    }
-
     /**
      * Find entities that have equality with the given value on the given field.
      *   Can be used for join field condition.
@@ -71,10 +52,8 @@ public abstract class BaseBean<E> {
      * @return          The entity with the given equality.
      */
     public List<E> findEntitiesByEquality(SingularAttribute<E, ? extends Object> field, Object value){
-        EntityManager entityManager = em;
-
         // Initialize components
-        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);
+        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
         CriteriaQuery<E> criteria = criteriaHelper.getCriteriaQuery();
         CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
         Root<E> rootEntity = criteriaHelper.getRootEntity();
@@ -86,7 +65,7 @@ public abstract class BaseBean<E> {
         criteria.where( criteriaBuilder.equal(rootEntity.get( field ) , value) );
 
         // Execute the select and return with the result
-        return entityManager.createQuery(criteria).getResultList();
+        return em.createQuery(criteria).getResultList();
     }
 
     /**
@@ -99,16 +78,14 @@ public abstract class BaseBean<E> {
     }
 
     public List<E> findAllEntity() {
-        EntityManager entityManager = em;
-
         // Initialize components
-        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, entityManager, CriteriaHelper.CriteriaType.SELECT);
+        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
         CriteriaQuery<E> criteria = criteriaHelper.getCriteriaQuery();
 
         // Set the appropriate select (the whole entity)
         criteria.select( criteriaHelper.getRootEntity() );
 
         // Execute the select and return with the result
-        return entityManager.createQuery(criteria).getResultList();
+        return em.createQuery(criteria).getResultList();
     }
 }
