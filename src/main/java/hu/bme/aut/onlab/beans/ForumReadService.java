@@ -113,7 +113,6 @@ public class ForumReadService {
 	}
 	
 	public List<Post> getPostsByMember(Member member, int pageNumber) {
-		
 		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
 		Root<Post> postRoot = postCriteriaHelper.getRootEntity();
 		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
