@@ -81,8 +81,8 @@ public class MessageRs {
                 }
 
                 result.put("title", conversation.getTitle());
-                result.put("starter", (firstMessage != null) ? firstMessage.getMember().getDisplayName() : null);
-                result.put("startDate", (firstMessage != null) ? firstMessage.getTime() : null);
+                result.put("starter", firstMessage.getMember().getDisplayName());
+                result.put("startDate", Formatter.formatTimeStamp(firstMessage.getTime()));
                 result.put("messages", messagesJsonArray);
                 result.put("pages", NavigationUtils.getPagesJsonArray("#/message/" + conversation.getId(), pageNumber, messagingService.getMessagesCountOfConversation(conversation)));
             }

@@ -4,6 +4,7 @@ import hu.bme.aut.onlab.beans.ForumReadService;
 import hu.bme.aut.onlab.beans.LoginService;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class MemberRs {
 
             memberJson.put("id", memberId);
             memberJson.put("name", member.getDisplayName());
-            memberJson.put("joined", member.getRegisterTime());
+            memberJson.put("joined", Formatter.formatTimeStamp(member.getRegisterTime()));
             memberJson.put("memberGroup", memberGroupTitle);
             memberJson.put("postCount", member.getPostCount());
             memberJson.put("topicCount", member.getTopicCount());

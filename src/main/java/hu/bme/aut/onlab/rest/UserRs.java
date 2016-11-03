@@ -1,6 +1,16 @@
 package hu.bme.aut.onlab.rest;
 
-import java.util.List;
+import hu.bme.aut.onlab.beans.ForumReadService;
+import hu.bme.aut.onlab.beans.LoginService;
+import hu.bme.aut.onlab.beans.dao.*;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.NavigationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
@@ -8,22 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import hu.bme.aut.onlab.beans.ForumReadService;
-import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.dao.CategoryBean;
-import hu.bme.aut.onlab.beans.dao.MemberBean;
-import hu.bme.aut.onlab.beans.dao.PostBean;
-import hu.bme.aut.onlab.beans.dao.SubcategoryBean;
-import hu.bme.aut.onlab.beans.dao.TopicBean;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import java.util.List;
 
 @Path("/user")
 public class UserRs {
@@ -55,8 +50,8 @@ public class UserRs {
 		result.put("id", member.getId());
 		result.put("name", member.getDisplayName());
 		result.put("joined", member.getRegisterTime());
-		result.put("active", member.getActiveTime());
-		result.put("imageLink", "");
+		result.put("active", Formatter.formatTimeStamp(member.getActiveTime()));
+		result.put("imageLink", member.getPictureId());
 
 		return result;
 	}
@@ -103,7 +98,7 @@ public class UserRs {
 
 			likedPostJsonObject.put("title", topic.getTitle());
 			likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + likedPost.getPostNumber());
-			likedPostJsonObject.put("date", likedPost.getTime());
+			likedPostJsonObject.put("date", Formatter.formatTimeStamp(likedPost.getTime()));
 			likedPostJsonObject.put("text", likedPost.getText());
 
 			likedPostsJsonArray.put(likedPostJsonObject);
@@ -136,7 +131,7 @@ public class UserRs {
 
 			createdTopicJson.put("title", createdTopic.getTitle());
 			createdTopicJson.put("link", "#/topic/" + createdTopic.getId());
-			createdTopicJson.put("date", firstPost.getTime());
+			createdTopicJson.put("date", Formatter.formatTimeStamp(firstPost.getTime()));
 			createdTopicJson.put("text", firstPost.getText());
 
 			topicsJsonArray.put(createdTopicJson);
@@ -170,7 +165,7 @@ public class UserRs {
 
 			createdPostJson.put("title", topic.getTitle());
 			createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + createdPost.getPostNumber());
-			createdPostJson.put("date", createdPost.getTime());
+			createdPostJson.put("date", Formatter.formatTimeStamp(createdPost.getTime()));
 			createdPostJson.put("text", createdPost.getText());
 
 			createdPostsJsonArray.put(createdPostJson);

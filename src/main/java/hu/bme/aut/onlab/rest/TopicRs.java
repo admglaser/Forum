@@ -6,6 +6,7 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -60,7 +61,7 @@ public class TopicRs {
                     postJson.put("userImageLink", member.getPictureId());
                     postJson.put("postCount", member.getPostCount());
                     postJson.put("memberGroup", memberGroup.getTitle());
-                    postJson.put("time", post.getTime());
+                    postJson.put("time", Formatter.formatTimeStamp(post.getTime()));
                     postJson.put("text", post.getText());
                     postJson.put("postNumber", post.getPostNumber());
                     postJson.put("postLink", "#/topic/" + topic.getId() + "/" + pageNumber);
@@ -68,8 +69,7 @@ public class TopicRs {
                 }
 
                 result.put("title", topic.getTitle());
-                // TODO: discuss about format
-                result.put("startedByText", firstPost.getTime());
+                result.put("startedByText", firstPost.getMember().getDisplayName() + ", " + Formatter.formatTimeStamp(firstPost.getTime()));
                 result.put("posts", postsJsonArray);
                 result.put("pages", NavigationUtils.getPagesJsonArray("#/topic/" + topic.getId(), pageNumber, forumReadService.getPostsCountOfTopic(topic)));
             }

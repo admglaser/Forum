@@ -1,14 +1,7 @@
 package hu.bme.aut.onlab.model;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @SuppressWarnings("unused")
 @Entity
@@ -20,6 +13,9 @@ public class Topic {
 
 	@Column(name = "title")	
 	private String title;
+
+	@Column(name = "view_count")
+	private int viewCount;
 
 	@OneToMany(mappedBy = "topic")
 	private List<Post> posts;
@@ -51,6 +47,14 @@ public class Topic {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public int getViewCount() {
+		return viewCount;
+	}
+
+	public void setViewCount(int viewCount) {
+		this.viewCount = viewCount;
 	}
 
 	public List<Post> getPosts() {
