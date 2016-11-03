@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.model;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -80,7 +79,7 @@ public class Conversation {
         this.members = members;
     }
 
-    public Collection<Message> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
@@ -88,7 +87,7 @@ public class Conversation {
         this.messages = messages;
     }
 
-    public Collection<ConversationSeenByMember> getConversationSeenByMembers() {
+    public List<ConversationSeenByMember> getConversationSeenByMembers() {
         return conversationSeenByMembers;
     }
 
