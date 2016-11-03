@@ -16,6 +16,8 @@ import hu.bme.aut.onlab.beans.LoginService;
 import hu.bme.aut.onlab.beans.MessagingService;
 import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Message;
+import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/conversations")
@@ -45,27 +47,32 @@ public class ConversationsRs {
 		List<Conversation> conversations = messagingService.getConversations(member, pageNumber);
 		for (Conversation conversation : conversations) {
 			JSONObject conversationJson = new JSONObject();
-			conversationJson.put("unread", );
-			conversationJson.put("title", );
-			conversationJson.put("starter", );
-			conversationJson.put("startDate", );
-			conversationJson.put("messages", );
-			conversationJson.put("lastPoster", );
-			conversationJson.put("lastDate", );
-			conversationJson.put("conversationLink", );
-			conversationJson.put("lastMessageLink", );
-			conversationJson.put("lastPosterLink", );
-			conversationJson.put("starterLink", );
-			conversationJson.put("starerImageLink", );
-			conversationJson.put("lastPosterImageLink", );
+			
+			Message firstMessage = messagingService.getMessageOfConversation(conversation, 1);
+			Message lastMessage = messagingService.getMessageOfConversation(conversation, conversation.getMessageCount());
+			
+			conversationJson.put("unread", messagingService.isConversationUnread(conversation, member));
+			conversationJson.put("title", conversation.getTitle());
+			conversationJson.put("starter", firstMessage.getMember().getDisplayName());
+			conversationJson.put("startDate", Formatter.formatTimeStampForMessage(firstMessage.getTime()));
+			conversationJson.put("messages", conversation.getMessageCount());
+			conversationJson.put("lastPoster", lastMessage.getMember().getDisplayName());
+			conversationJson.put("lastDate", Formatter.formatTimeStampForMessage(lastMessage.getTime()));
+			conversationJson.put("conversationLink", "#/messages/" + conversation.getConversationNumber());
+			conversationJson.put("lastMessageLink", "#/messages/" + conversation.getConversationNumber() + "/" + NavigationUtils.getPageOfElement(lastMessage.getMessageNumber()));
+			conversationJson.put("lastPosterLink", "#/user/" + lastMessage.getMember().getId());
+			conversationJson.put("starterLink", "#/user/" + firstMessage.getMember().getId());
+			conversationJson.put("starerImageLink", firstMessage.getMember().getPictureId());
+			conversationJson.put("lastPosterImageLink", lastMessage.getMember().getPictureId());
 			
 			conversationsJsonArray.put(conversationJson);
 		}
 		
-		result.put("pages", NavigationUtils.getPagesJsonArray(
-				"#/conversations", 
-				pageNumber, 
-				messagingService.getConversationsCount(member)));
+		result.put("pages", 
+				NavigationUtils.getPagesJsonArray(
+						"#/conversations", 
+						pageNumber, 
+						messagingService.getConversationsCount(member)));
 		
 		return result.toString();
 	}

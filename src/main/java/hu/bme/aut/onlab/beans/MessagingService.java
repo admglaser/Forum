@@ -15,6 +15,8 @@ import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 
 import hu.bme.aut.onlab.model.Conversation;
+import hu.bme.aut.onlab.model.ConversationSeenByMember;
+import hu.bme.aut.onlab.model.ConversationSeenByMember_;
 import hu.bme.aut.onlab.model.Conversation_;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
@@ -108,4 +110,46 @@ public class MessagingService {
             return 0;
         }
     }
+
+	public boolean isConversationUnread(Conversation conversation, Member member) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<ConversationSeenByMember> query = builder.createQuery(ConversationSeenByMember.class);
+		Root<ConversationSeenByMember> root = query.from(ConversationSeenByMember.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(ConversationSeenByMember_.conversationId), conversation.getId()),
+						builder.equal(root.get(ConversationSeenByMember_.memberId), member.getId())));
+
+		query.select(root);
+		
+		try {
+			ConversationSeenByMember conversationSeenByMember = em.createQuery(query).getSingleResult();
+			return conversationSeenByMember.getSeenMessageNumber() < conversation.getMessageCount();
+		} catch (NoResultException e) {
+			return true;
+		}
+	}
+
+	public Message getMessageOfConversation(Conversation conversation, int messageNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Message> query = builder.createQuery(Message.class);
+		Root<Message> root = query.from(Message.class);
+
+		Join<Message, Conversation> join = root.join(Message_.conversation);
+
+		query.where(
+				builder.and(
+						builder.equal(join.get(Conversation_.id), conversation.getId()),
+						builder.equal(root.get(Message_.messageNumber), messageNumber)));
+		
+		query.select(root);
+		
+		try {
+			 return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+	
 }

@@ -1,24 +1,32 @@
 package hu.bme.aut.onlab.beans;
 
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.model.Conversation_;
-import hu.bme.aut.onlab.model.Message_;
-import hu.bme.aut.onlab.model.Post_;
-import hu.bme.aut.onlab.model.Subcategory_;
-import hu.bme.aut.onlab.model.Topic_;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+
+import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
+import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.Subcategory_;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSeenByMember;
+import hu.bme.aut.onlab.model.TopicSeenByMember_;
+import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
