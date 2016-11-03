@@ -1,13 +1,7 @@
 package hu.bme.aut.onlab.model;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @SuppressWarnings("unused")
 @Entity
@@ -32,6 +26,13 @@ public class Message {
     
     @Column(name = "conversation_id", insertable = false, updatable = false)
     protected int conversationId;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
+    private Member member;
+
+    @Column(name = "member_id", insertable = false, updatable = false)
+    protected int memberId;
     
     public int getId() {
         return id;
@@ -80,5 +81,21 @@ public class Message {
 	private void setConversationId(int conversationId) {
 		this.conversationId = conversationId;
 	}
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    private int getMemberId() {
+        return memberId;
+    }
+
+    private void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
 
 }

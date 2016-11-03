@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 
@@ -17,6 +18,8 @@ import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.Conversation_;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Message;
+import hu.bme.aut.onlab.model.Message_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
@@ -25,6 +28,25 @@ public class MessagingService {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	public List<Conversation> getConversations(Member member, int pageNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Conversation> query = builder.createQuery(Conversation.class);
+		Root<Conversation> conversationRoot = query.from(Conversation.class);
+	
+		ListJoin<Conversation, Member> join = conversationRoot.join(Conversation_.members);
+		
+		query.where(builder.equal(join.get(Member_.id), member.getId()));
+	
+		try {
+			return em.createQuery(query)
+					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
 
 	public int getConversationsCount(Member member) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -44,24 +66,46 @@ public class MessagingService {
 		}
 	}
 
-	public List<Conversation> getConversations(Member member, int pageNumber) {
-		CriteriaBuilder builder = em.getCriteriaBuilder();
-		CriteriaQuery<Conversation> query = builder.createQuery(Conversation.class);
-		Root<Conversation> conversationRoot = query.from(Conversation.class);
+	public List<Message> getMessagesOfConversationOnPage(Conversation conversation, int pageNumber) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Message> criteriaQuery = criteriaBuilder.createQuery(Message.class);
+        Root<Message> messageRoot = criteriaQuery.from(Message.class);
 
-		ListJoin<Conversation, Member> join = conversationRoot.join(Conversation_.members);
-		
-		query.where(builder.equal(join.get(Member_.id), member.getId()));
+        Join<Message, Conversation> conversationJoin = messageRoot.join(Message_.conversation);
 
-		try {
-			return em.createQuery(query)
-					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
-					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
-					.getResultList();
-		} catch (NoResultException e) {
-			return Collections.emptyList();
-		}
-	}
+        criteriaQuery.where(criteriaBuilder.equal(conversationJoin.get(Conversation_.id), conversation.getId()));
 
-	
+        criteriaQuery.orderBy(criteriaBuilder.asc(messageRoot.get(Message_.messageNumber)));
+
+        criteriaQuery.select(messageRoot);
+
+        try {
+            return em.createQuery(criteriaQuery)
+                    .setFirstResult((pageNumber-1) * NavigationUtils.ELEMENTS_PER_PAGE)
+                    .setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public int getMessagesCountOfConversation(Conversation conversation) {
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<Message> messageRoot = query.from(Message.class);
+
+        Join<Message, Conversation> conversationJoin = messageRoot.join(Message_.conversation);
+
+        query.where(criteriaBuilder.equal(conversationJoin.get(Conversation_.id), conversation.getId()));
+
+        query.orderBy(criteriaBuilder.asc(messageRoot.get(Message_.messageNumber)));
+
+        query.select(criteriaBuilder.count(messageRoot));
+
+        try {
+            return em.createQuery(query).getSingleResult().intValue();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
 }
