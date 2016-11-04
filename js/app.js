@@ -1,6 +1,10 @@
 var restLink = "http://localhost:8080/ForumApp/rest/";
 //var restLink = "http://54.69.96.56:8080/ForumApp/rest/";
 
+var username = "dan";
+var password = "sgdg";
+var encoded = btoa(username + ":" + password);
+
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
 app.config(function($routeProvider) {
@@ -94,11 +98,14 @@ app.config(function($routeProvider) {
 
 //example without parameter
 app.controller('homeController', function($scope, $http) {
-	$http.get(restLink + "home")
-	   .then(function(res){
-			$scope.data = res.data;
+	$http.get(restLink + "home", {
+		headers : {
+			"Authorization" : "Basic " + encoded
 		}
-	);
+	})
+	.then(function(res){
+		$scope.data = res.data;
+	});
 });
 
 //example with parameters
