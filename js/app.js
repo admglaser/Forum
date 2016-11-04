@@ -1,12 +1,14 @@
 var restLink = "http://localhost:8080/ForumApp/rest/";
 //var restLink = "http://54.69.96.56:8080/ForumApp/rest/";
 
-var username = "dan";
-var password = "sgdg";
+var username = "robertksfdfsf";
+var password = "bbb";
 var encoded = btoa(username + ":" + password);
 
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
+
+//navigation
 app.config(function($routeProvider) {
 	$routeProvider
 	
@@ -90,14 +92,38 @@ app.config(function($routeProvider) {
 	})
 	
 	
+	
 	/* .otherwise({
 		redirectTo: '/'
 	}) */
 	;
+	
+	
 });
 
-//example without parameter
-app.controller('homeController', function($scope, $http) {
+
+//route location change event
+app.run(function($rootScope, $location) {
+	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
+		$rootScope.$emit('updateNavbar');
+	});
+});
+
+
+//navbar
+app.controller('navbarController', function($rootScope, $scope, $http) {
+	$rootScope.$on('updateNavbar', function(event, data) {
+		$http.get('navbar.json')
+		.then(function(res) {
+			$scope.data = res.data;
+		}
+		);
+	});
+});
+
+
+//home
+app.controller('homeController', function($rootScope, $scope, $http) {
 	$http.get(restLink + "home", {
 		headers : {
 			"Authorization" : "Basic " + encoded
@@ -108,7 +134,8 @@ app.controller('homeController', function($scope, $http) {
 	});
 });
 
-//example with parameters
+
+//subcategory
 app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	var categoryId = $routeParams.subcategoryId;
 	var pageNumber = 1;
@@ -122,6 +149,8 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	);
 });
 
+
+//topic
 app.controller('topicController', function($scope, $http, $routeParams, $sce, $location, $anchorScroll) {
 	$topicId = $routeParams.topicId;
 	$postId = $routeParams.postId;
@@ -136,14 +165,8 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce, $l
 	);
 });
 
-app.controller('navbarController', function($scope, $http) {
-	$http.get('navbar.json')
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
-});
 
+//members
 app.controller('membersController', function($scope, $http) {
 	$http.get('members.json')
 		.then(function(res) {
@@ -152,6 +175,8 @@ app.controller('membersController', function($scope, $http) {
 	);
 });
 
+
+//user
 app.controller('userOverviewController', function($scope, $http) {
 	$http.get('user.overview.json')
 		.then(function(res) {
@@ -159,7 +184,6 @@ app.controller('userOverviewController', function($scope, $http) {
 		}
 	);
 });
-
 app.controller('userTopicsController', function($scope, $http, $sce) {
 	$http.get('user.topics.json')
 		.then(function(res) {
@@ -171,7 +195,6 @@ app.controller('userTopicsController', function($scope, $http, $sce) {
 		}
 	);
 });
-
 app.controller('userPostsController', function($scope, $http, $sce) {
 	$http.get('user.posts.json')
 		.then(function(res) {
@@ -183,7 +206,6 @@ app.controller('userPostsController', function($scope, $http, $sce) {
 		}
 	);
 });
-
 app.controller('userLikesController', function($scope, $http, $sce) {
 	$http.get('user.likes.json')
 		.then(function(res) {
@@ -196,6 +218,8 @@ app.controller('userLikesController', function($scope, $http, $sce) {
 	);
 });
 
+
+//conversations
 app.controller('conversationsController', function($scope, $http, $sce) {
 	$http.get('conversations.json')
 		.then(function(res) {
@@ -204,6 +228,8 @@ app.controller('conversationsController', function($scope, $http, $sce) {
 	);
 });
 
+
+//messages
 app.controller('messagesController', function($scope, $http, $sce) {
 	$http.get('messages.json')
 		.then(function(res) {
@@ -216,6 +242,8 @@ app.controller('messagesController', function($scope, $http, $sce) {
 	);
 });
 
+
+//notifications
 app.controller('notificationsController', function($scope, $http, $sce) {
 	$http.get('notifications.json')
 		.then(function(res) {
