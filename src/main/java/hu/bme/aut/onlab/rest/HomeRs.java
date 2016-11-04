@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -44,15 +45,18 @@ public class HomeRs  {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getHome() {
+    public String getHome(@HeaderParam("Authorization") String encodedUserPassword) {
+    	
+    	Member member = loginService.getMember(encodedUserPassword);
+    	
         JSONArray result = new JSONArray();
         List<Category> categories = categoryBean.findAllEntity();
         for (Category category : categories) {
             JSONObject categoryJson = new JSONObject();
 
             JSONArray subcategoriesJsonArray = new JSONArray();
-
-            categoryJson.put("title", category.getTitle());
+            String str = member == null ? " - not logged in" : " " + member.getDisplayName();
+            categoryJson.put("title", category.getTitle()+str); //TODO remove
             categoryJson.put("subcategories", subcategoriesJsonArray);
             for (Subcategory subcategory : category.getSubcategories()) {
                 JSONObject subcategoryJson = new JSONObject();
