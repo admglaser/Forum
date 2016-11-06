@@ -63,6 +63,7 @@ public class TopicRs {
                     postJson.put("memberGroup", memberGroup.getTitle());
                     postJson.put("time", Formatter.formatTimeStamp(post.getTime()));
                     postJson.put("text", post.getText());
+                    postJson.put("likeCount", forumReadService.getPostLikesCount(post));
                     postJson.put("postNumber", post.getPostNumber());
                     postJson.put("postLink", "#/topic/" + topic.getId() + "/" + pageNumber);
                     postsJsonArray.put(postJson);

@@ -66,9 +66,9 @@ public class UserRs {
 		MemberGroup memberGroup = member.getMemberGroup();
 
 		result.put("memberGroup", memberGroup.getTitle());
-		result.put("topics", member.getTopicCount());
-		result.put("posts", member.getPostCount());
-		result.put("views", member.getViewsCount());
+		result.put("topicCount", member.getTopicCount());
+		result.put("postCount", member.getPostCount());
+		result.put("viewCount", member.getViewsCount());
 		result.put("birthday", member.getBirthday());
 		result.put("email", member.getEmail());
 
@@ -100,6 +100,7 @@ public class UserRs {
 			likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + likedPost.getPostNumber());
 			likedPostJsonObject.put("date", Formatter.formatTimeStamp(likedPost.getTime()));
 			likedPostJsonObject.put("text", likedPost.getText());
+			likedPostJsonObject.put("likeCount", forumReadService.getPostLikesCount(likedPost));
 
 			likedPostsJsonArray.put(likedPostJsonObject);
 		}
@@ -133,6 +134,7 @@ public class UserRs {
 			createdTopicJson.put("link", "#/topic/" + createdTopic.getId());
 			createdTopicJson.put("date", Formatter.formatTimeStamp(firstPost.getTime()));
 			createdTopicJson.put("text", firstPost.getText());
+			createdTopicJson.put("likeCount", forumReadService.getPostLikesCount(firstPost));
 
 			topicsJsonArray.put(createdTopicJson);
 		}
@@ -167,6 +169,7 @@ public class UserRs {
 			createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + createdPost.getPostNumber());
 			createdPostJson.put("date", Formatter.formatTimeStamp(createdPost.getTime()));
 			createdPostJson.put("text", createdPost.getText());
+			createdPostJson.put("likeCount", forumReadService.getPostLikesCount(createdPost));
 
 			createdPostsJsonArray.put(createdPostJson);
 		}

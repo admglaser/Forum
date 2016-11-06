@@ -1,17 +1,5 @@
 package hu.bme.aut.onlab.rest;
 
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import hu.bme.aut.onlab.beans.LoginService;
 import hu.bme.aut.onlab.beans.MessagingService;
 import hu.bme.aut.onlab.model.Conversation;
@@ -19,6 +7,16 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Message;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.NavigationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.ejb.EJB;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/conversations")
 public class ConversationsRs {
@@ -30,7 +28,6 @@ public class ConversationsRs {
 	private LoginService loginService;
 	
 	@GET
-	@Path("")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getConversations() {
 		return getConversationsWithPage(1);
