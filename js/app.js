@@ -1,7 +1,7 @@
 var restLink = "http://localhost:8080/ForumApp/rest/";
 //var restLink = "http://54.69.96.56:8080/ForumApp/rest/";
 
-var username = "robertksfdfsf";
+var username = "robertk";
 var password = "bbb";
 var encoded = btoa(username + ":" + password);
 
@@ -142,7 +142,11 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'subcategory/' + categoryId + "/" + pageNumber)
+	$http.get(restLink + 'subcategory/' + categoryId + "/" + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 		}
@@ -153,8 +157,15 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 //topic
 app.controller('topicController', function($scope, $http, $routeParams, $sce, $location, $anchorScroll) {
 	$topicId = $routeParams.topicId;
-	$postId = $routeParams.postId;
-	$http.get('topic.json')
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'topic/' + $topicId + "/" + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
@@ -167,8 +178,16 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce, $l
 
 
 //members
-app.controller('membersController', function($scope, $http) {
-	$http.get('members.json')
+app.controller('membersController', function($scope, $http, $routeParams) {
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'members/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 		}
@@ -177,15 +196,29 @@ app.controller('membersController', function($scope, $http) {
 
 
 //user
-app.controller('userOverviewController', function($scope, $http) {
-	$http.get('user.overview.json')
+app.controller('userOverviewController', function($scope, $http, $routeParams) {
+	var userId = $routeParams.userId;
+	$http.get(restLink + 'user/' + userId, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 		}
 	);
 });
-app.controller('userTopicsController', function($scope, $http, $sce) {
-	$http.get('user.topics.json')
+app.controller('userTopicsController', function($scope, $http, $sce, $routeParams) {
+	var userId = $routeParams.userId;
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'user/' + userId + '/topics/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.topics.length; i++) {
@@ -195,8 +228,17 @@ app.controller('userTopicsController', function($scope, $http, $sce) {
 		}
 	);
 });
-app.controller('userPostsController', function($scope, $http, $sce) {
-	$http.get('user.posts.json')
+app.controller('userPostsController', function($scope, $http, $sce, $routeParams) {
+	var userId = $routeParams.userId;
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'user/' + userId + '/posts/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
@@ -206,8 +248,17 @@ app.controller('userPostsController', function($scope, $http, $sce) {
 		}
 	);
 });
-app.controller('userLikesController', function($scope, $http, $sce) {
-	$http.get('user.likes.json')
+app.controller('userLikesController', function($scope, $http, $sce, $routeParams) {
+	var userId = $routeParams.userId;
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'user/' + userId + '/likes/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.posts.length; i++) {
@@ -220,8 +271,16 @@ app.controller('userLikesController', function($scope, $http, $sce) {
 
 
 //conversations
-app.controller('conversationsController', function($scope, $http, $sce) {
-	$http.get('conversations.json')
+app.controller('conversationsController', function($scope, $http, $sce, $routeParams) {
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'conversations/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 		}
@@ -230,8 +289,17 @@ app.controller('conversationsController', function($scope, $http, $sce) {
 
 
 //messages
-app.controller('messagesController', function($scope, $http, $sce) {
-	$http.get('messages.json')
+app.controller('messagesController', function($scope, $http, $sce, $routeParams) {
+	var conversationNumber = $routeParams.conversationNumber;
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'messages/' + conversationNumber + '/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 			for (var i = 0; i < $scope.data.messages.length; i++) {
@@ -244,8 +312,16 @@ app.controller('messagesController', function($scope, $http, $sce) {
 
 
 //notifications
-app.controller('notificationsController', function($scope, $http, $sce) {
-	$http.get('notifications.json')
+app.controller('notificationsController', function($scope, $http, $sce, $routeParams) {
+	var pageNumber = 1;
+	if ($routeParams.pageNumber) {
+		pageNumber = $routeParams.pageNumber;
+	}
+	$http.get(restLink + 'notifications/' + pageNumber, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
 		.then(function(res) {
 			$scope.data = res.data;
 		}

@@ -21,16 +21,16 @@
 				<div class="panel-heading">
 					<ul class="nav nav-tabs">
 						<li>
-							<a href="#/user/28">Overview</a>
+							<a href="#/user/{{data.id}}">Overview</a>
 						</li>
 						<li>
-							<a href="#/user/28/topics">Topics</a>
+							<a href="#/user/{{data.id}}/topics">Topics</a>
 						</li>
 						<li class="active">
-							<a href="#/user/28/posts">Posts</a>
+							<a href="#/user/{{data.id}}/posts">Posts</a>
 						</li>
 						<li>
-							<a href="#/user/28/likes">Likes</a>
+							<a href="#/user/{{data.id}}/likes">Likes</a>
 						</li>
 					</ul>
 				</div>
@@ -61,7 +61,7 @@
 											<div class="panel-footer user-panel-footer">
 												<div class="container">
 													<div class="pull-right">
-														<a>25 likes</a>
+														<a>{{post.likeCount}} likes</a>
 													</div>
 												</div>
 											</div>
