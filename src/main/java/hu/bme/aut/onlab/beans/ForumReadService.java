@@ -1,32 +1,20 @@
 package hu.bme.aut.onlab.beans;
 
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
+import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
+import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.MemberLike_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
-
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Post_;
-import hu.bme.aut.onlab.model.Subcategory;
-import hu.bme.aut.onlab.model.Subcategory_;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.model.TopicSeenByMember;
-import hu.bme.aut.onlab.model.TopicSeenByMember_;
-import hu.bme.aut.onlab.model.Topic_;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import javax.persistence.criteria.*;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 @LocalBean
 @Stateless
@@ -261,6 +249,24 @@ public class ForumReadService {
 		Join<Post, Topic> topicJoin = root.join(Post_.topic);
 
 		query.where(criteriaBuilder.and(criteriaBuilder.equal(topicJoin.get(Topic_.id), topic.getId())));
+
+		query.select(criteriaBuilder.count(root));
+
+		try {
+			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
+		}
+	}
+
+	public int getPostLikesCount(Post post) {
+		CriteriaBuilder criteriaBuilder  = em.getCriteriaBuilder();
+		CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+		Root<MemberLike> root = query.from(MemberLike.class);
+
+		query.where(criteriaBuilder.equal(root.get(MemberLike_.postId), post.getId()));
+
+		query.groupBy(root.get(MemberLike_.postId));
 
 		query.select(criteriaBuilder.count(root));
 
