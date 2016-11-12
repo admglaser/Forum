@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.beans;
+package hu.bme.aut.onlab.bean;
 
 import java.util.Collections;
 import java.util.List;
@@ -114,19 +114,20 @@ public class MessagingService {
 	public boolean isConversationUnread(Conversation conversation, Member member) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<ConversationSeenByMember> query = builder.createQuery(ConversationSeenByMember.class);
-		Root<ConversationSeenByMember> root = query.from(ConversationSeenByMember.class);
+		Root<ConversationSeenByMember> conversationSeenByMemberRoot = query.from(ConversationSeenByMember.class);
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(ConversationSeenByMember_.conversationId), conversation.getId()),
-						builder.equal(root.get(ConversationSeenByMember_.memberId), member.getId())));
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())));
 
-		query.select(root);
+		query.select(conversationSeenByMemberRoot);
 		
 		try {
 			ConversationSeenByMember conversationSeenByMember = em.createQuery(query).getSingleResult();
 			return conversationSeenByMember.getSeenMessageNumber() < conversation.getMessageCount();
 		} catch (NoResultException e) {
+			//if conversation is not in "seen" table then its unread
 			return true;
 		}
 	}
@@ -149,6 +150,30 @@ public class MessagingService {
 			 return em.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
+		}
+	}
+
+	public List<Message> getLastFiveMessages(Member member) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Message> query = builder.createQuery(Message.class);
+		Root<Message> messageRoot = query.from(Message.class);
+		
+		Join<Message, Conversation> conversationJoin = messageRoot.join(Message_.conversation);
+		ListJoin<Conversation, Member> memberJoin = conversationJoin.join(Conversation_.members);
+		
+		query.where(
+				builder.and(
+						builder.equal(memberJoin.get(Member_.id), member.getId()),
+						builder.equal(messageRoot.get(Message_.messageNumber), conversationJoin.get(Conversation_.messageCount))));
+		
+		query.select(messageRoot);
+		
+		query.orderBy(builder.desc(messageRoot.get(Message_.time)));
+		
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
 		}
 	}
 	

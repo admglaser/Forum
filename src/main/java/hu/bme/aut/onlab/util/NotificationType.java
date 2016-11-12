@@ -18,6 +18,11 @@ public enum NotificationType {
 	public String getString() {
 		return string;
 	}
+	
+	@Override
+	public String toString() {
+		return string;
+	}
 
 	public static NotificationType getNotificationType(int id) {
 		switch (id) {

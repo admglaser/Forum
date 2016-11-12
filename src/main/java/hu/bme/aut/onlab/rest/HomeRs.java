@@ -5,19 +5,19 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.beans.ForumReadService;
-import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.dao.CategoryBean;
-import hu.bme.aut.onlab.beans.dao.PostBean;
-import hu.bme.aut.onlab.beans.dao.TopicBean;
+import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.dao.CategoryBean;
+import hu.bme.aut.onlab.bean.dao.PostBean;
+import hu.bme.aut.onlab.bean.dao.TopicBean;
 import hu.bme.aut.onlab.model.Category;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Post;
@@ -45,9 +45,7 @@ public class HomeRs  {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getHome(@HeaderParam("Authorization") String encodedUserPassword) {
-    	
-    	Member member = loginService.getMember(encodedUserPassword);
+    public String getHome(@Context Member member) {
     	
         JSONArray result = new JSONArray();
         List<Category> categories = categoryBean.findAllEntity();
@@ -55,8 +53,7 @@ public class HomeRs  {
             JSONObject categoryJson = new JSONObject();
 
             JSONArray subcategoriesJsonArray = new JSONArray();
-            String str = member == null ? " - not logged in" : " " + member.getDisplayName();
-            categoryJson.put("title", category.getTitle()+str); //TODO remove
+            categoryJson.put("title", category.getTitle());
             categoryJson.put("subcategories", subcategoriesJsonArray);
             for (Subcategory subcategory : category.getSubcategories()) {
                 JSONObject subcategoryJson = new JSONObject();
@@ -84,7 +81,7 @@ public class HomeRs  {
                     subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
                     subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                     subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
-                    subcategoryJson.put("unread", forumReadService.hasTopicUnreadPostsByMember(lastTopic, loginService.getCurrentMember()));
+                    subcategoryJson.put("unread", member == null ? false : forumReadService.hasTopicUnreadPostsByMember(lastTopic, member));
                 }
 
                 subcategoriesJsonArray.put(subcategoryJson);

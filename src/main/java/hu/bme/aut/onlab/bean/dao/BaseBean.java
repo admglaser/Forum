@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.beans.dao;
+package hu.bme.aut.onlab.bean.dao;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
 
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
+import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
 
 /**
  * The base class for entity beans.

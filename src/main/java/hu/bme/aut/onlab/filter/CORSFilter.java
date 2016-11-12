@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.util;
+package hu.bme.aut.onlab.filter;
 
 import java.io.IOException;
 

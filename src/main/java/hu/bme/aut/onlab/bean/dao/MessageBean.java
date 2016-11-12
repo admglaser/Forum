@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.beans.dao;
+package hu.bme.aut.onlab.bean.dao;
 
 import hu.bme.aut.onlab.model.Message;
 

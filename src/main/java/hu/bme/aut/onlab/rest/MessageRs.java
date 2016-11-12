@@ -1,10 +1,10 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.beans.ForumReadService;
-import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.MessagingService;
-import hu.bme.aut.onlab.beans.dao.ConversationBean;
-import hu.bme.aut.onlab.beans.dao.MessageBean;
+import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.MessagingService;
+import hu.bme.aut.onlab.bean.dao.ConversationBean;
+import hu.bme.aut.onlab.bean.dao.MessageBean;
 import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;

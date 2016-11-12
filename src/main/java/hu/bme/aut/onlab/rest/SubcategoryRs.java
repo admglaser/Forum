@@ -1,22 +1,32 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.beans.ForumReadService;
-import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.dao.*;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.util.Formatter;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.text.Format;
-import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.dao.CategoryBean;
+import hu.bme.aut.onlab.bean.dao.MemberBean;
+import hu.bme.aut.onlab.bean.dao.PostBean;
+import hu.bme.aut.onlab.bean.dao.SubcategoryBean;
+import hu.bme.aut.onlab.bean.dao.TopicBean;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/subcategory")
 public class SubcategoryRs {
@@ -45,14 +55,14 @@ public class SubcategoryRs {
     @GET
     @Path("{subcategoryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSubcategory(@PathParam("subcategoryId") int subcategoryId) {
-    	return getSubcategoryWithPage(subcategoryId, 1);
+    public String getSubcategory(@Context Member member, @PathParam("subcategoryId") int subcategoryId) {
+    	return getSubcategoryWithPage(member, subcategoryId, 1);
     }
     
     @GET
     @Path("{subcategoryId}/{pageNumber}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSubcategoryWithPage(@PathParam("subcategoryId") int subcategoryId, @PathParam("pageNumber") int pageNumber) {
+    public String getSubcategoryWithPage(@Context Member member, @PathParam("subcategoryId") int subcategoryId, @PathParam("pageNumber") int pageNumber) {
         JSONObject result = new JSONObject();
         JSONArray topicJsonArray = new JSONArray();
 
@@ -62,7 +72,7 @@ public class SubcategoryRs {
         for (Topic topic : topics) {
             JSONObject topicJson = new JSONObject();
 
-            boolean isUnread = forumReadService.hasTopicUnreadPostsByMember(topic, loginService.getCurrentMember());
+            boolean isUnread = forumReadService.hasTopicUnreadPostsByMember(topic, member);
             Post firstPost = forumReadService.getFirstPostFromTopic(topic);
             Member starterMemberPosted = firstPost.getMember();
             Post lastPost = forumReadService.getLastPostFromTopic(topic);

@@ -1,7 +1,7 @@
-package hu.bme.aut.onlab.beans;
+package hu.bme.aut.onlab.bean;
 
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
+import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
+import hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.*;
 import hu.bme.aut.onlab.model.MemberLike_;
 import hu.bme.aut.onlab.util.NavigationUtils;

@@ -15,7 +15,7 @@ public class Notification {
 	@Id
 	private int id;
     
-	@Column(name = "noticiation_number")
+	@Column(name = "notification_number")
 	private int notificationNumber;
     
 	@Column(name = "seen")

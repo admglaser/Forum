@@ -1,7 +1,7 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.beans.LoginService;
-import hu.bme.aut.onlab.beans.MessagingService;
+import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.MessagingService;
 import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Message;
@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -29,16 +30,15 @@ public class ConversationsRs {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getConversations() {
-		return getConversationsWithPage(1);
+	public String getConversations(@Context Member member) {
+		return getConversationsWithPage(member, 1);
 	}
 	
 	@GET
 	@Path("{pageNumber}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getConversationsWithPage(@PathParam("pageNumber") int pageNumber) {
+	public String getConversationsWithPage(@Context Member member, @PathParam("pageNumber") int pageNumber) {
 		JSONObject result = new JSONObject();
-		Member member = loginService.getCurrentMember();
 		
 		JSONArray conversationsJsonArray = new JSONArray();
 		List<Conversation> conversations = messagingService.getConversations(member, pageNumber);
@@ -64,7 +64,7 @@ public class ConversationsRs {
 			
 			conversationsJsonArray.put(conversationJson);
 		}
-		
+		result.put("conversations", conversationsJsonArray);
 		result.put("pages", 
 				NavigationUtils.getPagesJsonArray(
 						"#/conversations", 

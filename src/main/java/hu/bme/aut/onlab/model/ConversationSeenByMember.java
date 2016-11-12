@@ -5,9 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @SuppressWarnings("unused")
 @Entity
+@Table(name = "conversation_seen_by_member")
 public class ConversationSeenByMember {
     
 	@Id

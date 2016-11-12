@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.beans.helper;
+package hu.bme.aut.onlab.bean.helper;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
@@ -30,22 +30,22 @@ public class CriteriaHelper<E> {
     private CriteriaBuilder criteriaBuilder;
     /**
      * The criteria query of the criteria.
-     *   If the type of the criteria is not {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#SELECT}, it will be {@code null}.
+     *   If the type of the criteria is not {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#SELECT}, it will be {@code null}.
      */
     private CriteriaQuery<E> criteriaQuery;
     /**
      * The criteria tuple query of the criteria (query on {@link Tuple} objects).
-     *   If the type of the criteria is not {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#TUPLE_SELECT}, it will be {@code null}.
+     *   If the type of the criteria is not {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#TUPLE_SELECT}, it will be {@code null}.
      */
     private CriteriaQuery<Tuple> criteriaTupleQuery;
     /**
      * The criteria update of the criteria.
-     *   If the type of the criteria is not {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#UPDATE}, it will be {@code null}.
+     *   If the type of the criteria is not {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#UPDATE}, it will be {@code null}.
      */
     private CriteriaUpdate<E> criteriaUpdate;
     /**
      * The criteria delete of the criteria.
-     *   If the type of the criteria is not {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#DELETE}, it will be {@code null}.
+     *   If the type of the criteria is not {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#DELETE}, it will be {@code null}.
      */
     private CriteriaDelete<E> criteriaDelete;
     /**
@@ -131,7 +131,7 @@ public class CriteriaHelper<E> {
 
     /**
      * Returns the criteria query of the criteria.
-     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#SELECT}.
+     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#SELECT}.
      * @return The criteria query of the criteria.
      */
     public CriteriaQuery<E> getCriteriaQuery() {
@@ -144,7 +144,7 @@ public class CriteriaHelper<E> {
 
     /**
      * Returns the criteria tuple query of the criteria (query on {@link Tuple} objects).
-     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#SELECT}.
+     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#SELECT}.
      * @return The criteria query of the criteria.
      */
     public CriteriaQuery<Tuple> getCriteriaTupleQuery() {
@@ -157,7 +157,7 @@ public class CriteriaHelper<E> {
 
     /**
      * Returns the criteria update of the criteria.
-     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#UPDATE}.
+     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#UPDATE}.
      * @return The criteria update of the criteria.
      */
     public CriteriaUpdate<E> getCriteriaUpdate() {
@@ -170,7 +170,7 @@ public class CriteriaHelper<E> {
 
     /**
      * Returns the criteria delete of the criteria.
-     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType#DELETE}.
+     *   Can only be used if the type of the criteria is {@link hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType#DELETE}.
      * @return The criteria delete of the criteria.
      */
     public CriteriaDelete<E> getCriteriaDelete() {

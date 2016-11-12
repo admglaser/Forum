@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.beans;
+package hu.bme.aut.onlab.bean;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import hu.bme.aut.onlab.beans.dao.MemberBean;
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper;
-import hu.bme.aut.onlab.beans.helper.CriteriaHelper.CriteriaType;
+import hu.bme.aut.onlab.bean.dao.MemberBean;
+import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
+import hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
 
@@ -34,11 +34,6 @@ public class LoginService {
 
 	private Map<String, Integer> membersMap = new HashMap<>();
 
-	public Member getCurrentMember() {
-		
-		return memberBean.findAllEntity().get(0);
-	}
-	
 	public Member getMember(String encodedUserPassword) {
 		if (membersMap.containsKey(encodedUserPassword)) {
 			int id = membersMap.get(encodedUserPassword);
