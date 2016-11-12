@@ -64,39 +64,44 @@ public class SubcategoryRs {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSubcategoryWithPage(@Context Member member, @PathParam("subcategoryId") int subcategoryId, @PathParam("pageNumber") int pageNumber) {
         JSONObject result = new JSONObject();
-        JSONArray topicJsonArray = new JSONArray();
-
+       
         Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
-        List<Topic> topics = topicBean.findEntitiesByEquality(Topic_.subcategoryId, subcategoryId);
-
-        for (Topic topic : topics) {
-            JSONObject topicJson = new JSONObject();
-
-            boolean isUnread = forumReadService.hasTopicUnreadPostsByMember(topic, member);
-            Post firstPost = forumReadService.getFirstPostFromTopic(topic);
-            Member starterMemberPosted = firstPost.getMember();
-            Post lastPost = forumReadService.getLastPostFromTopic(topic);
-            Member lastMemberPosted = lastPost.getMember();
-
-            topicJson.put("unread", isUnread);
-            topicJson.put("title", topic.getTitle());
-            topicJson.put("starter", starterMemberPosted.getDisplayName());
-            topicJson.put("startDate", Formatter.formatTimeStamp(firstPost.getTime()));
-            topicJson.put("postCount", topic.getPosts().size());
-            topicJson.put("viewCount", topic.getViewCount());
-            topicJson.put("lastPoster", lastMemberPosted.getDisplayName());
-            topicJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
-            topicJson.put("topicLink", "#/topic/" + topic.getId());
-            topicJson.put("postLink", "#/topic/" + topic.getId() + "/" + lastPost.getPostNumber());
-            topicJson.put("starterLink", "#/user/" + starterMemberPosted.getId());
-            topicJson.put("posterLink", "#/user/" + lastMemberPosted.getId());
-
-            topicJsonArray.put(topicJson);
+        boolean canMemberViewSubcategory = forumReadService.canMemberViewSubcategory(member, subcategory);
+        
+        if (canMemberViewSubcategory) {
+	        JSONArray topicJsonArray = new JSONArray();
+	        List<Topic> topics = topicBean.findEntitiesByEquality(Topic_.subcategoryId, subcategoryId);
+	
+	        for (Topic topic : topics) {
+	            JSONObject topicJson = new JSONObject();
+	
+	            boolean isUnread = member == null ? false : forumReadService.hasTopicUnreadPostsByMember(topic, member);
+	            Post firstPost = forumReadService.getFirstPostFromTopic(topic);
+	            Member starterMemberPosted = firstPost.getMember();
+	            Post lastPost = forumReadService.getLastPostFromTopic(topic);
+	            Member lastMemberPosted = lastPost.getMember();
+	
+	            topicJson.put("unread", isUnread);
+	            topicJson.put("title", topic.getTitle());
+	            topicJson.put("starter", starterMemberPosted.getDisplayName());
+	            topicJson.put("startDate", Formatter.formatTimeStamp(firstPost.getTime()));
+	            topicJson.put("postCount", topic.getPosts().size());
+	            topicJson.put("viewCount", topic.getViewCount());
+	            topicJson.put("lastPoster", lastMemberPosted.getDisplayName());
+	            topicJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
+	            topicJson.put("topicLink", "#/topic/" + topic.getId());
+	            topicJson.put("postLink", "#/topic/" + topic.getId() + "/" + lastPost.getPostNumber());
+	            topicJson.put("starterLink", "#/user/" + starterMemberPosted.getId());
+	            topicJson.put("posterLink", "#/user/" + lastMemberPosted.getId());
+	
+	            topicJsonArray.put(topicJson);
+	        }
+	
+	        result.put("title", subcategory.getTitle());
+	        result.put("topics", topicJsonArray);
+	        result.put("pages", NavigationUtils.getPagesJsonArray("#/subcategory/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
-
-        result.put("title", subcategory.getTitle());
-        result.put("topics", topicJsonArray);
-        result.put("pages", NavigationUtils.getPagesJsonArray("#/subcategory/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
+        
         return result.toString();
     }
 }

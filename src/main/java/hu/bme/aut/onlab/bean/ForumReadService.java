@@ -3,7 +3,6 @@ package hu.bme.aut.onlab.bean;
 import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
 import hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.model.MemberLike_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
 import javax.ejb.LocalBean;
@@ -20,6 +19,8 @@ import java.util.List;
 @Stateless
 public class ForumReadService {
 
+	private final int GUEST_PERMISSION_SET_ID = 1;
+	
 	@PersistenceContext
 	private EntityManager em;
 
@@ -258,7 +259,7 @@ public class ForumReadService {
 			return 0;
 		}
 	}
-
+	
 	public int getPostLikesCount(Post post) {
 		CriteriaBuilder criteriaBuilder  = em.getCriteriaBuilder();
 		CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
@@ -275,5 +276,70 @@ public class ForumReadService {
 		} catch (NoResultException e) {
 			return 0;
 		}
+	}
+	
+	public List<Permission> getMemberPermissionsForSubcategory(Member member, Subcategory subcategory) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Permission> query = builder.createQuery(Permission.class);
+		Root<Permission> permissionRoot = query.from(Permission.class);
+		
+		ListJoin<Permission, PermissionSet> permissionSetjoin = permissionRoot.join(Permission_.permissionSets);
+		ListJoin<PermissionSet, MemberGroup> memberGroupJoin = permissionSetjoin.join(PermissionSet_.memberGroups);
+		
+		query.where(
+				builder.and(
+						builder.equal(memberGroupJoin.get(MemberGroup_.id), member.getMemberGroup().getId()),
+						builder.equal(permissionRoot.get(Permission_.subcategoryId), subcategory.getId())
+				)
+		);
+				
+		query.select(permissionRoot);
+		
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+	
+	public List<Permission> getGuestPermissionsForSubcategory(Subcategory subcategory) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Permission> query = builder.createQuery(Permission.class);
+		Root<Permission> permissionRoot = query.from(Permission.class);
+		
+		ListJoin<Permission, PermissionSet> permissionSetjoin = permissionRoot.join(Permission_.permissionSets);
+		
+		query.where(
+				builder.and(
+						builder.equal(permissionSetjoin.get(PermissionSet_.id), GUEST_PERMISSION_SET_ID),
+						builder.equal(permissionRoot.get(Permission_.subcategoryId), subcategory.getId())
+				)
+		);
+				
+		query.select(permissionRoot);
+		
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public boolean canMemberViewSubcategory(Member member, Subcategory subcategory) {
+		boolean canView = false;
+		List<Permission> permissions = null;
+		if (member == null) {
+			permissions = getGuestPermissionsForSubcategory(subcategory);
+		} else {
+			permissions = getMemberPermissionsForSubcategory(member, subcategory);
+		}
+		for (int i = 0; i < permissions.size(); i++) {
+			Permission permission = permissions.get(i);
+			if (permission.getReadAllowed()) {
+				canView = true;
+				break;
+			}
+		}
+		return canView;
 	}
 }

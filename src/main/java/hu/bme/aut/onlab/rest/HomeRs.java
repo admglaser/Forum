@@ -50,44 +50,53 @@ public class HomeRs  {
         JSONArray result = new JSONArray();
         List<Category> categories = categoryBean.findAllEntity();
         for (Category category : categories) {
-            JSONObject categoryJson = new JSONObject();
-
+        	boolean canViewCategory = false;
+        	
+        	JSONObject categoryJson = new JSONObject();
             JSONArray subcategoriesJsonArray = new JSONArray();
             categoryJson.put("title", category.getTitle());
             categoryJson.put("subcategories", subcategoriesJsonArray);
             for (Subcategory subcategory : category.getSubcategories()) {
-                JSONObject subcategoryJson = new JSONObject();
-                Collection<Topic> topics = subcategory.getTopics();
-
-                int totalPosts = 0;
-                for (Topic topic : topics) {
-                	totalPosts += topic.getPosts().size();
+                boolean canViewSubcategory = forumReadService.canMemberViewSubcategory(member, subcategory);
+                
+                if (canViewSubcategory) {
+                	if (!canViewCategory) {
+                		canViewCategory = true;
+                	}
+                	JSONObject subcategoryJson = new JSONObject();
+                	Collection<Topic> topics = subcategory.getTopics();
+                	
+                	int totalPosts = 0;
+                	for (Topic topic : topics) {
+                		totalPosts += topic.getPosts().size();
+                	}
+                	
+                	subcategoryJson.put("title", subcategory.getTitle());
+                	subcategoryJson.put("desc", subcategory.getDesc());
+                	subcategoryJson.put("topicCount", topics.size());
+                	subcategoryJson.put("postCount", totalPosts);
+                	subcategoryJson.put("hasLasTopic", ! topics.isEmpty());
+                	
+                	if (!topics.isEmpty() ) {
+                		Topic lastTopic = forumReadService.getTopicWithLastPostFromSubcategory(subcategory);
+                		Post lastPost = forumReadService.getLastPostFromTopic(lastTopic);
+                		Member memberOfLastPost = lastPost.getMember();
+                		
+                		subcategoryJson.put("lastTitle", lastTopic.getTitle());
+                		subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
+                		subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
+                		subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
+                		subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
+                		subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
+                		subcategoryJson.put("unread", member == null ? false : forumReadService.hasTopicUnreadPostsByMember(lastTopic, member));
+                	}
+                	subcategoriesJsonArray.put(subcategoryJson);
                 }
                 
-                subcategoryJson.put("title", subcategory.getTitle());
-                subcategoryJson.put("desc", subcategory.getDesc());
-                subcategoryJson.put("topicCount", topics.size());
-                subcategoryJson.put("postCount", totalPosts);
-                subcategoryJson.put("hasLasTopic", ! topics.isEmpty());
-
-                if (!topics.isEmpty() ) {
-                    Topic lastTopic = forumReadService.getTopicWithLastPostFromSubcategory(subcategory);
-                    Post lastPost = forumReadService.getLastPostFromTopic(lastTopic);
-                    Member memberOfLastPost = lastPost.getMember();
-
-                    subcategoryJson.put("lastTitle", lastTopic.getTitle());
-                    subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
-                    subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
-                    subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
-                    subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
-                    subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
-                    subcategoryJson.put("unread", member == null ? false : forumReadService.hasTopicUnreadPostsByMember(lastTopic, member));
-                }
-
-                subcategoriesJsonArray.put(subcategoryJson);
             }
-
-            result.put(categoryJson);
+            if (canViewCategory) {
+            	result.put(categoryJson);
+            }
         }
 
         return result.toString();
