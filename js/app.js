@@ -1,9 +1,9 @@
 var restLink = "http://localhost:8080/ForumApp/rest/";
 //var restLink = "http://54.69.96.56:8080/ForumApp/rest/";
 
-var username = "robertk";
-var password = "bbb";
-var encoded = btoa(username + ":" + password);
+//var username = null; //robertk
+//var password = null; //bbb
+var encoded = ""; //btoa(username + ":" + password);
 
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
@@ -103,21 +103,27 @@ app.config(function($routeProvider) {
 
 
 //route location change event
-app.run(function($rootScope, $location) {
+app.run(function($rootScope, $location, $route) {
 	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
 		$rootScope.$emit('updateNavbar');
 	});
+	$rootScope.$on('reload', function(event, data) {
+		$route.reload();
+	});	
 });
 
 
 //navbar
 app.controller('navbarController', function($rootScope, $scope, $http) {
 	$rootScope.$on('updateNavbar', function(event, data) {
-		$http.get('navbar.json')
+		$http.get(restLink + "navbar", {
+			headers : {
+				"Authorization" : "Basic " + encoded
+			}
+		})
 		.then(function(res) {
 			$scope.data = res.data;
-		}
-		);
+		});
 	});
 });
 

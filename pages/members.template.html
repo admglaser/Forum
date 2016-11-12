@@ -17,7 +17,9 @@
 
 			<!-- member -->
 			<tr ng-repeat="member in data.members">
-				<td class="text-center"><img class="img-thumbnail" src="images/user.png"></td>
+				<td class="text-center">
+					<img class="img-thumbnail" src="images/user.png"/>
+				</td>
 				<td><h4><a href="{{member.userLink}}">{{member.name}}</a></h4></td>
 				<td>{{member.id}}</td>
 				<td>{{member.memberGroup}}</td>

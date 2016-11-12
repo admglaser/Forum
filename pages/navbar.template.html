@@ -89,7 +89,7 @@
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a href="#/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+								<a href="" onclick="logout();"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
 							</li>
 						</ul>
 					</li>
@@ -131,7 +131,7 @@
 					<div id="signinErrorMsg" class="alert alert-error hide">
 						Wrong username or password!
 					</div>
-					<button type="submit" class="btn btn-primary btn-block">
+					<button id ="loginSubmit" type="submit" class="btn btn-primary btn-block">
 						Login
 					</button>
 				</form>
@@ -180,3 +180,39 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	$('#loginSubmit').click(function(){ 
+		var username = $("#username").val();
+		var password = $("#password").val();  
+		var enc = btoa(username + ":" + password);
+		$.ajax({ 
+			type: "GET",
+			dataType: "json",
+			url: restLink + "login",
+			headers: {
+				"Authorization": "Basic " + enc
+			},
+			success: function(data){        
+				if (data.success) {
+					encoded = enc;
+					$('#loginModalForm').modal('toggle');					
+					var $body = angular.element(document.body);
+					var $rootScope = $body.scope().$root;
+					$rootScope.$emit('reload');
+				} else {
+					$("#username").val("");
+					$("#password").val("");
+				}
+			}
+		});
+	});
+	
+	function logout() {
+		encoded = "";
+		var $body = angular.element(document.body);
+		var $rootScope = $body.scope().$root;
+		$rootScope.$emit('reload');
+	}
+
+</script>
