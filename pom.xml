@@ -42,11 +42,6 @@
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>3.0.19.Final</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>ForumApp</finalName>
