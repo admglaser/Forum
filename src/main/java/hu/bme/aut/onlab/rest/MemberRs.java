@@ -5,6 +5,7 @@ import hu.bme.aut.onlab.bean.LoginService;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,6 +58,7 @@ public class MemberRs {
             memberJson.put("postCount", member.getPostCount());
             memberJson.put("topicCount", member.getTopicCount());
             memberJson.put("userLink", "#/user/" + memberId);
+            memberJson.put("userImageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
             memberJson.put("imageLink", member.getPictureId());
 
             memberJsonArray.put(memberJson);

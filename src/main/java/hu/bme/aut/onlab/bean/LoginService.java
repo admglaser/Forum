@@ -1,5 +1,7 @@
 package hu.bme.aut.onlab.bean;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,9 @@ public class LoginService {
 	public Member getMember(String encodedUserPassword) {
 		if (membersMap.containsKey(encodedUserPassword)) {
 			int id = membersMap.get(encodedUserPassword);
-			return memberBean.findEntityById(id);
+			Member member = memberBean.findEntityById(id);
+			updateLastActiveTime(member);
+			return member;
 		} 
 		
 		CriteriaHelper<Member> criteriaHelper = new CriteriaHelper<>(Member.class, em, CriteriaType.SELECT);
@@ -62,10 +66,15 @@ public class LoginService {
 
 			Member member = em.createQuery(criteriaQuery).getSingleResult();
 			membersMap.put(encodedUserPassword, member.getId());
+			updateLastActiveTime(member);
 			return member;
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	private void updateLastActiveTime(Member member) {
+		member.setActiveTime(Timestamp.valueOf(LocalDateTime.now()));
 	}
 
 }

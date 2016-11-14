@@ -8,6 +8,7 @@ import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,9 +50,9 @@ public class UserRs {
 
 		result.put("id", member.getId());
 		result.put("name", member.getDisplayName());
-		result.put("joined", member.getRegisterTime());
+		result.put("joined", Formatter.formatTimeStamp(member.getRegisterTime()));
 		result.put("active", Formatter.formatTimeStamp(member.getActiveTime()));
-		result.put("imageLink", member.getPictureId());
+		result.put("imageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
 
 		return result;
 	}

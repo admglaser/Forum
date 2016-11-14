@@ -24,6 +24,7 @@ import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Subcategory;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 
 @Path("/home")
 public class HomeRs  {
@@ -46,8 +47,8 @@ public class HomeRs  {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public String getHome(@Context Member member) {
-    	
-        JSONArray result = new JSONArray();
+    	JSONObject result = new JSONObject();
+    	JSONArray categoriesJsonArray = new JSONArray();
         List<Category> categories = categoryBean.findAllEntity();
         for (Category category : categories) {
         	boolean canViewCategory = false;
@@ -75,7 +76,7 @@ public class HomeRs  {
                 	subcategoryJson.put("desc", subcategory.getDesc());
                 	subcategoryJson.put("topicCount", topics.size());
                 	subcategoryJson.put("postCount", totalPosts);
-                	subcategoryJson.put("hasLasTopic", ! topics.isEmpty());
+                	subcategoryJson.put("hasLastTopic", ! topics.isEmpty());
                 	
                 	if (!topics.isEmpty() ) {
                 		Topic lastTopic = forumReadService.getTopicWithLastPostFromSubcategory(subcategory);
@@ -85,7 +86,8 @@ public class HomeRs  {
                 		subcategoryJson.put("lastTitle", lastTopic.getTitle());
                 		subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
                 		subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
-                		subcategoryJson.put("subcategoryLink", "#/subcategory/" + subcategory.getId());
+                		subcategoryJson.put("lastPosterImageLink", LinkUtils.getProfilePictureLink(memberOfLastPost.getPictureId()));
+                		subcategoryJson.put("subcategoryLink", "#/category/" + subcategory.getId());
                 		subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                 		subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
                 		subcategoryJson.put("unread", member == null ? false : forumReadService.hasTopicUnreadPostsByMember(lastTopic, member));
@@ -95,9 +97,11 @@ public class HomeRs  {
                 
             }
             if (canViewCategory) {
-            	result.put(categoryJson);
+            	categoriesJsonArray.put(categoryJson);
             }
         }
+        result.put("loggedIn", member != null);
+        result.put("categories", categoriesJsonArray);
 
         return result.toString();
     }

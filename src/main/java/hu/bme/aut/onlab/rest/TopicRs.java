@@ -7,6 +7,7 @@ import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class TopicRs {
 
                     postJson.put("username", member.getDisplayName());
                     postJson.put("userLink", "#/user/" + member.getId());
-                    postJson.put("userImageLink", member.getPictureId());
+                    postJson.put("userImageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
                     postJson.put("postCount", member.getPostCount());
                     postJson.put("memberGroup", memberGroup.getTitle());
                     postJson.put("time", Formatter.formatTimeStamp(post.getTime()));

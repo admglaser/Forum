@@ -26,9 +26,10 @@ import hu.bme.aut.onlab.model.Subcategory;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.model.Topic_;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
-@Path("/subcategory")
+@Path("/category")
 public class SubcategoryRs {
 
     @EJB
@@ -93,13 +94,14 @@ public class SubcategoryRs {
 	            topicJson.put("postLink", "#/topic/" + topic.getId() + "/" + lastPost.getPostNumber());
 	            topicJson.put("starterLink", "#/user/" + starterMemberPosted.getId());
 	            topicJson.put("posterLink", "#/user/" + lastMemberPosted.getId());
+	            topicJson.put("posterImageLink", LinkUtils.getProfilePictureLink(lastMemberPosted.getPictureId()));
 	
 	            topicJsonArray.put(topicJson);
 	        }
 	
 	        result.put("title", subcategory.getTitle());
 	        result.put("topics", topicJsonArray);
-	        result.put("pages", NavigationUtils.getPagesJsonArray("#/subcategory/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
+	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
         
         return result.toString();
