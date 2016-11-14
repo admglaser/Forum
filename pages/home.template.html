@@ -1,5 +1,5 @@
 <!-- category -->
-<div ng-repeat="category in data" class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+<div ng-repeat="category in data.categories" class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
 	<table class="table forum table-striped">
 		<thead>
 			<tr>
@@ -17,11 +17,13 @@
 			<!-- subcategory -->
 			<tr ng-repeat="subcategory in category.subcategories">
 				<td class="text-center">
-					<div ng-if="subcategory.unread">
-						<i class="fa fa-circle fa-2x text-primary"></i>
-					</div>
-					<div ng-if="!subcategory.unread">
-						<i class="fa fa-circle-o fa-2x text-primary"></i>
+					<div ng-if="data.loggedIn">
+						<div ng-if="subcategory.unread">
+							<i class="fa fa-circle fa-2x text-primary"></i>
+						</div>
+						<div ng-if="!subcategory.unread">
+							<i class="fa fa-circle-o fa-2x text-primary"></i>
+						</div>
 					</div>
 				</td>
 				<td>
@@ -33,19 +35,20 @@
 				<td class="text-center hidden-xs">{{subcategory.topicCount}}</td>
 				<td class="text-center hidden-xs">{{subcategory.postCount}}</td>
 				<td>
-					<div class="row">
-						<div class="col-xs-3">
-							<img class="user-icon img-thumbnail" src="images/user.png"/>
+					<div ng-if="subcategory.hasLastTopic">
+						<div class="row">
+							<div class="col-xs-3">
+								<img class="user-icon img-thumbnail" src="{{subcategory.lastPosterImageLink}}"/>
+							</div>
+							<div class="col-xs-9">
+								<small>
+									<a href="{{subcategory.postLink}}">{{subcategory.lastTitle}}</a>
+									<br/>By <a href="{{subcategory.userLink}}">{{subcategory.lastPoster}}</a>
+									<br/><a href="{{subcategory.postLink}}">{{subcategory.lastDate}}</a>
+								</small>
+							</div>
 						</div>
-						<div class="col-xs-9">
-							<small>
-								<a href="{{subcategory.postLink}}">{{subcategory.lastTitle}}</a>
-								<br/>By <a href="{{subcategory.userLink}}">{{subcategory.lastPoster}}</a>
-								<br/><a href="{{subcategory.postLink}}">{{subcategory.lastDate}}</a>
-							</small>
-						</div>
-					</div>
-					
+					</div>		
 				</td>
 			</tr>
 			<!-- end of subcategory -->

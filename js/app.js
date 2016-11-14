@@ -20,11 +20,11 @@ app.config(function($routeProvider) {
 	
 	
 	//subcategory
-	.when('/subcategory/:subcategoryId', {
+	.when('/category/:subcategoryId', {
 		templateUrl : 'pages/subcategory.template.html',
 		controller: 'subcategoryController'
 	})
-	.when('/subcategory/:subcategoryId/:pageNumber', {
+	.when('/category/:subcategoryId/:pageNumber', {
 		templateUrl : 'pages/subcategory.template.html',
 		controller: 'subcategoryController'
 	})
@@ -154,7 +154,7 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	var link = restLink + 'subcategory/' + categoryId + "/" + pageNumber;
+	var link = restLink + 'category/' + categoryId + "/" + pageNumber;
 	debug("Getting page: " + link);
 	$http.get(link, {
 		headers : {
