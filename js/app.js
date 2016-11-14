@@ -75,7 +75,7 @@ app.config(function($routeProvider) {
 	
 	
 	//messages
-	.when('/messages/:conversationId', {
+	.when('/message/:conversationNumber', {
 		templateUrl : 'pages/messages.template.html',
 		controller: 'messagesController'
 	})
@@ -86,7 +86,7 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/notifications.template.html',
 		controller: 'notificationsController'
 	})
-	.when('/notifications/:notificationId', {
+	.when('/notifications/:pageNumber', {
 		templateUrl : 'pages/notifications.template.html',
 		controller: 'notificationsController'
 	})
@@ -323,7 +323,7 @@ app.controller('messagesController', function($scope, $http, $sce, $routeParams)
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	var link = restLink + 'messages/' + conversationNumber + '/' + pageNumber;
+	var link = restLink + 'message/' + conversationNumber + '/' + pageNumber;
 	debug("Getting page: " + link);
 	$http.get(link, {
 		headers : {
