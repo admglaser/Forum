@@ -116,12 +116,15 @@ app.run(function($rootScope, $location, $route) {
 //navbar
 app.controller('navbarController', function($rootScope, $scope, $http) {
 	$rootScope.$on('updateNavbar', function(event, data) {
-		$http.get(restLink + "navbar", {
+		var link = restLink + "navbar";
+		debug("Getting page: " + link);
+		$http.get(link, {
 			headers : {
 				"Authorization" : "Basic " + encoded
 			}
 		})
 		.then(function(res) {
+			debug("Result has arrived for " +  link);
 			$scope.data = res.data;
 		});
 	});
