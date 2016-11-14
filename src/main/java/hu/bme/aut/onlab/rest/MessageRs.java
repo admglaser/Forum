@@ -10,6 +10,7 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.Message;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -70,13 +71,12 @@ public class MessageRs {
 
                     messageJson.put("userName", member.getDisplayName());
                     messageJson.put("userLink", "#/user/" + member.getId());
-                    messageJson.put("userImageLink", member.getPictureId());
+                    messageJson.put("userImageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
                     messageJson.put("posts", member.getPostCount());
                     messageJson.put("memberGroup", memberGroup.getTitle());
                     messageJson.put("time", Formatter.formatTimeStampForMessage(message.getTime()));
                     messageJson.put("text", message.getText());
                     messageJson.put("messageNumber", message.getMessageNumber());
-                    messageJson.put("messageLink", "#/messages/" + conversation.getId() + "/" + pageNumber);
                     messagesJsonArray.put(messageJson);
                 }
 
