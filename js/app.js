@@ -130,12 +130,15 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 
 //home
 app.controller('homeController', function($rootScope, $scope, $http) {
-	$http.get(restLink + "home", {
+	var link = restLink + "home";
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
 	.then(function(res){
+		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
 	});
 });
@@ -148,38 +151,42 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'subcategory/' + categoryId + "/" + pageNumber, {
+	var link = restLink + 'subcategory/' + categoryId + "/" + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+	});
 });
 
 
 //topic
-app.controller('topicController', function($scope, $http, $routeParams, $sce, $location, $anchorScroll) {
+app.controller('topicController', function($scope, $http, $routeParams, $sce) {
 	$topicId = $routeParams.topicId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'topic/' + $topicId + "/" + pageNumber, {
+	var link = restLink + 'topic/' + $topicId + "/" + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-			for (var i = 0; i < $scope.data.posts.length; i++) {
-				var post = $scope.data.posts[i];
-				post.text = convertBBCode(post.text, $sce);
-			}
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		for (var i = 0; i < $scope.data.posts.length; i++) {
+			var post = $scope.data.posts[i];
+			post.text = convertBBCode(post.text, $sce);
 		}
-	);
+	});
 });
 
 
@@ -189,30 +196,34 @@ app.controller('membersController', function($scope, $http, $routeParams) {
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'members/' + pageNumber, {
+	var link = restLink + 'members/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+	});
 });
 
 
 //user
 app.controller('userOverviewController', function($scope, $http, $routeParams) {
 	var userId = $routeParams.userId;
-	$http.get(restLink + 'user/' + userId, {
+	var link = restLink + 'user/' + userId;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+	});
 });
 app.controller('userTopicsController', function($scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
@@ -220,19 +231,21 @@ app.controller('userTopicsController', function($scope, $http, $sce, $routeParam
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'user/' + userId + '/topics/' + pageNumber, {
+	var link = restLink + 'user/' + userId + '/topics/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-			for (var i = 0; i < $scope.data.topics.length; i++) {
-				var topic = $scope.data.topics[i];
-				topic.text = convertBBCode(topic.text, $sce);
-			}
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		for (var i = 0; i < $scope.data.topics.length; i++) {
+			var topic = $scope.data.topics[i];
+			topic.text = convertBBCode(topic.text, $sce);
 		}
-	);
+	});
 });
 app.controller('userPostsController', function($scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
@@ -240,19 +253,21 @@ app.controller('userPostsController', function($scope, $http, $sce, $routeParams
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'user/' + userId + '/posts/' + pageNumber, {
+	var link = restLink + 'user/' + userId + '/posts/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-			for (var i = 0; i < $scope.data.posts.length; i++) {
-				var post = $scope.data.posts[i];
-				post.text = convertBBCode(post.text, $sce);
-			}
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		for (var i = 0; i < $scope.data.posts.length; i++) {
+			var post = $scope.data.posts[i];
+			post.text = convertBBCode(post.text, $sce);
 		}
-	);
+	});
 });
 app.controller('userLikesController', function($scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
@@ -260,19 +275,21 @@ app.controller('userLikesController', function($scope, $http, $sce, $routeParams
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'user/' + userId + '/likes/' + pageNumber, {
+	var link = restLink + 'user/' + userId + '/likes/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-			for (var i = 0; i < $scope.data.posts.length; i++) {
-				var post = $scope.data.posts[i];
-				post.text = convertBBCode(post.text, $sce);
-			}
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		for (var i = 0; i < $scope.data.posts.length; i++) {
+			var post = $scope.data.posts[i];
+			post.text = convertBBCode(post.text, $sce);
 		}
-	);
+	});
 });
 
 
@@ -282,15 +299,17 @@ app.controller('conversationsController', function($scope, $http, $sce, $routePa
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'conversations/' + pageNumber, {
+	var link = restLink + 'conversations/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+	});
 });
 
 
@@ -301,19 +320,21 @@ app.controller('messagesController', function($scope, $http, $sce, $routeParams)
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'messages/' + conversationNumber + '/' + pageNumber, {
+	var link = restLink + 'messages/' + conversationNumber + '/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-			for (var i = 0; i < $scope.data.messages.length; i++) {
-				var message = $scope.data.messages[i];
-				message.text = convertBBCode(message.text, $sce);
-			}
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		for (var i = 0; i < $scope.data.messages.length; i++) {
+			var message = $scope.data.messages[i];
+			message.text = convertBBCode(message.text, $sce);
 		}
-	);
+	});
 });
 
 
@@ -323,15 +344,17 @@ app.controller('notificationsController', function($scope, $http, $sce, $routePa
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	$http.get(restLink + 'notifications/' + pageNumber, {
+	var link = restLink + 'notifications/' + pageNumber;
+	debug("Getting page: " + link);
+	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
-		.then(function(res) {
-			$scope.data = res.data;
-		}
-	);
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+	});
 });
 
 
@@ -342,4 +365,8 @@ function convertBBCode(text, $sce) {
 		addInLineBreaks : false
 	});
 	return $sce.trustAsHtml(result.html);
+}
+
+function debug(text) {
+	console.log(text);
 }
