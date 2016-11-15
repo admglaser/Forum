@@ -4,6 +4,7 @@ var restLink = "http://localhost:8080/ForumApp/rest/";
 //var username = null; //robertk
 //var password = null; //bbb
 var encoded = ""; //btoa(username + ":" + password);
+var postParam = null;
 
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
@@ -337,6 +338,7 @@ app.controller('messagesController', function($scope, $http, $sce, $routeParams)
 			var message = $scope.data.messages[i];
 			message.text = convertBBCode(message.text, $sce);
 		}
+		postParam = conversationNumber;
 	});
 });
 

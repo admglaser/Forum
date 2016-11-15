@@ -83,7 +83,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Send</button>
+					<button id="messageSubmit" type="submit" class="btn btn-primary pull-right">Send</button>
 				</form>
 			</div>
 		</div>
@@ -124,4 +124,34 @@
 		$("#previewDiv").hide();
 		$("#bbcodeEditor").show();
 	}
+	
+	$('#messageSubmit').click(function(){ 
+		var text = $("#bbcodeEditor").val();
+		var postData = {
+			"text": text,
+			"conversationNumber": postParam
+		};
+		$.ajax({ 
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "message/new",
+			data: JSON.stringify(postData),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){        
+				if (data.success) {
+					alert("Message sent.")
+					$('#newReplyModalForm').modal('toggle');					
+					var $body = angular.element(document.body);
+					var $rootScope = $body.scope().$root;
+					$rootScope.$emit('reload');
+					$("#bbcodeEditor").val("");
+				} else {
+					alert("Failed to send message!");
+				}
+			}			
+		});
+	});
 </script>
