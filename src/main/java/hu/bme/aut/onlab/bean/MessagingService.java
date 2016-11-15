@@ -176,5 +176,28 @@ public class MessagingService {
 			return Collections.emptyList();
 		}
 	}
+
+	public Conversation getConversation(Member member, int conversationNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Conversation> query = builder.createQuery(Conversation.class);
+		Root<Conversation> conversationRoot = query.from(Conversation.class);
+		
+		ListJoin<Conversation, Member> memberJoin = conversationRoot.join(Conversation_.members);
+		
+		query.where(
+				builder.and(
+						builder.equal(memberJoin.get(Member_.id), member.getId()),
+						builder.equal(conversationRoot.get(Conversation_.conversationNumber), conversationNumber)
+				)
+		);
+		
+		query.select(conversationRoot);
+		
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 	
 }

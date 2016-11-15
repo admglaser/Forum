@@ -1,19 +1,39 @@
 package hu.bme.aut.onlab.bean;
 
-import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
-import hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Root;
+
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.MemberGroup_;
+import hu.bme.aut.onlab.model.MemberLike;
+import hu.bme.aut.onlab.model.MemberLike_;
+import hu.bme.aut.onlab.model.Permission;
+import hu.bme.aut.onlab.model.PermissionSet;
+import hu.bme.aut.onlab.model.PermissionSet_;
+import hu.bme.aut.onlab.model.Permission_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.Subcategory_;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSeenByMember;
+import hu.bme.aut.onlab.model.TopicSeenByMember_;
+import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
@@ -29,23 +49,21 @@ public class ForumReadService {
 	}
 
 	public Timestamp getLastSeenTimeOfMemberInTopic(Topic topic, Member member) {
-		CriteriaHelper<TopicSeenByMember> criteriaHelper = new CriteriaHelper<>(TopicSeenByMember.class, em,
-				CriteriaType.SELECT);
-		CriteriaQuery<TopicSeenByMember> criteriaQuery = criteriaHelper.getCriteriaQuery();
-		Root<TopicSeenByMember> rootEntity = criteriaHelper.getRootEntity();
-		CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
-
-		criteriaQuery.where(
-				criteriaBuilder.and(
-						criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.memberId), member.getId()),
-						criteriaBuilder.equal(rootEntity.get(TopicSeenByMember_.topicId), topic.getId())
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<TopicSeenByMember> query = builder.createQuery(TopicSeenByMember.class);
+		Root<TopicSeenByMember> topicSeenByMemberRoot = query.from(TopicSeenByMember.class);
+		
+		query.where(
+				builder.and(
+						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.memberId), member.getId()),
+						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.topicId), topic.getId())
 				)
 		);
 
-		criteriaQuery.select(rootEntity);
+		query.select(topicSeenByMemberRoot);
 
 		try {
-			TopicSeenByMember lastSeenTime = em.createQuery(criteriaQuery).getSingleResult();
+			TopicSeenByMember lastSeenTime = em.createQuery(query).getSingleResult();
 			return lastSeenTime.getSeenTime();
 		} catch (NoResultException e) {
 			// Has no record for the given topic and member.
@@ -55,21 +73,20 @@ public class ForumReadService {
 	}
 
 	public Topic getTopicWithLastPostFromSubcategory(Subcategory subcategory) {
-		CriteriaHelper<Topic> topicCriteriaHelper = new CriteriaHelper<>(Topic.class, em, CriteriaType.SELECT);
-		Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
-		CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
-		CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
-
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Topic> query = builder.createQuery(Topic.class);
+		Root<Topic> topicRoot = query.from(Topic.class);
+		
 		Join<Topic, Subcategory> subcategoryJoin = topicRoot.join(Topic_.subcategory);
 		Join<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 
-		criteriaQuery.groupBy(subcategoryJoin.get(Subcategory_.id));
-		criteriaQuery.where(criteriaBuilder.equal(subcategoryJoin.get(Subcategory_.id), subcategory.getId()));
-		criteriaQuery.orderBy(criteriaBuilder.desc(postJoin.get(Post_.time)));
+		query.groupBy(subcategoryJoin.get(Subcategory_.id));
+		query.where(builder.equal(subcategoryJoin.get(Subcategory_.id), subcategory.getId()));
+		query.orderBy(builder.desc(postJoin.get(Post_.time)));
 
-		criteriaQuery.select(topicRoot);
+		query.select(topicRoot);
 
-		return em.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+		return em.createQuery(query).setMaxResults(1).getSingleResult();
 	}
 
 	public boolean hasTopicUnreadPostsByMember(Topic topic, Member member) {
@@ -89,22 +106,21 @@ public class ForumReadService {
 	}
 
 	public List<Topic> getCreatedTopicsByMember(Member member, int pageNumber) {
-		CriteriaHelper<Topic> topicCriteriaHelper = new CriteriaHelper<>(Topic.class, em, CriteriaType.SELECT);
-		Root<Topic> topicRoot = topicCriteriaHelper.getRootEntity();
-		CriteriaQuery<Topic> criteriaQuery = topicCriteriaHelper.getCriteriaQuery();
-		CriteriaBuilder criteriaBuilder = topicCriteriaHelper.getCriteriaBuilder();
-
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Topic> query = builder.createQuery(Topic.class);
+		Root<Topic> topicRoot = query.from(Topic.class);
+		
 		Join<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 
-		criteriaQuery.where(
-				criteriaBuilder.and(
-						criteriaBuilder.equal(postJoin.get(Post_.memberId), member.getId()),
-						criteriaBuilder.equal(postJoin.get(Post_.postNumber), 1)
+		query.where(
+				builder.and(
+						builder.equal(postJoin.get(Post_.memberId), member.getId()),
+						builder.equal(postJoin.get(Post_.postNumber), 1)
 				)
 		);
 
 		try {
-			return em.createQuery(criteriaQuery)
+			return em.createQuery(query)
 					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
@@ -115,16 +131,15 @@ public class ForumReadService {
 	}
 	
 	public List<Post> getPostsByMember(Member member, int pageNumber) {
-		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
-		Root<Post> postRoot = postCriteriaHelper.getRootEntity();
-		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
-		CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
-
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> query = builder.createQuery(Post.class);
+		Root<Post> postRoot = query.from(Post.class);
+		
 		postRoot.join(Post_.member);
-		criteriaQuery.where(criteriaBuilder.equal(postRoot.get(Post_.memberId), member.getId()));
+		query.where(builder.equal(postRoot.get(Post_.memberId), member.getId()));
 
 		try {
-			return em.createQuery(criteriaQuery)
+			return em.createQuery(query)
 					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
@@ -134,22 +149,21 @@ public class ForumReadService {
 		}
 	}
 
-	private Post getPostFromTopicAtPosition(Topic topic, Position ordering) {
-		CriteriaHelper<Post> postCriteriaHelper = new CriteriaHelper<>(Post.class, em, CriteriaType.SELECT);
-		Root<Post> root = postCriteriaHelper.getRootEntity();
-		CriteriaBuilder criteriaBuilder = postCriteriaHelper.getCriteriaBuilder();
-		CriteriaQuery<Post> criteriaQuery = postCriteriaHelper.getCriteriaQuery();
+	private Post getPostFromTopicAtPosition(Topic topic, Position position) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> query = builder.createQuery(Post.class);
+		Root<Post> postRoot = query.from(Post.class);
 
-		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.topicId), topic.getId()));
-		if (ordering == Position.FIRST) {
-			criteriaQuery.orderBy(criteriaBuilder.asc(root.get(Post_.time)));
-		} else if (ordering == Position.LAST) {
-			criteriaQuery.orderBy(criteriaBuilder.desc(root.get(Post_.time)));
+		query.where(builder.equal(postRoot.get(Post_.topicId), topic.getId()));
+		if (position == Position.FIRST) {
+			query.orderBy(builder.asc(postRoot.get(Post_.time)));
+		} else if (position == Position.LAST) {
+			query.orderBy(builder.desc(postRoot.get(Post_.time)));
 		} else {
 			throw new IllegalArgumentException("Unknown ordering as parameter.");
 		}
 
-		return em.createQuery(criteriaQuery).setMaxResults(1).getSingleResult();
+		return em.createQuery(query).setMaxResults(1).getSingleResult();
 	}
 
 	public Post getFirstPostFromTopic(Topic topic) {

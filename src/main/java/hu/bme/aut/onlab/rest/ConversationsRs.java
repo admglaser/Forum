@@ -59,8 +59,8 @@ public class ConversationsRs {
 				conversationJson.put("messages", conversation.getMessageCount());
 				conversationJson.put("lastPoster", lastMessageMemmber.getDisplayName());
 				conversationJson.put("lastDate", Formatter.formatTimeStampForMessage(lastMessage.getTime()));
-				conversationJson.put("conversationLink", "#/messages/" + conversation.getConversationNumber());
-				conversationJson.put("lastMessageLink", "#/messages/" + conversation.getConversationNumber() + "/" + NavigationUtils.getPageOfElement(lastMessage.getMessageNumber()));
+				conversationJson.put("conversationLink", "#/message/" + conversation.getConversationNumber());
+				conversationJson.put("lastMessageLink", "#/message/" + conversation.getConversationNumber() + "/" + NavigationUtils.getPageOfElement(lastMessage.getMessageNumber()));
 				conversationJson.put("lastPosterLink", "#/user/" + lastMessageMemmber.getId());
 				conversationJson.put("starterLink", "#/user/" + firstMessageMember.getId());
 				conversationJson.put("firstMessageImageLink", LinkUtils.getProfilePictureLink(firstMessageMember.getPictureId()));

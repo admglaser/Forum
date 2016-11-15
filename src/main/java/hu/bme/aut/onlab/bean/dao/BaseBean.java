@@ -4,13 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
-
-import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
 
 /**
  * The base class for entity beans.
@@ -28,22 +25,6 @@ public abstract class BaseBean<E> {
 		this.entityType = entityType;
     }
 
-    public CriteriaHelper<E> createQueryHelper(){
-        return new CriteriaHelper<E>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
-    }
-
-    public List<E> executeQuery(CriteriaHelper<E> criteriaHelper) {
-        return em.createQuery(criteriaHelper.getCriteriaQuery()).getResultList();
-    }
-
-    public CriteriaHelper<E> createTupleQueryHelper(){
-        return new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.TUPLE_SELECT);
-    }
-
-    public List<Tuple> executeTupleQuery(CriteriaHelper<E> criteriaHelper) {
-        return em.createQuery(criteriaHelper.getCriteriaTupleQuery()).getResultList();
-    }
-
     /**
      * Find entities that have equality with the given value on the given field.
      *   Can be used for join field condition.
@@ -52,20 +33,15 @@ public abstract class BaseBean<E> {
      * @return          The entity with the given equality.
      */
     public List<E> findEntitiesByEquality(SingularAttribute<E, ? extends Object> field, Object value){
-        // Initialize components
-        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
-        CriteriaQuery<E> criteria = criteriaHelper.getCriteriaQuery();
-        CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
-        Root<E> rootEntity = criteriaHelper.getRootEntity();
+    	CriteriaBuilder builder = em.getCriteriaBuilder();
+    	CriteriaQuery<E> query = builder.createQuery(entityType);
+        Root<E> entityRoot = query.from(entityType);
 
-        // Set the appropriate select (the whole entity)
-        criteria.select(criteriaHelper.getRootEntity());
+        query.where(builder.equal(entityRoot.get(field) , value));
 
-        // Set the where term
-        criteria.where( criteriaBuilder.equal(rootEntity.get( field ) , value) );
+        query.select(entityRoot);
 
-        // Execute the select and return with the result
-        return em.createQuery(criteria).getResultList();
+        return em.createQuery(query).getResultList();
     }
 
     /**
@@ -78,14 +54,21 @@ public abstract class BaseBean<E> {
     }
 
     public List<E> findAllEntity() {
-        // Initialize components
-        CriteriaHelper<E> criteriaHelper = new CriteriaHelper<>(entityType, em, CriteriaHelper.CriteriaType.SELECT);
-        CriteriaQuery<E> criteria = criteriaHelper.getCriteriaQuery();
+    	CriteriaBuilder builder = em.getCriteriaBuilder();
+    	CriteriaQuery<E> query = builder.createQuery(entityType);
+        Root<E> entityRoot = query.from(entityType);
 
-        // Set the appropriate select (the whole entity)
-        criteria.select( criteriaHelper.getRootEntity() );
+        query.select(entityRoot);
 
-        // Execute the select and return with the result
-        return em.createQuery(criteria).getResultList();
+        return em.createQuery(query).getResultList();
     }
+    
+    public void add(E entity) {
+    	em.persist(entity);
+    }
+    
+    public void merge(E entity) {
+    	em.merge(entity);
+    }
+    
 }

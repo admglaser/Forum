@@ -18,8 +18,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import hu.bme.aut.onlab.bean.dao.MemberBean;
-import hu.bme.aut.onlab.bean.helper.CriteriaHelper;
-import hu.bme.aut.onlab.bean.helper.CriteriaHelper.CriteriaType;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
 
@@ -44,10 +42,9 @@ public class LoginService {
 			return member;
 		} 
 		
-		CriteriaHelper<Member> criteriaHelper = new CriteriaHelper<>(Member.class, em, CriteriaType.SELECT);
-		CriteriaQuery<Member> criteriaQuery = criteriaHelper.getCriteriaQuery();
-		Root<Member> rootEntity = criteriaHelper.getRootEntity();
-		CriteriaBuilder criteriaBuilder = criteriaHelper.getCriteriaBuilder();
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Member> query = builder.createQuery(Member.class);
+		Root<Member> memberRoot = query.from(Member.class);
 		
 		try {
 			byte[] decodedBytes = Base64.getDecoder().decode(encodedUserPassword.replaceFirst("Basic" + " ", ""));
@@ -56,15 +53,15 @@ public class LoginService {
 			final String username = tokenizer.nextToken();
 			final String password = tokenizer.nextToken();
 
-			criteriaQuery.where(
-					criteriaBuilder.and(
-							criteriaBuilder.equal(rootEntity.get(Member_.userName), username),
-							criteriaBuilder.equal(rootEntity.get(Member_.password), password)
+			query.where(
+					builder.and(
+							builder.equal(memberRoot.get(Member_.userName), username),
+							builder.equal(memberRoot.get(Member_.password), password)
 							)
 					);
-			criteriaQuery.select(rootEntity);
+			query.select(memberRoot);
 
-			Member member = em.createQuery(criteriaQuery).getSingleResult();
+			Member member = em.createQuery(query).getSingleResult();
 			membersMap.put(encodedUserPassword, member.getId());
 			updateLastActiveTime(member);
 			return member;

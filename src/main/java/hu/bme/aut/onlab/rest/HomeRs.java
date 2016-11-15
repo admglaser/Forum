@@ -77,7 +77,7 @@ public class HomeRs  {
                 	subcategoryJson.put("topicCount", topics.size());
                 	subcategoryJson.put("postCount", totalPosts);
                 	subcategoryJson.put("hasLastTopic", ! topics.isEmpty());
-                	
+                	subcategoryJson.put("subcategoryLink", "#/category/" + subcategory.getId());
                 	if (!topics.isEmpty() ) {
                 		Topic lastTopic = forumReadService.getTopicWithLastPostFromSubcategory(subcategory);
                 		Post lastPost = forumReadService.getLastPostFromTopic(lastTopic);
@@ -87,7 +87,6 @@ public class HomeRs  {
                 		subcategoryJson.put("lastPoster", memberOfLastPost.getDisplayName());
                 		subcategoryJson.put("lastDate", Formatter.formatTimeStamp(lastPost.getTime()));
                 		subcategoryJson.put("lastPosterImageLink", LinkUtils.getProfilePictureLink(memberOfLastPost.getPictureId()));
-                		subcategoryJson.put("subcategoryLink", "#/category/" + subcategory.getId());
                 		subcategoryJson.put("postLink", "#/topic/" + lastTopic.getId()+ "/" + lastPost.getPostNumber());
                 		subcategoryJson.put("userLink", "#/user/" + memberOfLastPost.getId());
                 		subcategoryJson.put("unread", member == null ? false : forumReadService.hasTopicUnreadPostsByMember(lastTopic, member));
