@@ -80,6 +80,10 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/messages.template.html',
 		controller: 'messagesController'
 	})
+	.when('/message/:conversationNumber/:pageNumber', {
+		templateUrl : 'pages/messages.template.html',
+		controller: 'messagesController'
+	})
 	
 	
 	//notifications
@@ -105,9 +109,9 @@ app.config(function($routeProvider) {
 
 //route location change event
 app.run(function($rootScope, $location, $route) {
-	$rootScope.$on( "$routeChangeStart", function(event, next, current) {
-		$rootScope.$emit('updateNavbar');
-	});
+	// $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+		// $rootScope.$emit('updateNavbar');
+	// });
 	$rootScope.$on('reload', function(event, data) {
 		$route.reload();
 	});	
@@ -144,12 +148,13 @@ app.controller('homeController', function($rootScope, $scope, $http) {
 	.then(function(res){
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //subcategory
-app.controller('subcategoryController', function($scope, $http, $routeParams) {
+app.controller('subcategoryController', function($rootScope, $scope, $http, $routeParams) {
 	var categoryId = $routeParams.subcategoryId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -165,12 +170,13 @@ app.controller('subcategoryController', function($scope, $http, $routeParams) {
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //topic
-app.controller('topicController', function($scope, $http, $routeParams, $sce) {
+app.controller('topicController', function($rootScope, $scope, $http, $routeParams, $sce) {
 	$topicId = $routeParams.topicId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -190,12 +196,13 @@ app.controller('topicController', function($scope, $http, $routeParams, $sce) {
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //members
-app.controller('membersController', function($scope, $http, $routeParams) {
+app.controller('membersController', function($rootScope, $scope, $http, $routeParams) {
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
@@ -210,12 +217,13 @@ app.controller('membersController', function($scope, $http, $routeParams) {
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //user
-app.controller('userOverviewController', function($scope, $http, $routeParams) {
+app.controller('userOverviewController', function($rootScope, $scope, $http, $routeParams) {
 	var userId = $routeParams.userId;
 	var link = restLink + 'user/' + userId;
 	debug("Getting page: " + link);
@@ -227,9 +235,10 @@ app.controller('userOverviewController', function($scope, $http, $routeParams) {
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
-app.controller('userTopicsController', function($scope, $http, $sce, $routeParams) {
+app.controller('userTopicsController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -249,9 +258,10 @@ app.controller('userTopicsController', function($scope, $http, $sce, $routeParam
 			var topic = $scope.data.topics[i];
 			topic.text = convertBBCode(topic.text, $sce);
 		}
+		$rootScope.$emit('updateNavbar');
 	});
 });
-app.controller('userPostsController', function($scope, $http, $sce, $routeParams) {
+app.controller('userPostsController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -271,9 +281,10 @@ app.controller('userPostsController', function($scope, $http, $sce, $routeParams
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
+		$rootScope.$emit('updateNavbar');
 	});
 });
-app.controller('userLikesController', function($scope, $http, $sce, $routeParams) {
+app.controller('userLikesController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var userId = $routeParams.userId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -293,12 +304,13 @@ app.controller('userLikesController', function($scope, $http, $sce, $routeParams
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //conversations
-app.controller('conversationsController', function($scope, $http, $sce, $routeParams) {
+app.controller('conversationsController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
@@ -313,12 +325,13 @@ app.controller('conversationsController', function($scope, $http, $sce, $routePa
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //messages
-app.controller('messagesController', function($scope, $http, $sce, $routeParams) {
+app.controller('messagesController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var conversationNumber = $routeParams.conversationNumber;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
@@ -339,12 +352,13 @@ app.controller('messagesController', function($scope, $http, $sce, $routeParams)
 			message.text = convertBBCode(message.text, $sce);
 		}
 		postParam = conversationNumber;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 
 
 //notifications
-app.controller('notificationsController', function($scope, $http, $sce, $routeParams) {
+app.controller('notificationsController', function($rootScope, $scope, $http, $sce, $routeParams) {
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
@@ -359,6 +373,7 @@ app.controller('notificationsController', function($scope, $http, $sce, $routePa
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
 	});
 });
 

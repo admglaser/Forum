@@ -5,7 +5,6 @@
 	<table class="table forum table-striped">
 		<thead>
 			<tr>
-<!-- 				<th class="cell-stat"></th> -->
 				<th class=""><h3>My Conversations</h3></th>
 				<th class="cell-stat hidden-xs">Messages</th>
 				<th class="cell-stat-2x">Last Message
@@ -29,8 +28,12 @@
 						<img class="user-icon img-thumbnail" src="{{conversation.firstMessageImageLink}}">
 					</div>
 					<div class="pull-left" style="margin-left:10px">
-						<a href="{{conversation.conversationLink}}" class="b">{{conversation.title}}</a> 
-						<br>
+						<div ng-if="conversation.unread">
+							<b><a href="{{conversation.conversationLink}}">{{conversation.title}}</a></b>
+						</div>
+						<div ng-if="!conversation.unread">
+							<a href="{{conversation.conversationLink}}">{{conversation.title}}</a>
+						</div>
 						<small>
 						 	Started by <a href="{{conversation.starterLink}}">{{conversation.starter}}</a> 
 						 	<i class="fa fa-clock-o"></i> {{conversation.startDate}}
@@ -109,7 +112,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Send</button>
+					<button id="conversationSubmit" type="submit" class="btn btn-primary pull-right">Send</button>
 				</form>
 			</div>
 		</div>
@@ -150,4 +153,40 @@
 		$("#previewDiv").hide();
 		$("#bbcodeEditor").show();
 	}
+	
+	$('#conversationSubmit').click(function(){ 
+		var subject = $("#subject").val();
+		var recipients = $("#recipients").val();
+		var text = $("#bbcodeEditor").val();
+		
+		var postData = {
+			"subject": subject,
+			"recipients": recipients,
+			"text": text,
+		};
+		$.ajax({ 
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "conversations/new",
+			data: JSON.stringify(postData),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){        
+				if (data.success) {
+					alert("Message sent.")
+					$('#newMessageModalForm').modal('toggle');					
+					var $body = angular.element(document.body);
+					var $rootScope = $body.scope().$root;
+					$rootScope.$emit('reload');
+					$("#subject").val("");
+					$("#recipients").val("");
+					$("#bbcodeEditor").val("");
+				} else {
+					alert(data.message);
+				}
+			}			
+		});
+	});
 </script>
