@@ -62,13 +62,13 @@ public class Formatter {
 			LocalDateTime now = LocalDateTime.now();
 			if (year == now.getYear() && dayOfYear == now.getDayOfYear()) {
 				int minutesOfTimeStamp = hour * 60 + minute;
-				int minutesAnHourAgo = now.getHour() * 60 + now.getMinute() - 60;
+				int minutesAnHourAgo = now.getHour() * 60 + now.getMinute()-60;
 				if (minutesOfTimeStamp > minutesAnHourAgo) {
 					int m = minutesOfTimeStamp - minutesAnHourAgo;
 					if (m == 1) {
 						return "1 minutes ago";
 					} else {
-						return String.format("%d minutes ago", m);
+						return String.format("%d minutes ago", 60-m);
 					}
 				} else {
 					return TODAY + localDateTime.format(timeFormatter);

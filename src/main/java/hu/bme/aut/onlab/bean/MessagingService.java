@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
@@ -17,6 +18,8 @@ import javax.persistence.criteria.Root;
 import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.ConversationSeenByMember;
 import hu.bme.aut.onlab.model.ConversationSeenByMember_;
+import hu.bme.aut.onlab.model.ConversationToMember;
+import hu.bme.aut.onlab.model.ConversationToMember_;
 import hu.bme.aut.onlab.model.Conversation_;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
@@ -36,10 +39,14 @@ public class MessagingService {
 		CriteriaQuery<Conversation> query = builder.createQuery(Conversation.class);
 		Root<Conversation> conversationRoot = query.from(Conversation.class);
 	
-		ListJoin<Conversation, Member> join = conversationRoot.join(Conversation_.members);
+		ListJoin<Conversation, Member> memberJoin = conversationRoot.join(Conversation_.members);
+		ListJoin<Conversation, Message> messageJoin = conversationRoot.join(Conversation_.messages);
 		
-		query.where(builder.equal(join.get(Member_.id), member.getId()));
-	
+		query.where(builder.equal(memberJoin.get(Member_.id), member.getId()));
+		query.orderBy(builder.desc(messageJoin.get(Message_.time)));
+		query.groupBy(conversationRoot.get(Conversation_.id));
+		query.select(conversationRoot);
+		
 		try {
 			return em.createQuery(query)
 					.setFirstResult((pageNumber-1)*NavigationUtils.ELEMENTS_PER_PAGE)
@@ -63,6 +70,26 @@ public class MessagingService {
 	
 		try {
 			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
+		}
+	}
+
+	public int getConversationNumber(Conversation conversation, Member member) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<ConversationToMember> query = builder.createQuery(ConversationToMember.class);
+		Root<ConversationToMember> conversationToMemberRoot = query.from(ConversationToMember.class);
+		
+		query.where(
+				builder.and(
+						builder.equal(conversationToMemberRoot.get(ConversationToMember_.conversationId), conversation.getId()),
+						builder.equal(conversationToMemberRoot.get(ConversationToMember_.memberId), member.getId())
+				)
+		);
+		
+		try {
+			ConversationToMember conversationToMember = em.createQuery(query).getSingleResult();
+			return conversationToMember.getConversationNumber();
 		} catch (NoResultException e) {
 			return 0;
 		}
@@ -111,27 +138,6 @@ public class MessagingService {
         }
     }
 
-	public boolean isConversationUnread(Conversation conversation, Member member) {
-		CriteriaBuilder builder = em.getCriteriaBuilder();
-		CriteriaQuery<ConversationSeenByMember> query = builder.createQuery(ConversationSeenByMember.class);
-		Root<ConversationSeenByMember> conversationSeenByMemberRoot = query.from(ConversationSeenByMember.class);
-
-		query.where(
-				builder.and(
-						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
-						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())));
-
-		query.select(conversationSeenByMemberRoot);
-		
-		try {
-			ConversationSeenByMember conversationSeenByMember = em.createQuery(query).getSingleResult();
-			return conversationSeenByMember.getSeenMessageNumber() < conversation.getMessageCount();
-		} catch (NoResultException e) {
-			//if conversation is not in "seen" table then its unread
-			return true;
-		}
-	}
-
 	public Message getMessageOfConversation(Conversation conversation, int messageNumber) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Message> query = builder.createQuery(Message.class);
@@ -168,6 +174,7 @@ public class MessagingService {
 		
 		query.select(messageRoot);
 		
+		query.groupBy(conversationJoin.get(Conversation_.id));
 		query.orderBy(builder.desc(messageRoot.get(Message_.time)));
 		
 		try {
@@ -183,11 +190,12 @@ public class MessagingService {
 		Root<Conversation> conversationRoot = query.from(Conversation.class);
 		
 		ListJoin<Conversation, Member> memberJoin = conversationRoot.join(Conversation_.members);
+		ListJoin<Conversation, ConversationToMember> conversationToMemberJoin = conversationRoot.join(Conversation_.conversationToMemberList);
 		
 		query.where(
 				builder.and(
 						builder.equal(memberJoin.get(Member_.id), member.getId()),
-						builder.equal(conversationRoot.get(Conversation_.conversationNumber), conversationNumber)
+						builder.equal(conversationToMemberJoin.get(ConversationToMember_.conversationNumber), conversationNumber)
 				)
 		);
 		
@@ -197,6 +205,56 @@ public class MessagingService {
 			return em.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
+		}
+	}
+
+	private int getConversationReadMessageNumber(Conversation conversation, Member member) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<ConversationSeenByMember> query = builder.createQuery(ConversationSeenByMember.class);
+		Root<ConversationSeenByMember> conversationSeenByMemberRoot = query.from(ConversationSeenByMember.class);
+	
+		query.where(
+				builder.and(
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())));
+	
+		query.select(conversationSeenByMemberRoot);
+		
+		try {
+			ConversationSeenByMember conversationSeenByMember = em.createQuery(query).getSingleResult();
+			return conversationSeenByMember.getSeenMessageNumber();
+		} catch (NoResultException e) {
+			return 0;
+		}
+	}
+	
+	public boolean isConversationUnread(Conversation conversation, Member member) {
+		return getConversationReadMessageNumber(conversation, member) < conversation.getMessageCount();
+	}
+
+	public void updateConversationReadMessageNumber(Conversation conversation, Member member, int seenMessageNumber) {
+		int conversationReadMessageNumber = getConversationReadMessageNumber(conversation, member);
+		if (seenMessageNumber > conversationReadMessageNumber) {
+			if (conversationReadMessageNumber == 0) {
+				ConversationSeenByMember conversationSeenByMember = new ConversationSeenByMember();
+				conversationSeenByMember.setConversation(conversation);
+				conversationSeenByMember.setMember(member);
+				conversationSeenByMember.setSeenMessageNumber(seenMessageNumber);
+				em.persist(conversationSeenByMember);
+			} else {
+				CriteriaBuilder builder = em.getCriteriaBuilder();
+				CriteriaUpdate<ConversationSeenByMember> update = builder.createCriteriaUpdate(ConversationSeenByMember.class);	
+				Root<ConversationSeenByMember> conversationSeenByMemberRoot = update.from(ConversationSeenByMember.class);
+				
+				update.where(
+						builder.and(
+								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
+								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())
+						)
+				);
+				update.set(conversationSeenByMemberRoot.get(ConversationSeenByMember_.seenMessageNumber), seenMessageNumber);
+				em.createQuery(update).executeUpdate();
+			}
 		}
 	}
 	

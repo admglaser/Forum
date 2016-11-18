@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class Message {
     
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
 	@Column(name = "message_number")    

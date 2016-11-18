@@ -67,7 +67,7 @@ public class MessageRs {
         	if (conversation != null) {
         		List<Message> messages = messagingService.getMessagesOfConversationOnPage(conversation, pageNumber);
         		// messages is empty if navigated to a too high page number
-        		if (! messages.isEmpty() ) {
+        		if (!messages.isEmpty()) {
         			Message firstMessage = messages.get(0);
         			
         			for (Message message : messages) {
@@ -87,12 +87,17 @@ public class MessageRs {
         				messagesJsonArray.put(messageJson);
         			}
         			
-        			result.put("conversationNumber", conversation.getConversationNumber());
+        			result.put("conversationNumber", messagingService.getConversationNumber(conversation, member));
         			result.put("title", conversation.getTitle());
         			result.put("starter", firstMessage.getMember().getDisplayName());
         			result.put("startDate", Formatter.formatTimeStamp(firstMessage.getTime()));
         			result.put("messages", messagesJsonArray);
         			result.put("pages", NavigationUtils.getPagesJsonArray("#/message/" + conversation.getId(), pageNumber, messagingService.getMessagesCountOfConversation(conversation)));
+        		
+        			//update read number
+        			Message lastMessage = messages.get(messages.size()-1);
+        			messagingService.updateConversationReadMessageNumber(conversation, member, lastMessage.getMessageNumber());
+        				
         		}
         	}
         }
@@ -108,7 +113,7 @@ public class MessageRs {
     	JSONObject json = new JSONObject(data);
     	JSONObject result = new JSONObject();
     	if (member != null) {
-    		String text = (String) json.get("text");
+    		String text = json.getString("text");
     		int conversationNumber = Integer.parseInt((String) json.get("conversationNumber"));
     		Conversation conversation = messagingService.getConversation(member, conversationNumber);
     		if (conversation != null) {
@@ -123,6 +128,7 @@ public class MessageRs {
 				conversation.setMessageCount(messageCount);
 				messageBean.add(message);
 				conversationBean.merge(conversation);
+				messagingService.updateConversationReadMessageNumber(conversation, member, messageCount);
 				result.put("success", true);
 				return result.toString();
     		}

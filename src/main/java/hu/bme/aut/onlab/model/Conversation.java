@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,11 +18,15 @@ import javax.persistence.Table;
 public class Conversation {
     
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
     
-	@Column(name = "conversation_number")
-	private int conversationNumber;
-    
+//	@Column(name = "conversation_number")
+//	private int conversationNumber;
+	
+    @OneToMany(mappedBy = "conversation")
+    private List<ConversationToMember> conversationToMemberList;
+	
 	@Column(name = "title")
 	private String title;
     
@@ -47,12 +53,20 @@ public class Conversation {
         this.id = id;
     }
 
-    public int getConversationNumber() {
-        return conversationNumber;
+//    public int getConversationNumber() {
+//        return conversationNumber;
+//    }
+
+//    public void setConversationNumber(int conversationNumber) {
+//        this.conversationNumber = conversationNumber;
+//    }
+    
+    public List<ConversationToMember> getConversationToMemberList() {
+    	return conversationToMemberList;
     }
 
-    public void setConversationNumber(int conversationNumber) {
-        this.conversationNumber = conversationNumber;
+    public void setConversationToMemberList(List<ConversationToMember> conversationToMemberList) {
+    	this.conversationToMemberList = conversationToMemberList;
     }
 
     public String getTitle() {

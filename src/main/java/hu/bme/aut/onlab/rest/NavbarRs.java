@@ -18,6 +18,7 @@ import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Message;
 import hu.bme.aut.onlab.model.Notification;
 import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationType;
 
 @Path("/navbar")
@@ -47,7 +48,10 @@ public class NavbarRs  {
     			messageJson.put("title", message.getConversation().getTitle());
     			messageJson.put("sender", message.getMember().getDisplayName());
     			messageJson.put("time", Formatter.formatTimeStampForMessage(message.getTime()));
-    			messageJson.put("link", "#/message/" + message.getConversation().getConversationNumber());
+    			
+    			int pageNumber = NavigationUtils.getPageOfElement(message.getMessageNumber());
+    			messageJson.put("link", "#/message/" + messagingService.getConversationNumber(message.getConversation(), member) + (pageNumber == 1 ? "" : "/" + pageNumber));
+    			
     			boolean conversationUnread = messagingService.isConversationUnread(message.getConversation(), member);
 				if (!hasUnreadMessage) {
 					if (conversationUnread) {

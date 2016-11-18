@@ -6,11 +6,14 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @SuppressWarnings("unused")
@@ -19,6 +22,7 @@ import javax.persistence.Table;
 public class Member {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
 	@Column(name = "user_name")
@@ -70,6 +74,9 @@ public class Member {
     
     @ManyToMany(mappedBy = "members")
     private List<Conversation> conversations;
+    
+    @OneToMany(mappedBy = "member")
+    private List<ConversationToMember> conversationToMemberList;
     
     @Column(name = "register_time")
 	private Timestamp registerTime;
@@ -223,6 +230,14 @@ public class Member {
 
     public void setConversations(List<Conversation> conversations) {
         this.conversations = conversations;
+    }
+
+    public List<ConversationToMember> getConversationToMemberList() {
+    	return conversationToMemberList;
+    }
+
+    public void setConversationToMemberList(List<ConversationToMember> conversationToMemberList) {
+    	this.conversationToMemberList = conversationToMemberList;
     }
 
     public Timestamp getRegisterTime() {
