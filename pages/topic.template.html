@@ -132,7 +132,7 @@
 		};
 		$.ajax({
 			type: "POST",
-			dataType: "application/json",
+			dataType: "json",
 			contentType: 'application/json',
 			url: restLink + "topic/new",
 			data: JSON.stringify( postData ),
@@ -140,7 +140,6 @@
 				"Authorization": "Basic " + encoded
 			},
 			success: function(data){
-				// TODO: Check why does not run this callback function
 				if (data.success) {
 					alert("Post has been sent.");
 					$('#newPostModalForm').modal('toggle');
@@ -149,7 +148,7 @@
 					var $rootScope = $body.scope().$root;
 					$rootScope.$emit('reload');
 				} else {
-					alert("Failed to send post.");
+					alert("Failed to send post:\n\n" + data.errorMessage);
 				}
 			}
 		});
