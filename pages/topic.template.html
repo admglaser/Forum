@@ -140,7 +140,7 @@
 				"Authorization": "Basic " + encoded
 			},
 			success: function(data){
-				alert("HEEEY");
+				// TODO: Check why does not run this callback function
 				if (data.success) {
 					alert("Post has been sent.");
 					$('#newPostModalForm').modal('toggle');
