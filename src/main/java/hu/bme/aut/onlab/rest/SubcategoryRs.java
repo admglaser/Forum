@@ -1,33 +1,22 @@
 package hu.bme.aut.onlab.rest;
 
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import hu.bme.aut.onlab.bean.ForumReadService;
 import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.bean.dao.CategoryBean;
-import hu.bme.aut.onlab.bean.dao.MemberBean;
-import hu.bme.aut.onlab.bean.dao.PostBean;
-import hu.bme.aut.onlab.bean.dao.SubcategoryBean;
-import hu.bme.aut.onlab.bean.dao.TopicBean;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Subcategory;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.bean.dao.*;
+import hu.bme.aut.onlab.model.*;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.ejb.EJB;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Path("/category")
 public class SubcategoryRs {
@@ -104,6 +93,58 @@ public class SubcategoryRs {
 	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
         
+        return result.toString();
+    }
+
+    @POST
+    @Path("new")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addTopic(@Context Member member, String data) {
+        JSONObject input = new JSONObject(data);
+        JSONObject result = new JSONObject();
+        String errorMessage;
+
+        if (member != null) {
+            int subcategoryId = Integer.parseInt((String) input.get("category"));
+            Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
+            if (subcategory != null) {
+                String subcategoryTitle = (String) input.get("title");
+                String postText = (String) input.get("text");
+
+                Topic topic = new Topic();
+                topic.setTitle(subcategoryTitle);
+                topic.setSubcategory(subcategory);
+                topic.setViewCount(0);
+                topicBean.add(topic);
+
+                Post post = new Post();
+                post.setTopic(topic);
+                post.setMember(member);
+                post.setText(postText);
+                post.setPostNumber(1);
+                post.setTime(Timestamp.valueOf(LocalDateTime.now()));
+                postBean.add(post);
+
+                member.setPostCount(member.getPostCount() + 1);
+                member.setTopicCount(member.getTopicCount() + 1);
+                memberBean.merge(member);
+
+                topicBean.flush();
+
+                result.put("success", true);
+                result.put("topic", topic.getId());
+                return result.toString();
+            }
+            else {
+                errorMessage = "Unknown category.";
+            }
+        } else {
+            errorMessage = "Unidentified member.\nPlease log in.";
+        }
+
+        result.put("success", false);
+        result.put("errorMessage", errorMessage);
         return result.toString();
     }
 }

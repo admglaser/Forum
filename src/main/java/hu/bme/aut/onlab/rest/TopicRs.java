@@ -125,7 +125,7 @@ public class TopicRs {
 				errorMessage = "Unknown topic.";
 			}
 		} else {
-			errorMessage = "Unidentified member";
+			errorMessage = "Unidentified member.\nPlease log in.";
 		}
 
 		result.put("success", false);

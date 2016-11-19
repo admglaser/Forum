@@ -70,5 +70,9 @@ public abstract class BaseBean<E> {
     public void merge(E entity) {
     	em.merge(entity);
     }
+
+    public void flush() {
+        em.flush();
+    }
     
 }
