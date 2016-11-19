@@ -111,7 +111,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Post</button>
+					<button id="submitPostButton" type="submit" class="btn btn-primary pull-right" >Post</button>
 				</form>
 			</div>
 		</div>
@@ -121,6 +121,38 @@
 <script>
 	$(document).ready(function() {
 		$("#previewDiv").hide();
+	});
+
+	$('#submitPostButton').click(function() {
+		var postText = $('#bbcodeEditor').val();
+		postText = postText.replace(/\n/g, "[br][/br]");
+		var postData = {
+			"topic" : topicPostParam,
+			"text" : postText
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "application/json",
+			contentType: 'application/json',
+			url: restLink + "topic/new",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				alert("HEEEY");
+				if (data.success) {
+					alert("Post has been sent.");
+					$('#newPostModalForm').modal('toggle');
+
+					var $body = angular.element(document.body);
+					var $rootScope = $body.scope().$root;
+					$rootScope.$emit('reload');
+				} else {
+					alert("Failed to send post.");
+				}
+			}
+		});
 	});
 	
 	function togglePreview() {

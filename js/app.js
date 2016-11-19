@@ -4,7 +4,8 @@ var restLink = "http://localhost:8080/ForumApp/rest/";
 //var username = null; //robertk
 //var password = null; //bbb
 var encoded = ""; //btoa(username + ":" + password);
-var postParam = null;
+var conversationPostParam = null;
+var topicPostParam = null;
 
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
@@ -177,12 +178,12 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 
 //topic
 app.controller('topicController', function($rootScope, $scope, $http, $routeParams, $sce) {
-	$topicId = $routeParams.topicId;
+	var topicId = $routeParams.topicId;
 	var pageNumber = 1;
 	if ($routeParams.pageNumber) {
 		pageNumber = $routeParams.pageNumber;
 	}
-	var link = restLink + 'topic/' + $topicId + "/" + pageNumber;
+	var link = restLink + 'topic/' + topicId + "/" + pageNumber;
 	debug("Getting page: " + link);
 	$http.get(link, {
 		headers : {
@@ -196,6 +197,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
+		topicPostParam = topicId;
 		$rootScope.$emit('updateNavbar');
 	});
 });
@@ -351,7 +353,7 @@ app.controller('messagesController', function($rootScope, $scope, $http, $sce, $
 			var message = $scope.data.messages[i];
 			message.text = convertBBCode(message.text, $sce);
 		}
-		postParam = conversationNumber;
+		conversationPostParam = conversationNumber;
 		$rootScope.$emit('updateNavbar');
 	});
 });
