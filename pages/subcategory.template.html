@@ -96,7 +96,7 @@
 						</div>
 					</div>
 					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right">Post</button>
+					<button type="submit" class="btn btn-primary pull-right" onclick="submitTopic()">Post</button>
 				</form>
 			</div>
 		</div>
@@ -107,6 +107,38 @@
 	$(document).ready(function() {
 		$("#previewDiv").hide();
 	});
+
+	function submitTopic() {
+		var postText = $('#bbcodeEditor').val();
+		postText = postText.replace(/\n/g, "[br][/br]");
+		var title = $('#title').val();
+
+		var postData = {
+			"category" : categoryPostParam,
+			"title" : title,
+			"text" : postText
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "category/new",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					$('#startNewTopicModalForm').modal('toggle');
+
+					jumpToAbsolutePath("topic/" + data.topic);
+					alert("Topic has been created.");
+				} else {
+					alert("Failed to create topic:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
 	
 	function togglePreview() {
 		var text = $("#previewButton").html();

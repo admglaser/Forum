@@ -6,6 +6,7 @@ var restLink = "http://localhost:8080/ForumApp/rest/";
 var encoded = ""; //btoa(username + ":" + password);
 var conversationPostParam = null;
 var topicPostParam = null;
+var categoryPostParam = null;
 
 var app = angular.module('forumApp', [ 'ngRoute', 'ui.bootstrap' ]);
 
@@ -171,6 +172,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
+		categoryPostParam = categoryId;
 		$rootScope.$emit('updateNavbar');
 	});
 });
@@ -379,6 +381,15 @@ app.controller('notificationsController', function($rootScope, $scope, $http, $s
 	});
 });
 
+
+function jumpToAbsolutePath(absolutePath) {
+	var currentURL = window.location.href;
+
+	var indexOfHashtag = currentURL.indexOf("#");
+	var rootURL = currentURL.substr(0, indexOfHashtag + 1);
+
+	window.location.href = rootURL + "/" + absolutePath;
+}
 
 function convertBBCode(text, $sce) {
 	var result = XBBCODE.process({
