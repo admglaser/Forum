@@ -1,22 +1,5 @@
 package hu.bme.aut.onlab.rest;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import hu.bme.aut.onlab.bean.ForumReadService;
 import hu.bme.aut.onlab.bean.NotificationService;
 import hu.bme.aut.onlab.bean.dao.MemberBean;
@@ -24,15 +7,12 @@ import hu.bme.aut.onlab.bean.dao.PostBean;
 import hu.bme.aut.onlab.bean.dao.TopicBean;
 import hu.bme.aut.onlab.bean.dao.TopicSubscriptionBean;
 import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.Member_;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;

@@ -226,7 +226,7 @@ public class ForumReadService {
 
 		try {
 			return em.createQuery(query)
-					.setFirstResult((pageNumber-1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
 		} catch (NoResultException e) {
@@ -360,5 +360,32 @@ public class ForumReadService {
 		}
 
 		return getTopicSubscription(member, topic) != null;
+	}
+
+	public SubcategorySubscription getSubcategorySubscription(Member member, Subcategory subcategory) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<SubcategorySubscription> query = builder.createQuery(SubcategorySubscription.class);
+		Root<SubcategorySubscription> root = query.from(SubcategorySubscription.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(SubcategorySubscription_.memberId), member.getId()),
+						builder.equal(root.get(SubcategorySubscription_.subcategoryId), subcategory.getId())
+				)
+		);
+
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public boolean isMemberFollowingSubcategory(Member member, Subcategory subcategory) {
+		if (member == null	|| subcategory == null) {
+			return false;
+		}
+
+		return getSubcategorySubscription(member, subcategory) != null;
 	}
 }

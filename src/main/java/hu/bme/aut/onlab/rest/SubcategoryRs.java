@@ -48,6 +48,9 @@ public class SubcategoryRs {
     @EJB
     private MemberBean memberBean;
 
+    @EJB
+    private SubcategorySubscriptionBean subcategorySubscriptionBean;
+
     @GET
     @Path("{subcategoryId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -95,6 +98,7 @@ public class SubcategoryRs {
 	        }
 	
 	        result.put("title", subcategory.getTitle());
+            result.put("isFollowedByMember", forumReadService.isMemberFollowingSubcategory(member, subcategory));
 	        result.put("topics", topicJsonArray);
 	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
@@ -155,6 +159,57 @@ public class SubcategoryRs {
                 return result.toString();
             }
             else {
+                errorMessage = "Unknown category.";
+            }
+        } else {
+            errorMessage = "Unidentified member.\nPlease log in.";
+        }
+
+        result.put("success", false);
+        result.put("errorMessage", errorMessage);
+        return result.toString();
+    }
+
+    @POST
+    @Path("follow")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String followTopic(@Context Member member, String data) {
+        JSONObject input = new JSONObject(data);
+        JSONObject result = new JSONObject();
+        String errorMessage;
+
+        if (member != null) {
+            int subcategoryId = Integer.parseInt((String) input.get("category"));
+            Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
+            if (subcategory != null) {
+                if (input.has("isFollowRequest")) {
+
+                    boolean isFollowRequest = input.getBoolean("isFollowRequest");
+                    SubcategorySubscription existingSubcategorySubscription = forumReadService.getSubcategorySubscription(member, subcategory);
+
+                    if (isFollowRequest) {
+                        // Request to follow the subcategory
+                        if (existingSubcategorySubscription == null) {
+                            SubcategorySubscription subcategorySubscription = new SubcategorySubscription();
+                            subcategorySubscription.setMember(member);
+                            subcategorySubscription.setSubcategory(subcategory);
+                            subcategorySubscriptionBean.add(subcategorySubscription);
+                        }
+
+                    } else {
+                        // Request to unfollow the subcategory
+                        if (existingSubcategorySubscription != null) {
+                            subcategorySubscriptionBean.remove(existingSubcategorySubscription);
+                        }
+                    }
+
+                    result.put("success", true);
+                    return result.toString();
+                } else {
+                    errorMessage = "Unknown error has occurred.";
+                }
+            } else {
                 errorMessage = "Unknown category.";
             }
         } else {
