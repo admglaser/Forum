@@ -40,7 +40,7 @@
 						</div>
 						<div class="col-xs-10 text-center">
 							<div class="container">
-								<div class="post-text" ng-bind-html="post.text"></div>
+								<div class="post-text" ng-bind-html="post.textBBCode"></div>
 							</div>
 						</div>
 					</div>
@@ -54,7 +54,7 @@
 									Delete
 								</button>
 								
-								<button type="button" class="btn btn-sm btn-primary">
+								<button type="button" class="btn btn-sm btn-primary" ng-click="openQuotePanel(post.username, post.userLink, post.postNumber, post.postLink, post.text)" >
 									Quote
 								</button>
 								<button type="button" class="btn btn-sm btn-primary">
@@ -75,7 +75,7 @@
 		<div id="test" style="margin-top: 25px;">
 			<!-- new reply button -->
 			<div class="btn-group pull-right">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm" ng-click="setLastQuote(null);" onclick="edit()">
 					New Reply
 				</button>
 			</div>
@@ -125,10 +125,19 @@
 
 	function submitPost() {
 		var postText = $('#bbcodeEditor').val();
+		var lastQuote = angular.element(document.body).scope().$root.$getLastQuote();
+		// Delete the quoted text from the beginning of the post.
+		//   Not supported that the user deletes from the quote.
+		if (lastQuote != null && lastQuote.text != null) {
+			postText = postText.slice(lastQuote.text.length);
+		}
 		postText = postText.replace(/\n/g, "[br][/br]");
+
 		var postData = {
 			"topic" : topicPostParam,
-			"text" : postText
+			"text" : postText,
+			"quote" : lastQuote.text,
+			"quotePostNumber" : lastQuote.postNumber
 		};
 		$.ajax({
 			type: "POST",
@@ -177,7 +186,7 @@
 		});
 		$("#previewHtml").html(result.html);
 	}
-	
+
 	function edit() {
 		$("#previewButton").html("Preview");
 		$("#previewDiv").hide();

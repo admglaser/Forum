@@ -116,7 +116,19 @@ app.run(function($rootScope, $location, $route) {
 	// });
 	$rootScope.$on('reload', function(event, data) {
 		$route.reload();
-	});	
+	});
+
+	$rootScope.$setLastQuote = function(post) {
+		$rootScope.$lastQuote = post;
+		if (post == null) {
+			$('#bbcodeEditor').val(null);
+		}
+	};
+
+	$rootScope.$getLastQuote = function() {
+		return $rootScope.$lastQuote;
+	};
+
 });
 
 
@@ -194,13 +206,26 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+
 		$scope.data = res.data;
 		for (var i = 0; i < $scope.data.posts.length; i++) {
 			var post = $scope.data.posts[i];
-			post.text = convertBBCode(post.text, $sce);
+			post.textBBCode = convertBBCode(post.text, $sce);
 		}
 		topicPostParam = topicId;
 		$rootScope.$emit('updateNavbar');
+
+		$scope.openQuotePanel = function (username, userLink, postNumber, postLink, text) {
+			var linkToUser = createBBCodeLink(userLink, username);
+			var linkToQuote = createBBCodeLink(postLink, "posted");
+			var quote = surroundWithBBCodeTag("I", surroundWithBBCodeTag("B", linkToUser) + " has " + linkToQuote + ":") + "\n" + surroundWithBBCodeTag("QUOTE", text) + "\n";
+			$('#bbcodeEditor').val(quote);
+			edit();
+			$('#newPostModalForm').modal('toggle');
+
+			var quoteToSave = { text: quote, postNumber: postNumber };
+			$rootScope.$setLastQuote(quoteToSave);
+		};
 	});
 });
 
@@ -381,14 +406,26 @@ app.controller('notificationsController', function($rootScope, $scope, $http, $s
 	});
 });
 
-
-function jumpToAbsolutePath(absolutePath) {
+function createAbsolutePath(absolutePath) {
 	var currentURL = window.location.href;
 
 	var indexOfHashtag = currentURL.indexOf("#");
 	var rootURL = currentURL.substr(0, indexOfHashtag + 1);
 
-	window.location.href = rootURL + "/" + absolutePath;
+	return rootURL + "/" + absolutePath;
+}
+
+
+function jumpToAbsolutePath(absolutePath) {
+	window.location.href = createAbsolutePath(absolutePath);
+}
+
+function createBBCodeLink(link, textToGetSurrounded) {
+	return "[inner_link=" + link + "]" + textToGetSurrounded + "[/inner_link]";
+}
+
+function surroundWithBBCodeTag(tagToSurroundWith, textToGetSurrounded) {
+	return "[" + tagToSurroundWith + "]" + textToGetSurrounded + "[/" + tagToSurroundWith + "]";
 }
 
 function convertBBCode(text, $sce) {
