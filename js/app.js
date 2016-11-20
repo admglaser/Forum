@@ -186,6 +186,10 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 		$scope.data = res.data;
 		categoryPostParam = categoryId;
 		$rootScope.$emit('updateNavbar');
+
+		if ($scope.data.isFollowedByMember == true) {
+			$("#followCategoryButton").html("Unfollow");
+		}
 	});
 });
 

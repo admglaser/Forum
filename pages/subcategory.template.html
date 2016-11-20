@@ -9,8 +9,7 @@
 				<th><h3>{{data.title}}</h3></th>
 				<th class="cell-stat hidden-xs"></th>
 				<th class="cell-stat-2x">Last Post
-					<button type="button" class="btn btn-xs btn-primary pull-right">
-						Follow</button>
+					<button id="followCategoryButton" type="button" class="btn btn-xs btn-primary pull-right" onclick="toggleFollowingCategory()">Follow</button>
 				</th>
 			</tr>
 		</thead>
@@ -135,6 +134,65 @@
 					alert("Topic has been created.");
 				} else {
 					alert("Failed to create topic:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
+
+	function toggleFollowingCategory() {
+		var btnText = $("#followCategoryButton").html();
+		if (btnText == "Follow") {
+			followCategory();
+		} else {
+			unfollowCategory();
+		}
+	}
+
+	function followCategory() {
+		var postData = {
+			category: categoryPostParam,
+			isFollowRequest: true
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "category/follow",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					$("#followCategoryButton").html("Unfollow");
+					alert("You are now following this category.");
+				} else {
+					alert("Failed to follow category:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
+
+	function unfollowCategory() {
+		var postData = {
+			category: categoryPostParam,
+			isFollowRequest: false
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "category/follow",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					$("#followCategoryButton").html("Follow");
+					alert("You have stopped following this category.");
+				} else {
+					alert("Failed to stop following category:\n\n" + data.errorMessage);
 				}
 			}
 		});
