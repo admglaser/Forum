@@ -10,13 +10,16 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 
 import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Member_;
 import hu.bme.aut.onlab.model.Notification;
 import hu.bme.aut.onlab.model.NotificationEvent;
 import hu.bme.aut.onlab.model.Notification_;
 import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationType;
 
@@ -83,7 +86,6 @@ public class NotificationService {
 		} catch (NoResultException e) {
 			return 0;
 		}
-		
 	}
 	
 	public void addMention(Member member, Member targetMember, Post post) {
@@ -105,7 +107,49 @@ public class NotificationService {
 		em.persist(notification);
 	}
 	
+	private Member getMemberOfPost(int topicId, int postNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Member> query = builder.createQuery(Member.class);
+		Root<Member> memberRoot = query.from(Member.class);
+		
+		ListJoin<Member, Post> postJoin = memberRoot.join(Member_.posts);
+		
+		query.where(
+				builder.and(
+						builder.equal(postJoin.get(Post_.topicId), topicId),
+						builder.equal(postJoin.get(Post_.postNumber), postNumber)
+				)
+		);
+		
+		
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public void addQuote(Member member, int topicId, int postNumber) {
+		Member targetMember = getMemberOfPost(topicId, postNumber);
+		
+		int highestNotificationNumber = getHighestNotificationNumber(targetMember);
+		
+		NotificationEvent notificationEvent = new NotificationEvent();
+		notificationEvent.setType(NotificationType.QUOTE.getId());
+		int pageNumber = NavigationUtils.getPageOfElement(postNumber);
+		notificationEvent.setLink(String.format("#/topic/%d/%d", topicId, pageNumber));
+		notificationEvent.setText(String.format("%s quoted a post you made.", member.getDisplayName()));
+		em.persist(notificationEvent);
+		
+		Notification notification = new Notification();
+		notification.setNotificationNumber(highestNotificationNumber+1);
+		notification.setSeen(false);
+		notification.setMember(targetMember);
+		notification.setNotificationEvent(notificationEvent);
+		em.persist(notification);
+		
+	}
+	
 	//There is a new reply in this topic.
 	//There is a new topic in this forum.
-	//Jason quoted a post you made.
 }

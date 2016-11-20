@@ -118,6 +118,8 @@ public class TopicRs {
 			if (topic != null) {
 				String quotedPostText = (input.has("quote")) ? (String) input.get("quote") : null;
 				String postText = (String) input.get("text");
+				int quotePostNumber = input.has("quotePostNumber") ? input.getInt("quotePostNumber") : 0;
+				
 				Post lastPostInTopic = forumReadService.getLastPostFromTopic(topic);
 
 				Post post = new Post();
@@ -142,6 +144,11 @@ public class TopicRs {
 							notificationService.addMention(member, mentionedMember, post);
 						}
 					}
+				}
+				
+				//add quote notification
+				if (quotePostNumber > 0) {
+					notificationService.addQuote(member, topicId, quotePostNumber);
 				}
 
 				result.put("success", true);
