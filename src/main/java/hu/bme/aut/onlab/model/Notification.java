@@ -62,12 +62,12 @@ public class Notification {
         this.seen = seen;
     }
 
-    public Member getMemberByMemberId() {
+    public Member getMember() {
         return member;
     }
 
-    public void setMemberByMemberId(Member memberByMemberId) {
-        this.member = memberByMemberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public NotificationEvent getNotificationEvent() {

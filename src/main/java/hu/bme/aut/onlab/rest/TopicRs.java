@@ -1,16 +1,38 @@
 package hu.bme.aut.onlab.rest;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.NotificationService;
 import hu.bme.aut.onlab.bean.dao.MemberBean;
 import hu.bme.aut.onlab.bean.dao.PostBean;
 import hu.bme.aut.onlab.bean.dao.TopicBean;
 import hu.bme.aut.onlab.bean.dao.TopicSubscriptionBean;
 import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import hu.bme.aut.onlab.util.NotificationUtils;
 
 import javax.ejb.EJB;
 import javax.ws.rs.*;
@@ -25,6 +47,9 @@ public class TopicRs {
 
     @EJB
     private ForumReadService forumReadService;
+    
+    @EJB
+    private NotificationService notificationService;
 
     @EJB
     private TopicBean topicBean;
@@ -107,6 +132,8 @@ public class TopicRs {
 			if (topic != null) {
 				String quotedPostText = (input.has("quote")) ? (String) input.get("quote") : null;
 				String postText = (String) input.get("text");
+				int quotePostNumber = input.has("quotePostNumber") ? input.getInt("quotePostNumber") : 0;
+				
 				Post lastPostInTopic = forumReadService.getLastPostFromTopic(topic);
 
 				Post post = new Post();
@@ -120,6 +147,23 @@ public class TopicRs {
 
 				member.setPostCount(member.getPostCount() + 1);
 				memberBean.merge(member);
+				
+				//add mention notification
+				if (postText.contains("@")) {
+					String mentionedName = NotificationUtils.getMentionedName(postText);
+					if (mentionedName != null) {
+						List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
+						if (list.size() > 0) {
+							Member mentionedMember = list.get(0);
+							notificationService.addMention(member, mentionedMember, post);
+						}
+					}
+				}
+				
+				//add quote notification
+				if (quotePostNumber > 0) {
+					notificationService.addQuote(member, topicId, quotePostNumber);
+				}
 
 				result.put("success", true);
 				return result.toString();
