@@ -135,10 +135,14 @@
 
 		var postData = {
 			"topic" : topicPostParam,
-			"text" : postText,
-			"quote" : lastQuote.text,
-			"quotePostNumber" : lastQuote.postNumber
+			"text" : postText
 		};
+
+		if (lastQuote != null) {
+			postData.quote = lastQuote.text;
+			postData.quotePostNumber = lastQuote.postNumber;
+		}
+
 		$.ajax({
 			type: "POST",
 			dataType: "json",

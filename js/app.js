@@ -224,8 +224,12 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			$('#newPostModalForm').modal('toggle');
 
 			var quoteToSave = { text: quote, postNumber: postNumber };
-			$rootScope.$setLastQuote(quoteToSave);
+			$scope.setLastQuote(quoteToSave);
 		};
+
+		$scope.setLastQuote = function(quoteToSave) {
+			$rootScope.$setLastQuote(quoteToSave);
+		}
 	});
 });
 
