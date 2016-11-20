@@ -2,11 +2,14 @@ package hu.bme.aut.onlab.rest;
 
 import hu.bme.aut.onlab.bean.ForumReadService;
 import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.NotificationService;
 import hu.bme.aut.onlab.bean.dao.*;
 import hu.bme.aut.onlab.model.*;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
+import hu.bme.aut.onlab.util.NotificationUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,6 +26,9 @@ public class SubcategoryRs {
 
     @EJB
     private ForumReadService forumReadService;
+    
+    @EJB 
+    private NotificationService notificationService;
     
     @EJB
     private LoginService loginService;
@@ -131,6 +137,18 @@ public class SubcategoryRs {
                 memberBean.merge(member);
 
                 topicBean.flush();
+                
+                //add mention notification
+				if (postText.contains("@")) {
+					String mentionedName = NotificationUtils.getMentionedName(postText);
+					if (mentionedName != null) {
+						List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
+						if (list.size() > 0) {
+							Member mentionedMember = list.get(0);
+							notificationService.addMention(member, mentionedMember, post);
+						}
+					}
+				}
 
                 result.put("success", true);
                 result.put("topic", topic.getId());
