@@ -103,13 +103,14 @@ public class TopicRs {
 			int topicId = Integer.parseInt((String) input.get("topic"));
 			Topic topic = topicBean.findEntityById( topicId );
 			if (topic != null) {
+				String quotedPostText = (input.has("quote")) ? (String) input.get("quote") : null;
 				String postText = (String) input.get("text");
 				Post lastPostInTopic = forumReadService.getLastPostFromTopic(topic);
 
 				Post post = new Post();
 				post.setTopic(topic);
 				post.setMember(member);
-				post.setText(postText);
+				post.setText( (quotedPostText==null) ? postText : quotedPostText + postText);
 				post.setPostNumber(lastPostInTopic.getPostNumber() + 1);
 				post.setTime(Timestamp.valueOf(LocalDateTime.now()));
 
