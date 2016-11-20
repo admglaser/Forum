@@ -215,6 +215,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 		topicPostParam = topicId;
 		$rootScope.$emit('updateNavbar');
 
+		if ($scope.data.isFollowedByMember == true) {
+			$('#followTopicButton').html("Unfollow");
+		}
+
 		$scope.openQuotePanel = function (username, userLink, postNumber, postLink, text) {
 			var linkToUser = createBBCodeLink(userLink, username);
 			var linkToQuote = createBBCodeLink(postLink, "posted");

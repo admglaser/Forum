@@ -8,9 +8,7 @@
 		<div class="pull-right">
 
 			<h3>
-			<button type="button" class="btn btn-primary">
-				Follow
-			</button></h3>
+			<button id="followTopicButton" type="button" class="btn btn-primary" onclick="toggleFollowingTopic()">Follow</button></h3>
 		</div>
 	</div>
 
@@ -47,12 +45,14 @@
 					<div class="panel-footer">
 						<div class="container">
 							<div class="pull-left">
+								<!--
 								<button type="button" class="btn btn-sm btn-primary">
 									Edit
 								</button>
 								<button type="button" class="btn btn-sm btn-primary">
 									Delete
 								</button>
+								-->
 								
 								<button type="button" class="btn btn-sm btn-primary" ng-click="openQuotePanel(post.username, post.userLink, post.postNumber, post.postLink, post.text)" >
 									Quote
@@ -162,6 +162,65 @@
 					alert("Post has been created.");
 				} else {
 					alert("Failed to create post:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
+
+	function toggleFollowingTopic() {
+		var btnText = $("#followTopicButton").html();
+		if (btnText == "Follow") {
+			followTopic();
+		} else {
+			unfollowTopic();
+		}
+	}
+
+	function followTopic() {
+		var postData = {
+			topic: topicPostParam,
+			isFollowRequest: true
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "topic/follow",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					$("#followTopicButton").html("Unfollow");
+					alert("You are now following this topic.");
+				} else {
+					alert("Failed to follow topic:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
+
+	function unfollowTopic() {
+		var postData = {
+			topic: topicPostParam,
+			isFollowRequest: false
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "topic/follow",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					$("#followTopicButton").html("Follow");
+					alert("You have stopped following this topic.");
+				} else {
+					alert("Failed to follow topic:\n\n" + data.errorMessage);
 				}
 			}
 		});
