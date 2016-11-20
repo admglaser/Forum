@@ -1,39 +1,17 @@
 package hu.bme.aut.onlab.bean;
 
-import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.List;
+import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.ListJoin;
-import javax.persistence.criteria.Root;
-
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.MemberGroup_;
-import hu.bme.aut.onlab.model.MemberLike;
-import hu.bme.aut.onlab.model.MemberLike_;
-import hu.bme.aut.onlab.model.Permission;
-import hu.bme.aut.onlab.model.PermissionSet;
-import hu.bme.aut.onlab.model.PermissionSet_;
-import hu.bme.aut.onlab.model.Permission_;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Post_;
-import hu.bme.aut.onlab.model.Subcategory;
-import hu.bme.aut.onlab.model.Subcategory_;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.model.TopicSeenByMember;
-import hu.bme.aut.onlab.model.TopicSeenByMember_;
-import hu.bme.aut.onlab.model.Topic_;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import javax.persistence.criteria.*;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 @LocalBean
 @Stateless
@@ -355,5 +333,32 @@ public class ForumReadService {
 			}
 		}
 		return canView;
+	}
+
+	public TopicSubscription getTopicSubscription(Member member, Topic topic) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<TopicSubscription> query = builder.createQuery(TopicSubscription.class);
+		Root<TopicSubscription> root = query.from(TopicSubscription.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(TopicSubscription_.memberId), member.getId()),
+						builder.equal(root.get(TopicSubscription_.topicId), topic.getId())
+				)
+		);
+
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public boolean isMemberFollowingTopic(Member member, Topic topic) {
+		if (member == null	|| topic == null) {
+			return false;
+		}
+
+		return getTopicSubscription(member, topic) != null;
 	}
 }

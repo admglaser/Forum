@@ -67,8 +67,13 @@ public abstract class BaseBean<E> {
     	em.persist(entity);
     }
     
-    public void merge(E entity) {
-    	em.merge(entity);
+    public E merge(E entity) {
+    	return em.merge(entity);
+    }
+
+    public void remove(E entity) {
+        // Merge is necessary to make the entity attached.
+        em.remove( em.merge(entity) );
     }
 
     public void flush() {
