@@ -260,6 +260,69 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 
 		$scope.setLastQuote = function(quoteToSave) {
 			$rootScope.$setLastQuote(quoteToSave);
+		};
+
+		$scope.toggleLikingPost = function (postNumber) {
+			var btnText = $("#likePostButton").html();
+			if (btnText == "Like") {
+				$scope.likePost(postNumber);
+			} else {
+				$scope.unlikePost(postNumber);
+			}
+		};
+
+		$scope.likePost = function (postNumber) {
+			var postData = {
+				topic: topicPostParam,
+				postNumber: postNumber,
+				isLikeRequest: true
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "topic/like",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						// TODO: refresh the button --> no visible change
+						$("#likePostButton").html("Unlike");
+						alert("You have liked this topic.");
+					} else {
+						alert("Failed to like post:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		};
+
+		$scope.unlikePost = function (postNumber) {
+			var postData = {
+				topic: topicPostParam,
+				postNumber: postNumber,
+				isLikeRequest: false
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "topic/like",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						// TODO: refresh the button --> no visible change
+						$("#likePostButton").html("Like");
+						alert("You do no longer like this post.");
+					} else {
+						alert("Failed to stop the like of post:\n\n" + data.errorMessage);
+					}
+				}
+			});
 		}
 	});
 });
