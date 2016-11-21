@@ -210,6 +210,12 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 		categoryPostParam = categoryId;
 		$rootScope.$emit('updateNavbar');
 
+		if ($scope.data.canFollow) {
+			$('#followCategoryButton').prop('disabled', false);
+		} else {
+			$('#followCategoryButton').prop('disabled', true);
+		}
+
 		if ($scope.data.isFollowedByMember == true) {
 			$("#followCategoryButton").html("Unfollow");
 		}
@@ -233,8 +239,14 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-
 		$scope.data = res.data;
+
+		if ($scope.data.canFollow) {
+			$('#followTopicButton').prop('disabled', false);
+		} else {
+			$('#followTopicButton').prop('disabled', true);
+		}
+
 		for (var i = 0; i < $scope.data.posts.length; i++) {
 			var post = $scope.data.posts[i];
 			post.textBBCode = convertBBCode(post.text, $sce);
@@ -260,6 +272,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 
 			post.likerVisual = "ASDASDASDASDASD";
 		}
+
 		topicPostParam = topicId;
 		$rootScope.$emit('updateNavbar');
 
