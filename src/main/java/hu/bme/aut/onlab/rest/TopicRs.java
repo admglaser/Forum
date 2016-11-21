@@ -99,6 +99,7 @@ public class TopicRs {
 	                result.put("title", topic.getTitle());
 	                result.put("startedByText", firstPost.getMember().getDisplayName() + ", " + Formatter.formatTimeStamp(firstPost.getTime()));
 					result.put("isFollowedByMember", forumReadService.isMemberFollowingTopic(member, topic));
+					result.put("canFollow", (member != null));
 	                result.put("posts", postsJsonArray);
 	                result.put("pages", NavigationUtils.getPagesJsonArray("#/topic/" + topic.getId(), pageNumber, forumReadService.getPostsCountOfTopic(topic)));
 	            }

@@ -99,6 +99,7 @@ public class SubcategoryRs {
 	
 	        result.put("title", subcategory.getTitle());
             result.put("isFollowedByMember", forumReadService.isMemberFollowingSubcategory(member, subcategory));
+            result.put("canFollow", (member != null));
 	        result.put("topics", topicJsonArray);
 	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
