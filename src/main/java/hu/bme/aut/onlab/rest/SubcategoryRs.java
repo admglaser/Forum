@@ -100,6 +100,7 @@ public class SubcategoryRs {
 	        result.put("title", subcategory.getTitle());
             result.put("isFollowedByMember", forumReadService.isMemberFollowingSubcategory(member, subcategory));
             result.put("canFollow", (member != null));
+            result.put("canStartTopic", forumReadService.canMemberStartTopicInSubcategory(member, subcategory));
 	        result.put("topics", topicJsonArray);
 	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
         }
@@ -120,51 +121,54 @@ public class SubcategoryRs {
             int subcategoryId = Integer.parseInt((String) input.get("category"));
             Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
             if (subcategory != null) {
-                String subcategoryTitle = (String) input.get("title");
-                String postText = (String) input.get("text");
+                if (forumReadService.canMemberStartTopicInSubcategory(member, subcategory)) {
+                    String subcategoryTitle = (String) input.get("title");
+                    String postText = (String) input.get("text");
 
-                Topic topic = new Topic();
-                topic.setTitle(subcategoryTitle);
-                topic.setSubcategory(subcategory);
-                topic.setViewCount(0);
-                topicBean.add(topic);
+                    Topic topic = new Topic();
+                    topic.setTitle(subcategoryTitle);
+                    topic.setSubcategory(subcategory);
+                    topic.setViewCount(0);
+                    topicBean.add(topic);
 
-                Post post = new Post();
-                post.setTopic(topic);
-                post.setMember(member);
-                post.setText(postText);
-                post.setPostNumber(1);
-                post.setTime(Timestamp.valueOf(LocalDateTime.now()));
-                postBean.add(post);
+                    Post post = new Post();
+                    post.setTopic(topic);
+                    post.setMember(member);
+                    post.setText(postText);
+                    post.setPostNumber(1);
+                    post.setTime(Timestamp.valueOf(LocalDateTime.now()));
+                    postBean.add(post);
 
-                member.setPostCount(member.getPostCount() + 1);
-                member.setTopicCount(member.getTopicCount() + 1);
-                memberBean.merge(member);
+                    member.setPostCount(member.getPostCount() + 1);
+                    member.setTopicCount(member.getTopicCount() + 1);
+                    memberBean.merge(member);
 
-                topicBean.flush();
-                
-                //add mention notification
-				if (postText.contains("@")) {
-					String mentionedName = NotificationUtils.getMentionedName(postText);
-					if (mentionedName != null) {
-						List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
-						if (list.size() > 0) {
-							Member mentionedMember = list.get(0);
-							notificationService.addMention(member, mentionedMember, post);
-						}
-					}
-				}
-				
-				//add subscribtion notification
-				notificationService.addNewTopic(topic);
+                    topicBean.flush();
 
-                forumReadService.renewTopicSeenByMember(member, topic);
+                    //add mention notification
+                    if (postText.contains("@")) {
+                        String mentionedName = NotificationUtils.getMentionedName(postText);
+                        if (mentionedName != null) {
+                            List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
+                            if (list.size() > 0) {
+                                Member mentionedMember = list.get(0);
+                                notificationService.addMention(member, mentionedMember, post);
+                            }
+                        }
+                    }
 
-                result.put("success", true);
-                result.put("topic", topic.getId());
-                return result.toString();
-            }
-            else {
+                    //add subscribtion notification
+                    notificationService.addNewTopic(topic);
+
+                    forumReadService.renewTopicSeenByMember(member, topic);
+
+                    result.put("success", true);
+                    result.put("topic", topic.getId());
+                    return result.toString();
+                } else {
+                    errorMessage = "You have no permission to start a new topic.";
+                }
+            } else {
                 errorMessage = "Unknown category.";
             }
         } else {

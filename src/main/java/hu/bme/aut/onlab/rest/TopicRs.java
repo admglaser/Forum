@@ -100,6 +100,7 @@ public class TopicRs {
 	                result.put("startedByText", firstPost.getMember().getDisplayName() + ", " + Formatter.formatTimeStamp(firstPost.getTime()));
 					result.put("isFollowedByMember", forumReadService.isMemberFollowingTopic(member, topic));
 					result.put("canFollow", (member != null));
+					result.put("canReply", forumReadService.canMemberReplyInTopic(member, topic));
 	                result.put("posts", postsJsonArray);
 	                result.put("pages", NavigationUtils.getPagesJsonArray("#/topic/" + topic.getId(), pageNumber, forumReadService.getPostsCountOfTopic(topic)));
 	            }
@@ -125,51 +126,54 @@ public class TopicRs {
 			int topicId = Integer.parseInt((String) input.get("topic"));
 			Topic topic = topicBean.findEntityById( topicId );
 			if (topic != null) {
-				String quotedPostText = (input.has("quote")) ? (String) input.get("quote") : null;
-				String postText = (String) input.get("text");
-				int quotePostNumber = input.has("quotePostNumber") ? input.getInt("quotePostNumber") : 0;
-				
-				Post lastPostInTopic = forumReadService.getLastPostFromTopic(topic);
+				if (forumReadService.canMemberReplyInTopic(member, topic)) {
+					String quotedPostText = (input.has("quote")) ? (String) input.get("quote") : null;
+					String postText = (String) input.get("text");
+					int quotePostNumber = input.has("quotePostNumber") ? input.getInt("quotePostNumber") : 0;
 
-				Post post = new Post();
-				post.setTopic(topic);
-				post.setMember(member);
-				post.setText( (quotedPostText==null) ? postText : quotedPostText + postText);
-				post.setPostNumber(lastPostInTopic.getPostNumber() + 1);
-				post.setTime(Timestamp.valueOf(LocalDateTime.now()));
+					Post lastPostInTopic = forumReadService.getLastPostFromTopic(topic);
 
-				postBean.add(post);
+					Post post = new Post();
+					post.setTopic(topic);
+					post.setMember(member);
+					post.setText((quotedPostText == null) ? postText : quotedPostText + postText);
+					post.setPostNumber(lastPostInTopic.getPostNumber() + 1);
+					post.setTime(Timestamp.valueOf(LocalDateTime.now()));
 
-				member.setPostCount(member.getPostCount() + 1);
-				memberBean.merge(member);
-				
-				//add mention notification
-				if (postText.contains("@")) {
-					String mentionedName = NotificationUtils.getMentionedName(postText);
-					if (mentionedName != null) {
-						List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
-						if (list.size() > 0) {
-							Member mentionedMember = list.get(0);
-							notificationService.addMention(member, mentionedMember, post);
+					postBean.add(post);
+
+					member.setPostCount(member.getPostCount() + 1);
+					memberBean.merge(member);
+
+					//add mention notification
+					if (postText.contains("@")) {
+						String mentionedName = NotificationUtils.getMentionedName(postText);
+						if (mentionedName != null) {
+							List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, mentionedName);
+							if (list.size() > 0) {
+								Member mentionedMember = list.get(0);
+								notificationService.addMention(member, mentionedMember, post);
+							}
 						}
 					}
-				}
-				
-				//add quote notification
-				if (quotePostNumber > 0) {
-					notificationService.addQuote(member, topicId, quotePostNumber);
-				}
-				
-				//add subscribtion notification
-				notificationService.addNewReply(post);
-				
 
-				forumReadService.renewTopicSeenByMember(member, topic);
+					//add quote notification
+					if (quotePostNumber > 0) {
+						notificationService.addQuote(member, topicId, quotePostNumber);
+					}
 
-				result.put("success", true);
-				return result.toString();
-			}
-			else {
+					//add subscribtion notification
+					notificationService.addNewReply(post);
+
+
+					forumReadService.renewTopicSeenByMember(member, topic);
+
+					result.put("success", true);
+					return result.toString();
+				} else {
+					errorMessage = "You have no permission to create new reply.";
+				}
+			} else {
 				errorMessage = "Unknown topic.";
 			}
 		} else {

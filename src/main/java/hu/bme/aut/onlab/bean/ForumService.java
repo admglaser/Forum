@@ -361,6 +361,42 @@ public class ForumService {
 		return canView;
 	}
 
+	public boolean canMemberStartTopicInSubcategory(Member member, Subcategory subcategory) {
+		boolean canStart = true;
+		List<Permission> permissions = null;
+		if (member == null) {
+			permissions = getGuestPermissionsForSubcategory(subcategory);
+		} else {
+			permissions = getMemberPermissionsForSubcategory(member, subcategory);
+		}
+
+		for (Permission permission : permissions) {
+			if (!permission.getStartAllowed()) {
+				canStart = false;
+				break;
+			}
+		}
+		return canStart;
+	}
+
+	public boolean canMemberReplyInTopic(Member member, Topic topic) {
+		boolean canReply = true;
+		List<Permission> permissions = null;
+		if (member == null) {
+			permissions = getGuestPermissionsForSubcategory(topic.getSubcategory());
+		} else {
+			permissions = getMemberPermissionsForSubcategory(member, topic.getSubcategory());
+		}
+
+		for (Permission permission : permissions) {
+			if (!permission.getReplyAllowed()) {
+				canReply = false;
+				break;
+			}
+		}
+		return canReply;
+	}
+
 	public TopicSubscription getTopicSubscription(Member member, Topic topic) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<TopicSubscription> query = builder.createQuery(TopicSubscription.class);
