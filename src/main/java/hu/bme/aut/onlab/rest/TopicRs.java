@@ -71,6 +71,16 @@ public class TopicRs {
 	
 	                    Member memberOfPost = post.getMember();
 	                    MemberGroup memberGroup = memberOfPost.getMemberGroup();
+
+						List<Member> likerMembers = forumReadService.getMembersWhoLikedPost(post);
+						JSONArray likerMembersJsonArray = new JSONArray();
+						for (Member likerMember: likerMembers) {
+							JSONObject likerMemberJson = new JSONObject();
+							likerMemberJson.put("name", likerMember.getDisplayName());
+							likerMemberJson.put("link", "#/user/" + likerMember.getId());
+							likerMembersJsonArray.put(likerMemberJson);
+						}
+						postJson.put("likes", likerMembersJsonArray);
 	
 	                    postJson.put("username", memberOfPost.getDisplayName());
 	                    postJson.put("userLink", "#/user/" + memberOfPost.getId());
@@ -82,6 +92,7 @@ public class TopicRs {
 	                    postJson.put("likeCount", forumReadService.getPostLikesCount(post));
 	                    postJson.put("postNumber", post.getPostNumber());
 	                    postJson.put("postLink", "#/topic/" + topic.getId() + "/" + pageNumber);
+						postJson.put("isPostLiked", (forumReadService.getMemberLike(member, post) != null));
 	                    postsJsonArray.put(postJson);
 	                }
 	

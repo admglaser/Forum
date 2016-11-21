@@ -277,6 +277,24 @@ public class ForumReadService {
 			return 0;
 		}
 	}
+
+	public List<Member> getMembersWhoLikedPost(Post post) {
+		CriteriaBuilder criteriaBuilder  = em.getCriteriaBuilder();
+		CriteriaQuery<Member> query = criteriaBuilder.createQuery(Member.class);
+		Root<Member> root = query.from(Member.class);
+
+		Join<Member, MemberLike> memberLikeJoin = root.join(Member_.likes);
+
+		query.where(criteriaBuilder.equal(memberLikeJoin.get(MemberLike_.postId), post.getId()));
+
+		query.select(root);
+
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
 	
 	public List<Permission> getMemberPermissionsForSubcategory(Member member, Subcategory subcategory) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
@@ -450,6 +468,10 @@ public class ForumReadService {
 	}
 
 	public MemberLike getMemberLike(Member member, Post post) {
+		if (member == null || post == null) {
+			return null;
+		}
+
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<MemberLike> query = builder.createQuery(MemberLike.class);
 		Root<MemberLike> root = query.from(MemberLike.class);
