@@ -429,4 +429,42 @@ public class ForumReadService {
 			topicSeenByMemberBean.merge(topicSeenByMember);
 		}
 	}
+
+	public Post getPostByPostNumber(Topic topic, int postNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> query = builder.createQuery(Post.class);
+		Root<Post> root = query.from(Post.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(Post_.topicId), topic.getId()),
+						builder.equal(root.get(Post_.postNumber), postNumber)
+				)
+		);
+
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public MemberLike getMemberLike(Member member, Post post) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<MemberLike> query = builder.createQuery(MemberLike.class);
+		Root<MemberLike> root = query.from(MemberLike.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(MemberLike_.memberId), member.getId()),
+						builder.equal(root.get(MemberLike_.postId), post.getId())
+				)
+		);
+
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
 }

@@ -40,6 +40,9 @@ public class TopicRs {
 	@EJB
 	private TopicSubscriptionBean topicSubscriptionBean;
 
+	@EJB
+	private MemberLikeBean memberLikeBean;
+
 	@GET
     @Path("{topicId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -171,9 +174,17 @@ public class TopicRs {
 		JSONObject input = new JSONObject(data);
 		JSONObject result = new JSONObject();
 		String errorMessage;
+		int topicId;
+
+		try {
+			topicId = Integer.parseInt((String) input.get("topic"));
+		} catch (NumberFormatException e) {
+			result.put("success", false);
+			result.put("errorMessage", "Invalid number format for topic ID.");
+			return result.toString();
+		}
 
 		if (member != null) {
-			int topicId = Integer.parseInt((String) input.get("topic"));
 			Topic topic = topicBean.findEntityById( topicId );
 			if (topic != null) {
 				if (input.has("isFollowRequest")) {
@@ -201,6 +212,80 @@ public class TopicRs {
 					return result.toString();
 				} else {
 					errorMessage = "Unknown error has occurred.";
+				}
+			} else {
+				errorMessage = "Unknown topic.";
+			}
+		} else {
+			errorMessage = "Unidentified member.\nPlease log in.";
+		}
+
+		result.put("success", false);
+		result.put("errorMessage", errorMessage);
+		return result.toString();
+	}
+
+	@POST
+	@Path("like")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String likePost(@Context Member member, String data) {
+		JSONObject input = new JSONObject(data);
+		JSONObject result = new JSONObject();
+		String errorMessage;
+		int topicId;
+		int postNumber;
+
+		try {
+			topicId = Integer.parseInt(input.getString("topic"));
+		} catch (NumberFormatException e) {
+			result.put("success", false);
+			result.put("errorMessage", "Invalid number format for topic ID.");
+			return result.toString();
+		}
+
+		try {
+			postNumber = input.getInt("postNumber");
+		} catch (NumberFormatException e) {
+			result.put("success", false);
+			result.put("errorMessage", "Invalid number format for post number.");
+			return result.toString();
+		}
+
+		if (member != null) {
+			Topic topic = topicBean.findEntityById( topicId );
+			if (topic != null) {
+				Post post = forumReadService.getPostByPostNumber(topic, postNumber);
+				if (post != null) {
+					if (input.has("isLikeRequest")) {
+
+						boolean isLikeRequest = input.getBoolean("isLikeRequest");
+						MemberLike existingMemberLike = forumReadService.getMemberLike(member, post);
+
+						if (isLikeRequest) {
+							// Request to like the post
+							if (existingMemberLike == null) {
+								MemberLike memberLike = new MemberLike();
+								memberLike.setMember(member);
+								memberLike.setPost(post);
+
+								memberLikeBean.add(memberLike);
+							}
+
+						} else {
+							// Request to unlike the post
+							if (existingMemberLike != null) {
+								memberLikeBean.remove(existingMemberLike);
+							}
+						}
+
+						result.put("success", true);
+						return result.toString();
+					} else {
+						errorMessage = "Unknown error has occurred.";
+					}
+				} else {
+					errorMessage = "Unknown post.";
 				}
 			} else {
 				errorMessage = "Unknown topic.";
