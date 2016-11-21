@@ -244,6 +244,14 @@
 				if (data.success) {
 					alert("Successfully registered.");
 					$('#registerModalForm').modal('toggle');
+
+					// Clear values after successful registration
+					$('#reg_username').val("");
+					$('#reg_displayname').val("");
+					$('#reg_email').val("");
+					$('#reg_password').val("");
+					$('#reg_passwordConfirm').val("");
+					$('#reg_birthDate').val("");
 				} else {
 					alert("Registration failed:\n\n" + data.errorMessage);
 				}
