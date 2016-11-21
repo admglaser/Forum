@@ -2,10 +2,7 @@ package hu.bme.aut.onlab.rest;
 
 import hu.bme.aut.onlab.bean.ForumReadService;
 import hu.bme.aut.onlab.bean.NotificationService;
-import hu.bme.aut.onlab.bean.dao.MemberBean;
-import hu.bme.aut.onlab.bean.dao.PostBean;
-import hu.bme.aut.onlab.bean.dao.TopicBean;
-import hu.bme.aut.onlab.bean.dao.TopicSubscriptionBean;
+import hu.bme.aut.onlab.bean.dao.*;
 import hu.bme.aut.onlab.model.*;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
@@ -93,6 +90,9 @@ public class TopicRs {
 	            }
         	}
         }
+
+		forumReadService.renewTopicSeenByMember(member, topic);
+
         return result.toString();
     }
 
@@ -144,6 +144,8 @@ public class TopicRs {
 				if (quotePostNumber > 0) {
 					notificationService.addQuote(member, topicId, quotePostNumber);
 				}
+
+				forumReadService.renewTopicSeenByMember(member, topic);
 
 				result.put("success", true);
 				return result.toString();

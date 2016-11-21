@@ -154,6 +154,8 @@ public class SubcategoryRs {
 					}
 				}
 
+                forumReadService.renewTopicSeenByMember(member, topic);
+
                 result.put("success", true);
                 result.put("topic", topic.getId());
                 return result.toString();

@@ -1,8 +1,10 @@
 package hu.bme.aut.onlab.bean;
 
+import hu.bme.aut.onlab.bean.dao.TopicSeenByMemberBean;
 import hu.bme.aut.onlab.model.*;
 import hu.bme.aut.onlab.util.NavigationUtils;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -10,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +24,9 @@ public class ForumReadService {
 	
 	@PersistenceContext
 	private EntityManager em;
+
+	@EJB
+	private TopicSeenByMemberBean topicSeenByMemberBean;
 
 	private enum Position {
 		FIRST, LAST
@@ -73,14 +79,16 @@ public class ForumReadService {
 			Post lastPost = getLastPostFromTopic(topic);
 			if (lastPost != null) {
 				Timestamp lastPostTime = lastPost.getTime();
-				if (lastRead.after(lastPostTime) || lastRead.equals(lastRead)) {
+				if (lastPostTime.after(lastRead)) {
+					return true;
+				} else {
 					return false;
 				}
 			} else {
 				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 
 	public List<Topic> getCreatedTopicsByMember(Member member, int pageNumber) {
@@ -387,5 +395,38 @@ public class ForumReadService {
 		}
 
 		return getSubcategorySubscription(member, subcategory) != null;
+	}
+
+	public TopicSeenByMember getTopicSeenByMember(Member member, Topic topic) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<TopicSeenByMember> query = builder.createQuery(TopicSeenByMember.class);
+		Root<TopicSeenByMember> root = query.from(TopicSeenByMember.class);
+
+		query.where(
+				builder.and(
+						builder.equal(root.get(TopicSeenByMember_.memberId), member.getId()),
+						builder.equal(root.get(TopicSeenByMember_.topicId), topic.getId())
+				)
+		);
+
+		try {
+			return em.createQuery(query).getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+	}
+
+	public void renewTopicSeenByMember(Member member, Topic topic) {
+		if (member != null && topic != null) {
+			TopicSeenByMember topicSeenByMember = getTopicSeenByMember(member, topic);
+			if (topicSeenByMember == null) {
+				topicSeenByMember = new TopicSeenByMember();
+			}
+			topicSeenByMember.setMember(member);
+			topicSeenByMember.setTopic(topic);
+			topicSeenByMember.setSeenTime(Timestamp.valueOf(LocalDateTime.now()));
+
+			topicSeenByMemberBean.merge(topicSeenByMember);
+		}
 	}
 }
