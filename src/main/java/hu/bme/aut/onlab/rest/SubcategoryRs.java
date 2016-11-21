@@ -153,6 +153,9 @@ public class SubcategoryRs {
 						}
 					}
 				}
+				
+				//add subscribtion notification
+				notificationService.addNewTopic(topic);
 
                 result.put("success", true);
                 result.put("topic", topic.getId());

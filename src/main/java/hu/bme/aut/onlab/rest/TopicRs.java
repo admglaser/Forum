@@ -144,7 +144,10 @@ public class TopicRs {
 				if (quotePostNumber > 0) {
 					notificationService.addQuote(member, topicId, quotePostNumber);
 				}
-
+				
+				//add subscribtion notification
+				notificationService.addNewReply(post);
+				
 				result.put("success", true);
 				return result.toString();
 			}

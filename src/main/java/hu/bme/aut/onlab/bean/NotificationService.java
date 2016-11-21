@@ -20,6 +20,12 @@ import hu.bme.aut.onlab.model.NotificationEvent;
 import hu.bme.aut.onlab.model.Notification_;
 import hu.bme.aut.onlab.model.Post;
 import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.SubcategorySubscription;
+import hu.bme.aut.onlab.model.SubcategorySubscription_;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSubscription;
+import hu.bme.aut.onlab.model.TopicSubscription_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationType;
 
@@ -121,7 +127,6 @@ public class NotificationService {
 				)
 		);
 		
-		
 		try {
 			return em.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
@@ -149,7 +154,89 @@ public class NotificationService {
 		em.persist(notification);
 		
 	}
+
+	private List<Member> getTopicSubscribers(Topic topic) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Member> query = builder.createQuery(Member.class);
+		Root<Member> memberRoot = query.from(Member.class);
+		
+		ListJoin<Member, TopicSubscription> topicSubscribtionJoin = memberRoot.join(Member_.topicSubscriptions);
+		
+		query.where(
+				builder.equal(topicSubscribtionJoin.get(TopicSubscription_.topicId), topic.getId())
+		);
+		
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
 	
-	//There is a new reply in this topic.
-	//There is a new topic in this forum.
+	private List<Member> getSubcategorySubscribers(Subcategory subcategory) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Member> query = builder.createQuery(Member.class);
+		Root<Member> memberRoot = query.from(Member.class);
+		
+		ListJoin<Member, SubcategorySubscription> subcategorySubscribtion = memberRoot.join(Member_.subcategorySubscriptions);
+		
+		query.where(
+				builder.equal(subcategorySubscribtion.get(SubcategorySubscription_.subcategoryId), subcategory.getId())
+		);
+		
+		try {
+			return em.createQuery(query).getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public void addNewReply(Post post) {
+		Topic topic = post.getTopic();
+		
+		List<Member> subscribers = getTopicSubscribers(topic);
+		
+		for (Member targetMember : subscribers) {
+			int highestNotificationNumber = getHighestNotificationNumber(targetMember);
+			
+			NotificationEvent notificationEvent = new NotificationEvent();
+			notificationEvent.setType(NotificationType.NEW_REPLY.getId());
+			int pageNumber = NavigationUtils.getPageOfElement(post.getPostNumber());
+			notificationEvent.setLink(String.format("#/topic/%d/%d", topic.getId(), pageNumber));
+			notificationEvent.setText("There is a new reply in this topic.");
+			em.persist(notificationEvent);
+
+			Notification notification = new Notification();
+			notification.setNotificationNumber(highestNotificationNumber+1);
+			notification.setSeen(false);
+			notification.setMember(targetMember);
+			notification.setNotificationEvent(notificationEvent);
+			em.persist(notification);
+		}
+	}
+
+	public void addNewTopic(Topic topic) {
+		Subcategory subcategory = topic.getSubcategory();
+		
+		List<Member> subscribers = getSubcategorySubscribers(subcategory);
+		
+		for (Member targetMember : subscribers) {
+			int highestNotificationNumber = getHighestNotificationNumber(targetMember);
+			
+			NotificationEvent notificationEvent = new NotificationEvent();
+			notificationEvent.setType(NotificationType.NEW_TOPIC.getId());
+			notificationEvent.setLink(String.format("#/topic/%d", topic.getId()));
+			notificationEvent.setText("There is a new topic in this category.");
+			em.persist(notificationEvent);
+
+			Notification notification = new Notification();
+			notification.setNotificationNumber(highestNotificationNumber+1);
+			notification.setSeen(false);
+			notification.setMember(targetMember);
+			notification.setNotificationEvent(notificationEvent);
+			em.persist(notification);
+		}
+		
+	}
+	
 }
