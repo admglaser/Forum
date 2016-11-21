@@ -213,6 +213,7 @@
 					var $body = angular.element(document.body);
 					var $rootScope = $body.scope().$root;
 					$rootScope.$emit('reload');
+					$('#password').val("");
 				} else {
 					$("#username").val("");
 					$("#password").val("");
