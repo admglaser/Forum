@@ -149,30 +149,30 @@
 			<div class="modal-body">
 				<form>
 					<div class="form-group">
-						<label for="username" class="control-label">User name</label>
-						<input type="text" class="form-control" id="username" name="username" value="" required="true" title="Please enter you username">
+						<label for="reg_username" class="control-label">User name</label>
+						<input type="text" class="form-control" id="reg_username" name="username" value="" required="true" title="Please enter you username">
 					</div>
 					<div class="form-group">
-						<label for="displayname" class="control-label">Display name</label>
-						<input type="text" class="form-control" id="displayname" name="displayname" value="" required="true" title="Please enter you display name">
+						<label for="reg_displayname" class="control-label">Display name</label>
+						<input type="text" class="form-control" id="reg_displayname" name="displayname" value="" required="true" title="Please enter you display name">
 					</div>
 					<div class="form-group">
-						<label for="email" class="control-label">E-mail</label>
-						<input type="email" class="form-control" id="email" name="email" value="" required="true" title="Please enter you email">
+						<label for="reg_email" class="control-label">E-mail</label>
+						<input type="email" class="form-control" id="reg_email" name="email" value="" required="true" title="Please enter you email">
 					</div>
 					<div class="form-group">
-						<label for="password" class="control-label">Password</label>
-						<input type="password" class="form-control" id="password" name="password" value="" required="true" title="Please enter your password">
+						<label for="reg_password" class="control-label">Password</label>
+						<input type="password" class="form-control" id="reg_password" name="password" value="" required="true" title="Please enter your password">
 					</div>
 					<div class="form-group">
-						<label for="passwordConfirm" class="control-label">Confirm password</label>
-						<input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" value="" required="true" title="Please confirm your password">
+						<label for="reg_passwordConfirm" class="control-label">Confirm password</label>
+						<input type="password" class="form-control" id="reg_passwordConfirm" name="passwordConfirm" value="" required="true" title="Please confirm your password">
 					</div>
 					<div class="form-group">
-						<label for="birthDate" class="control-label">Date of birth</label>
-						<input type="date" class="form-control" id="birthDate" name="birthDate" value="" required="false" title="Please enter your birth date">
+						<label class="control-label" for="reg_birthDate">Date of birth</label>
+						<input class="form-control" id="reg_birthDate" name="reg_birthDate" placeholder="YYYY-MM-DD" type="text" readonly/>
 					</div>
-					<button type="submit" class="btn btn-primary btn-block">
+					<button id="registerSubmit" type="submit" class="btn btn-primary btn-block" onclick="register()">
 						Submit
 					</button>
 				</form>
@@ -182,6 +182,19 @@
 </div>
 
 <script>
+	$(document).ready(function(){
+		var date_input=$('input[name="reg_birthDate"]');
+		var options={
+			format: "yyyy-mm-dd",
+			weekStart: 1,
+			todayBtn: true,
+			clearBtn: true,
+			autoclose: true,
+			todayHighlight: true
+		};
+		date_input.datepicker(options);
+	});
+
 	$('#loginSubmit').click(function(){ 
 		var username = $("#username").val();
 		var password = $("#password").val();  
@@ -208,6 +221,35 @@
 			}
 		});
 	});
+
+	function register() {
+		var postData = {
+			username: $('#reg_username').val(),
+			displayName: $('#reg_displayname').val(),
+			email: $('#reg_email').val(),
+			password: $('#reg_password').val(),
+			confirmPassword: $('#reg_passwordConfirm').val(),
+			birthDate: $('#reg_birthDate').val()
+		};
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			contentType: 'application/json',
+			url: restLink + "register",
+			data: JSON.stringify( postData ),
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			success: function(data){
+				if (data.success) {
+					alert("Successfully registered.");
+					$('#registerModalForm').modal('toggle');
+				} else {
+					alert("Registration failed:\n\n" + data.errorMessage);
+				}
+			}
+		});
+	}
 	
 	function logout() {
 		encoded = "";
