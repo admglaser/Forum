@@ -60,7 +60,7 @@
 						</div> </a>
 						<ul class="dropdown-menu dropdown-messages">
 							<li ng-repeat-start="notification in data.notifications">
-								<a href="{{notification.link}}">
+								<a href="{{notification.link}}" ng-click="readNotification(notification.id)">
 								<div class="small {{notification.unread ? 'text-danger' : ''}}">
 									<div>
 										<strong>{{notification.type}}</strong>

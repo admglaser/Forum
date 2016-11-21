@@ -13,8 +13,15 @@
 			<!-- notification -->
 			<tr ng-repeat="notification in data.notifications">
 				<td>
-					<a href="{{notification.link}}">{{notification.type}}</a> 
-					<br/>
+					<div ng-if="notification.unread">
+						<b><a href="{{notification.link}}" ng-click="readNotification(notification.id)">{{notification.type}}</a></b>
+					</div>
+										
+					<div ng-if="!notification.unread">
+						<a href="{{notification.link}}" ng-click="readNotification(notification.id)">{{notification.type}}</a>
+						<br/>
+					</div>
+										
 					<small>
 					 	{{notification.text}} 
 					</small>

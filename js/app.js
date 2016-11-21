@@ -145,6 +145,29 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 		.then(function(res) {
 			debug("Result has arrived for " +  link);
 			$scope.data = res.data;
+			
+			$scope.readNotification = function (id) {
+			var postData = {
+				"id" : id
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "notifications/read",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						console.log("Successfully read notification " + id);
+					} else {
+						console.log("Failed to read notification " + id + ". " + data.errorMessage);
+					}
+				}
+			});
+		};	
 		});
 	});
 });
@@ -415,6 +438,29 @@ app.controller('notificationsController', function($rootScope, $scope, $http, $s
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		
+		$scope.readNotification = function (id) {
+			var postData = {
+				"id" : id
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "notifications/read",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						console.log("Successfully read notification " + id);
+					} else {
+						console.log("Failed to read notification " + id + ". " + data.errorMessage);
+					}
+				}
+			});
+		};		
 	});
 });
 
