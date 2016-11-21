@@ -3,7 +3,9 @@ package hu.bme.aut.onlab.rest;
 import java.util.Collection;
 
 import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -59,7 +61,8 @@ public class NotificationsRs {
 				notificationJson.put("text", notificationEvent.getText());
 				notificationJson.put("time", Formatter.formatTimeStampForMessage(notificationEvent.getTime()));
 				notificationJson.put("link", notificationEvent.getLink());
-				notificationJson.put("unread", notification.isSeen());
+				notificationJson.put("unread", !notification.isSeen());
+				notificationJson.put("id", notification.getId());
 				notificationsJsonArray.put(notificationJson);
 			}
 			result.put("notifications", notificationsJsonArray);
@@ -68,6 +71,30 @@ public class NotificationsRs {
 		
 		return result.toString();
 
+	}
+	
+	@POST
+	@Path("read")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String readNotification(@Context Member member, String data) {
+		JSONObject input = new JSONObject(data);
+		JSONObject result = new JSONObject();
+		String errorMessage;
+
+		if (member != null) {
+			int notificationId = input.getInt("id");
+			Notification notification = notificationBean.findEntityById(notificationId);
+			notification.setSeen(true);
+			notificationBean.merge(notification);
+			result.put("success", true);
+			return result.toString();
+		} 
+
+		errorMessage = "Not logged in.";
+		result.put("success", false);
+		result.put("errorMessage", errorMessage);
+		return result.toString();
 	}
 
 }
