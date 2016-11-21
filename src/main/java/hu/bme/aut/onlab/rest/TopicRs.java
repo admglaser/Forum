@@ -90,9 +90,6 @@ public class TopicRs {
 	            }
         	}
         }
-
-		forumReadService.renewTopicSeenByMember(member, topic);
-
         return result.toString();
     }
 
@@ -144,6 +141,10 @@ public class TopicRs {
 				if (quotePostNumber > 0) {
 					notificationService.addQuote(member, topicId, quotePostNumber);
 				}
+				
+				//add subscribtion notification
+				notificationService.addNewReply(post);
+				
 
 				forumReadService.renewTopicSeenByMember(member, topic);
 
@@ -212,4 +213,5 @@ public class TopicRs {
 		result.put("errorMessage", errorMessage);
 		return result.toString();
 	}
+	
 }

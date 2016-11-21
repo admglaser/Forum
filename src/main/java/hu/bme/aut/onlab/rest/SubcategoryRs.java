@@ -153,6 +153,9 @@ public class SubcategoryRs {
 						}
 					}
 				}
+				
+				//add subscribtion notification
+				notificationService.addNewTopic(topic);
 
                 forumReadService.renewTopicSeenByMember(member, topic);
 

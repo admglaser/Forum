@@ -73,6 +73,8 @@ public class NavbarRs  {
 				notificationJson.put("text", notification.getNotificationEvent().getText());
 				notificationJson.put("time", Formatter.formatTimeStampForMessage(notification.getNotificationEvent().getTime()));
 				notificationJson.put("link", notification.getNotificationEvent().getLink());
+				notificationJson.put("id", notification.getId());
+				
 				boolean notificationUnread = notificationService.isNotificationUnread(notification);
 				if (!hasUnreadNotification) {
 					if (notificationUnread) {
