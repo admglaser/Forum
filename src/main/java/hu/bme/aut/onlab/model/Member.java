@@ -81,7 +81,18 @@ public class Member {
 
 	@Column(name = "member_group_id", insertable = false, updatable = false)
 	protected int memberGroupId;
-	
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Member member = (Member) o;
+
+        return id == member.id;
+
+    }
+
     public int getId() {
         return id;
     }

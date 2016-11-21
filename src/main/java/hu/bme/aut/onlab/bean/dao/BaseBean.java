@@ -37,7 +37,7 @@ public abstract class BaseBean<E> {
     	CriteriaQuery<E> query = builder.createQuery(entityType);
         Root<E> entityRoot = query.from(entityType);
 
-        query.where(builder.equal(entityRoot.get(field) , value));
+        query.where(builder.equal(entityRoot.get(field), value));
 
         query.select(entityRoot);
 
@@ -65,6 +65,10 @@ public abstract class BaseBean<E> {
     
     public void add(E entity) {
     	em.persist(entity);
+    }
+
+    public void update(E entity) {
+        em.persist( em.merge(entity) );
     }
     
     public E merge(E entity) {
