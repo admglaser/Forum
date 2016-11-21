@@ -18,7 +18,7 @@ import java.util.List;
 
 @LocalBean
 @Stateless
-public class ForumReadService {
+public class ForumService {
 
 	private final int GUEST_PERMISSION_SET_ID = 1;
 	

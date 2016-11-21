@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.ForumService;
 import hu.bme.aut.onlab.bean.LoginService;
 import hu.bme.aut.onlab.bean.dao.CategoryBean;
 import hu.bme.aut.onlab.bean.dao.PostBean;
@@ -30,7 +30,7 @@ import hu.bme.aut.onlab.util.LinkUtils;
 public class HomeRs  {
    
     @EJB
-    private ForumReadService forumReadService;
+    private ForumService forumReadService;
     
     @EJB 
     private LoginService loginService;

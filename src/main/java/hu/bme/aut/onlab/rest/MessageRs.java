@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.ForumService;
 import hu.bme.aut.onlab.bean.LoginService;
 import hu.bme.aut.onlab.bean.MessagingService;
 import hu.bme.aut.onlab.bean.dao.ConversationBean;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MessageRs {
 
     @EJB
-    private ForumReadService forumReadService;
+    private ForumService forumReadService;
 
     @EJB
     private MessagingService messagingService;

@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.ForumReadService;
+import hu.bme.aut.onlab.bean.ForumService;
 import hu.bme.aut.onlab.bean.LoginService;
 import hu.bme.aut.onlab.bean.dao.NotificationBean;
 import hu.bme.aut.onlab.model.Member;
@@ -29,7 +29,7 @@ import hu.bme.aut.onlab.util.NotificationType;
 public class NotificationsRs {
 
 	@EJB
-	private ForumReadService forumReadService;
+	private ForumService forumReadService;
 
 	@EJB
 	private LoginService loginService;
