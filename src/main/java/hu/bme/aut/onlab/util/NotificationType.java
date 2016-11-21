@@ -2,7 +2,12 @@ package hu.bme.aut.onlab.util;
 
 public enum NotificationType {
 
-	QUOTE(0, "Quote"), MENTION(1, "Mention"), NEW_REPLY(2, "New reply"), NEW_TOPIC(3, "New topic");
+	QUOTE(0, "Quote"), 
+	MENTION(1, "Mention"), 
+	NEW_REPLY(2, "New reply"), 
+	NEW_TOPIC(3, "New topic"),
+	LIKE(4, "Like");
+	
 	private int id;
 	private String string;
 
@@ -34,6 +39,8 @@ public enum NotificationType {
 			return NotificationType.NEW_REPLY;
 		case 3:
 			return NotificationType.NEW_TOPIC;
+		case 4:
+			return NotificationType.LIKE;
 		default:
 			throw new RuntimeException("Unhandled notification id!");
 		}

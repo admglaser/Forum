@@ -1,7 +1,8 @@
 package hu.bme.aut.onlab.bean;
 
-import java.util.Collections;
-import java.util.List;
+import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.util.NavigationUtils;
+import hu.bme.aut.onlab.util.NotificationType;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -12,22 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
-
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.Member_;
-import hu.bme.aut.onlab.model.Notification;
-import hu.bme.aut.onlab.model.NotificationEvent;
-import hu.bme.aut.onlab.model.Notification_;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Post_;
-import hu.bme.aut.onlab.model.Subcategory;
-import hu.bme.aut.onlab.model.SubcategorySubscription;
-import hu.bme.aut.onlab.model.SubcategorySubscription_;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.model.TopicSubscription;
-import hu.bme.aut.onlab.model.TopicSubscription_;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import hu.bme.aut.onlab.util.NotificationType;
+import java.util.Collections;
+import java.util.List;
 
 @LocalBean
 @Stateless
@@ -237,6 +224,26 @@ public class NotificationService {
 			em.persist(notification);
 		}
 		
+	}
+	
+	public void addLike(Member member, Post post) {
+		Topic topic = post.getTopic();
+		Member targetMember = post.getMember();
+		int highestNotificationNumber = getHighestNotificationNumber(targetMember);
+		int pageNumber = NavigationUtils.getPageOfElement(post.getPostNumber());
+		
+		NotificationEvent notificationEvent = new NotificationEvent();
+		notificationEvent.setType(NotificationType.LIKE.getId());
+		notificationEvent.setLink(String.format("#/topic/%d/%d", topic.getId(), pageNumber));
+		notificationEvent.setText(String.format("%s liked a post of yours.", targetMember.getDisplayName()));
+		em.persist(notificationEvent);
+
+		Notification notification = new Notification();
+		notification.setNotificationNumber(highestNotificationNumber+1);
+		notification.setSeen(false);
+		notification.setMember(targetMember);
+		notification.setNotificationEvent(notificationEvent);
+		em.persist(notification);
 	}
 	
 }
