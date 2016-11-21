@@ -78,6 +78,11 @@ public class RegistrationService {
                     "  - _, ., \\, /, [space]";
         }
 
+        if (isDisplayNameExists(displayName)) {
+            // Display name already in use
+            return "Display name already in use.\nPlease use another one.";
+        }
+
         return null;
     }
 
@@ -153,6 +158,21 @@ public class RegistrationService {
 
         query.select(builder.count(query.from(Member.class)));
         query.where(builder.equal(root.get(Member_.userName), username));
+
+        try {
+            return em.createQuery(query).getSingleResult().intValue() > 0;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
+
+    public boolean isDisplayNameExists(String displayName) {
+        CriteriaBuilder builder = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = builder.createQuery(Long.class);
+        Root<Member> root = query.from(Member.class);
+
+        query.select(builder.count(query.from(Member.class)));
+        query.where(builder.equal(root.get(Member_.displayName), displayName));
 
         try {
             return em.createQuery(query).getSingleResult().intValue() > 0;
