@@ -57,10 +57,10 @@
 								<button type="button" class="btn btn-sm btn-primary" ng-click="openQuotePanel(post.username, post.userLink, post.postNumber, post.postLink, post.text)" >
 									Quote
 								</button>
-								<button id="likePostButton" type="button" class="btn btn-sm btn-primary" ng-click="toggleLikingPost(post.postNumber)">Like</button>
+								<button id="likePostButton" type="button" class="btn btn-sm btn-primary" ng-click="toggleLikingPost(post)">{{post.likePostButtonText}}</button>
 							</div>
 							<div class="pull-right">
-								<a>{{post.likeCount}} likes</a>
+								<a data-toggle="popover" title="Liker members " data-placement="top" data-trigger="hover" data-content="asdfasdfasdf">{{post.likeCount}} likes</a>
 							</div>
 						</div>
 					</div>
@@ -119,6 +119,7 @@
 <script>
 	$(document).ready(function() {
 		$("#previewDiv").hide();
+		$('[data-toggle="popover"]').popover();
 	});
 
 	function submitPost() {

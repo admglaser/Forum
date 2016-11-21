@@ -238,6 +238,27 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 		for (var i = 0; i < $scope.data.posts.length; i++) {
 			var post = $scope.data.posts[i];
 			post.textBBCode = convertBBCode(post.text, $sce);
+
+			if (post.isPostLiked) {
+				post.likePostButtonText = "Unlike";
+			} else {
+				post.likePostButtonText = "Like";
+			}
+
+			/*
+			var likes = post.likes;
+			var likeVisual = "<ul style=\"list-style-type:none\">";
+			for (var j = 0; j < likes.length; j++) {
+				//likes[j].name;
+				//likes[j].link;
+				likeVisual = likeVisual.concat("<li>" + "<a href=\""+ likes[j].link +"\">" + likes[j].name + "</a>" + "</li>");
+			}
+			likeVisual = likeVisual.concat("</ul>");
+
+			post.likerVisual = likeVisual;
+			*/
+
+			post.likerVisual = "ASDASDASDASDASD";
 		}
 		topicPostParam = topicId;
 		$rootScope.$emit('updateNavbar');
@@ -262,19 +283,19 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			$rootScope.$setLastQuote(quoteToSave);
 		};
 
-		$scope.toggleLikingPost = function (postNumber) {
-			var btnText = $("#likePostButton").html();
-			if (btnText == "Like") {
-				$scope.likePost(postNumber);
+		$scope.toggleLikingPost = function (post) {
+			//var btnText = $("#likePostButton").text();
+			if (post.isPostLiked == false) {
+				$scope.likePost(post);
 			} else {
-				$scope.unlikePost(postNumber);
+				$scope.unlikePost(post);
 			}
 		};
 
-		$scope.likePost = function (postNumber) {
+		$scope.likePost = function (post) {
 			var postData = {
 				topic: topicPostParam,
-				postNumber: postNumber,
+				postNumber: post.postNumber,
 				isLikeRequest: true
 			};
 			$.ajax({
@@ -288,8 +309,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 				},
 				success: function(data){
 					if (data.success) {
-						// TODO: refresh the button --> no visible change
-						$("#likePostButton").html("Unlike");
+						$rootScope.$emit('reload');
 						alert("You have liked this topic.");
 					} else {
 						alert("Failed to like post:\n\n" + data.errorMessage);
@@ -298,10 +318,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			});
 		};
 
-		$scope.unlikePost = function (postNumber) {
+		$scope.unlikePost = function (post) {
 			var postData = {
 				topic: topicPostParam,
-				postNumber: postNumber,
+				postNumber: post.postNumber,
 				isLikeRequest: false
 			};
 			$.ajax({
@@ -315,8 +335,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 				},
 				success: function(data){
 					if (data.success) {
-						// TODO: refresh the button --> no visible change
-						$("#likePostButton").html("Like");
+						$rootScope.$emit('reload');
 						alert("You do no longer like this post.");
 					} else {
 						alert("Failed to stop the like of post:\n\n" + data.errorMessage);
