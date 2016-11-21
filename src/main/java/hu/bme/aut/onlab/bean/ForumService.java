@@ -20,7 +20,7 @@ import java.util.List;
 @Stateless
 public class ForumService {
 
-	private final int GUEST_PERMISSION_SET_ID = 1;
+	private final int GUEST_PERMISSION_SET_ID = 0;
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -344,7 +344,7 @@ public class ForumService {
 	}
 
 	public boolean canMemberViewSubcategory(Member member, Subcategory subcategory) {
-		boolean canView = false;
+		boolean canView = true;
 		List<Permission> permissions = null;
 		if (member == null) {
 			permissions = getGuestPermissionsForSubcategory(subcategory);
@@ -353,8 +353,8 @@ public class ForumService {
 		}
 		for (int i = 0; i < permissions.size(); i++) {
 			Permission permission = permissions.get(i);
-			if (permission.getReadAllowed()) {
-				canView = true;
+			if (!permission.getReadAllowed()) {
+				canView = false;
 				break;
 			}
 		}

@@ -235,7 +235,7 @@ public class NotificationService {
 		NotificationEvent notificationEvent = new NotificationEvent();
 		notificationEvent.setType(NotificationType.LIKE.getId());
 		notificationEvent.setLink(String.format("#/topic/%d/%d", topic.getId(), pageNumber));
-		notificationEvent.setText(String.format("%s liked a post of yours.", targetMember.getDisplayName()));
+		notificationEvent.setText(String.format("%s liked a post of yours.", member.getDisplayName()));
 		em.persist(notificationEvent);
 
 		Notification notification = new Notification();

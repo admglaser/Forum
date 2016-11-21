@@ -87,6 +87,16 @@ public class MessageRs {
         				messagesJsonArray.put(messageJson);
         			}
         			
+        			List<Member> members = conversation.getMembers();
+        			StringBuilder sb = new StringBuilder();
+        			for (int i=0; i<members.size(); i++) {
+        				sb.append(members.get(i).getDisplayName());
+        				if (i < members.size()-1) {
+        					sb.append(", ");
+        				}
+        			}
+        			result.put("recipients", sb.toString());
+        			
         			result.put("conversationNumber", messagingService.getConversationNumber(conversation, member));
         			result.put("title", conversation.getTitle());
         			result.put("starter", firstMessage.getMember().getDisplayName());
