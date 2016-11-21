@@ -103,6 +103,9 @@ public class TopicRs {
 	                result.put("pages", NavigationUtils.getPagesJsonArray("#/topic/" + topic.getId(), pageNumber, forumReadService.getPostsCountOfTopic(topic)));
 	            }
         	}
+
+			// Renew seen of topic of a member
+			forumReadService.renewTopicSeenByMember(member, topic);
         }
         return result.toString();
     }
@@ -281,7 +284,7 @@ public class TopicRs {
 								memberLike.setPost(post);
 
 								memberLikeBean.add(memberLike);
-								
+
 								//like notification
 								notificationService.addLike(member, post);
 								
