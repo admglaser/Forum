@@ -239,4 +239,24 @@ public class NotificationService {
 		
 	}
 	
+	public void addLike(Member member, Post post) {
+		Topic topic = post.getTopic();
+		Member targetMember = post.getMember();
+		int highestNotificationNumber = getHighestNotificationNumber(targetMember);
+		int pageNumber = NavigationUtils.getPageOfElement(post.getPostNumber());
+		
+		NotificationEvent notificationEvent = new NotificationEvent();
+		notificationEvent.setType(NotificationType.LIKE.getId());
+		notificationEvent.setLink(String.format("#/topic/%d/%d", topic.getId(), pageNumber));
+		notificationEvent.setText(String.format("%s liked a post of yours.", targetMember.getDisplayName()));
+		em.persist(notificationEvent);
+
+		Notification notification = new Notification();
+		notification.setNotificationNumber(highestNotificationNumber+1);
+		notification.setSeen(false);
+		notification.setMember(targetMember);
+		notification.setNotificationEvent(notificationEvent);
+		em.persist(notification);
+	}
+	
 }

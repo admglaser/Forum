@@ -253,7 +253,7 @@ public class TopicRs {
 		}
 
 		if (member != null) {
-			Topic topic = topicBean.findEntityById( topicId );
+			Topic topic = topicBean.findEntityById(topicId);
 			if (topic != null) {
 				Post post = forumReadService.getPostByPostNumber(topic, postNumber);
 				if (post != null) {
@@ -270,6 +270,10 @@ public class TopicRs {
 								memberLike.setPost(post);
 
 								memberLikeBean.add(memberLike);
+								
+								//like notification
+								notificationService.addLike(member, post);
+								
 							}
 
 						} else {
