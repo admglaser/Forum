@@ -56,7 +56,6 @@ public class RegisterRs {
                             member.setViewsCount(0);
                             member.setPostCount(0);
                             member.setTopicCount(0);
-                            member.setLikesCount(0);
                             // Validation of birth date is not necessary because of the date picker.
                             if ((birthDateString != null) && (! birthDateString.isEmpty())) {
                                 member.setBirthday(Date.valueOf(birthDateString));

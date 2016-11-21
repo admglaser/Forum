@@ -1,20 +1,9 @@
 package hu.bme.aut.onlab.model;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @SuppressWarnings("unused")
 @Entity
@@ -43,9 +32,6 @@ public class Member {
 	
 	@Column(name = "topic_count")
 	private int topicCount;
-    
-	@Column(name = "likes_count")
-	private int likesCount;
 
 	@Column(name = "views_count")
 	private int viewsCount;
@@ -150,14 +136,6 @@ public class Member {
 
     public void setTopicCount(int topicCount) {
         this.topicCount = topicCount;
-    }
-
-    public int getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
     }
     
     public int getViewsCount() {
