@@ -18,6 +18,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -60,18 +61,24 @@ public class UserRs {
 	@GET
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserOverview(@PathParam("userId") int userId) {
-		Member member = memberBean.findEntityById(userId);
-		JSONObject result = generateBase(member);
+	public String getUserOverview(@Context Member member, @PathParam("userId") int userId) {
+		Member memberToSee = memberBean.findEntityById(userId);
+		JSONObject result = generateBase(memberToSee);
 
-		MemberGroup memberGroup = member.getMemberGroup();
+		// Increase the view count of the profile if the page is not his own.
+		if (member != null  && ! member.equals(memberToSee)) {
+			memberToSee.setViewsCount( memberToSee.getViewsCount() + 1 );
+			memberBean.update(memberToSee);
+		}
+
+		MemberGroup memberGroup = memberToSee.getMemberGroup();
 
 		result.put("memberGroup", memberGroup.getTitle());
-		result.put("topicCount", member.getTopicCount());
-		result.put("postCount", member.getPostCount());
-		result.put("viewCount", member.getViewsCount());
-		result.put("birthday", member.getBirthday());
-		result.put("email", member.getEmail());
+		result.put("topicCount", memberToSee.getTopicCount());
+		result.put("postCount", memberToSee.getPostCount());
+		result.put("viewCount", memberToSee.getViewsCount());
+		result.put("birthday", memberToSee.getBirthday());
+		result.put("email", memberToSee.getEmail());
 
 		return result.toString();
 	}
