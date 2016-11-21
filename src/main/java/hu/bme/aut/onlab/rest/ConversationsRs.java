@@ -130,6 +130,11 @@ public class ConversationsRs {
 			}
 			List<Member> members = new ArrayList<>();
 			for (String split : splits) {
+				if (split.equals(member.getDisplayName())) {
+					result.put("success", false);
+					result.put("message", "Cant send message to yourself!");
+					return result.toString();
+				}
 				List<Member> list = memberBean.findEntitiesByEquality(Member_.displayName, split);
 				if (list.size() > 0) {
 					members.add(list.get(0));
