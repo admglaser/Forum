@@ -97,6 +97,13 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/notifications.template.html',
 		controller: 'notificationsController'
 	})
+
+	
+	//settings
+	.when('/settings', {
+		templateUrl : 'pages/settings.template.html',
+		controller: 'settingsController'
+	})
 	
 	
 	
@@ -560,6 +567,24 @@ app.controller('notificationsController', function($rootScope, $scope, $http, $s
 	});
 });
 
+
+//settings
+app.controller('settingsController', function($rootScope, $scope, $http) {
+	var link = restLink + 'settings/';
+	debug("Getting page: " + link);
+	$http.get(link, {
+		headers : {
+			"Authorization" : "Basic " + encoded
+		}
+	})
+	.then(function(res) {
+		debug("Result has arrived for " +  link);
+		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');	
+	});
+});
+
+
 function createAbsolutePath(absolutePath) {
 	var currentURL = window.location.href;
 
@@ -568,7 +593,6 @@ function createAbsolutePath(absolutePath) {
 
 	return rootURL + "/" + absolutePath;
 }
-
 
 function jumpToAbsolutePath(absolutePath) {
 	window.location.href = createAbsolutePath(absolutePath);

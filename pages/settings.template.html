@@ -1,0 +1,77 @@
+<style>
+.kv-avatar .file-preview-frame,.kv-avatar .file-preview-frame:hover {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+}
+.kv-avatar .file-input {
+    display: table-cell;
+    max-width: 220px;
+}
+</style>
+
+
+<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+	<div class="container">
+		<div class="row">
+			<div class="panel with-nav-tabs panel-default">
+				<div class="panel-heading">
+					<h1>Profile photo</h1>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<div class="col-xs-2 text-center">
+							<img class="img-thumbnail" src="{{data.imageLink}}"></img>
+						</div>
+						<div class="col-xs-10">
+							<form>
+								<h3>Upload</h3>
+								<div class="form-group">
+									<input id="fileInput" type="file" class="file">
+								</div>
+								<div class="form-group">
+									<button id ="uploadSubmit" type="submit" class="btn btn-primary">
+										Upload photo
+									</button>
+								</div>
+							<form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$('#uploadSubmit').click(function(){ 
+		
+		var file = $("#fileInput").prop('files')[0];
+		console.log(file);
+	
+		$.ajax({
+			type: "POST",
+			contentType: 'multipart/form-data',
+			url: restLink + "settings/photo",
+			data: file,
+			headers: {
+				"Authorization": "Basic " + encoded
+			},
+			processData: false,
+			success: function(data){
+				if (data.success) {
+					var $body = angular.element(document.body);
+					var $rootScope = $body.scope().$root;
+					$rootScope.$emit('reload');
+					alert("Image uploaded.");
+				} else {
+					alert(data.errorMessage);
+				}
+			}
+		});
+		
+		
+	});
+</script>
