@@ -246,7 +246,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
 		$scope.data = res.data;
-
+		
 		if ($scope.data.canFollow) {
 			$('#followTopicButton').prop('disabled', false);
 		} else {
@@ -272,20 +272,6 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			post.isQuoteDisabled = ! $scope.data.canReply;
 			post.isLikeDisabled = ! $scope.data.canReply;
 
-			/*
-			var likes = post.likes;
-			var likeVisual = "<ul style=\"list-style-type:none\">";
-			for (var j = 0; j < likes.length; j++) {
-				//likes[j].name;
-				//likes[j].link;
-				likeVisual = likeVisual.concat("<li>" + "<a href=\""+ likes[j].link +"\">" + likes[j].name + "</a>" + "</li>");
-			}
-			likeVisual = likeVisual.concat("</ul>");
-
-			post.likerVisual = likeVisual;
-			*/
-
-			post.likerVisual = "ASDASDASDASDASD";
 		}
 
 		topicPostParam = topicId;

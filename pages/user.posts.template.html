@@ -45,7 +45,7 @@
 											<div class="panel-heading">
 												<div class="container">
 													<div class="pull-left small">
-														<h4><a href="{{topic.link}}">In Topic: {{post.title}}</a></h4>
+														<h4><a href="{{post.link}}">In Topic: {{post.title}}</a></h4>
 													</div>
 													<div class="pull-right small">
 														<small>{{post.date}}</small>
@@ -61,7 +61,7 @@
 											<div class="panel-footer user-panel-footer">
 												<div class="container">
 													<div class="pull-right">
-														<a>{{post.likeCount}} likes</a>
+														<button uib-popover="{{post.likers}}" type="button" class="btn btn-sm">{{post.likeCount}} likes</button> 
 													</div>
 												</div>
 											</div>

@@ -25,14 +25,13 @@
 								<small>{{post.time}}</small>
 							</div>
 							<div class="pull-right small">
-								<h5><a href="{{post.postLink}}">{{post.postNumber}}</a></h5>
+								<h5>{{post.postNumber}}</h5>
 							</div>
 						</div>
 					</div>
 					<div class="panel-body">
 						<div class="col-xs-2 text-center">
-							<img class="img-thumbnail" src="{{post.userImageLink}}"></img>
-
+							<img class="img-thumbnail" src="{{post.userImageLink}}"></img
 							<h5>{{post.memberGroup}}</h5>
 							<h6>{{post.postCount}} posts</h6>
 						</div>
@@ -45,22 +44,13 @@
 					<div class="panel-footer">
 						<div class="container">
 							<div class="pull-left">
-								<!--
-								<button type="button" class="btn btn-sm btn-primary">
-									Edit
-								</button>
-								<button type="button" class="btn btn-sm btn-primary">
-									Delete
-								</button>
-								-->
-								
 								<button id="quoteButton" type="button" class="btn btn-sm btn-primary" ng-disabled="post.isQuoteDisabled" ng-click="openQuotePanel(post.username, post.userLink, post.postNumber, post.postLink, post.text)" >
 									Quote
 								</button>
 								<button id="likePostButton" type="button" class="btn btn-sm btn-primary" ng-disabled="post.isLikeDisabled" ng-click="toggleLikingPost(post)">{{post.likePostButtonText}}</button>
 							</div>
 							<div class="pull-right">
-								<a data-toggle="popover" title="Liker members " data-placement="top" data-content="asdfasdfasdf">{{post.likeCount}} likes</a>
+								<button uib-popover="{{post.likers}}" type="button" class="btn btn-sm btn-primary">{{post.likeCount}} likes</button> 	
 							</div>
 						</div>
 					</div>
