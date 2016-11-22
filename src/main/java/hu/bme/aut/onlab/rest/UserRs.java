@@ -109,7 +109,17 @@ public class UserRs {
 			likedPostJsonObject.put("date", Formatter.formatTimeStamp(likedPost.getTime()));
 			likedPostJsonObject.put("text", likedPost.getText());
 			likedPostJsonObject.put("likeCount", forumReadService.getPostLikesCount(likedPost));
-
+			
+			List<Member> members = forumReadService.getMembersWhoLikedPost(likedPost);
+			StringBuilder sb = new StringBuilder();
+			for (int i=0; i<members.size(); i++) {
+				sb.append(members.get(i).getDisplayName());
+				if (i < members.size()-1) {
+					sb.append(", ");
+				}
+			}
+			likedPostJsonObject.put("likers", sb.toString());
+			
 			likedPostsJsonArray.put(likedPostJsonObject);
 		}
 
@@ -144,6 +154,16 @@ public class UserRs {
 			createdTopicJson.put("text", firstPost.getText());
 			createdTopicJson.put("likeCount", forumReadService.getPostLikesCount(firstPost));
 
+			List<Member> members = forumReadService.getMembersWhoLikedPost(firstPost);
+			StringBuilder sb = new StringBuilder();
+			for (int i=0; i<members.size(); i++) {
+				sb.append(members.get(i).getDisplayName());
+				if (i < members.size()-1) {
+					sb.append(", ");
+				}
+			}
+			createdTopicJson.put("likers", sb.toString());
+			
 			topicsJsonArray.put(createdTopicJson);
 		}
 
@@ -179,6 +199,16 @@ public class UserRs {
 			createdPostJson.put("text", createdPost.getText());
 			createdPostJson.put("likeCount", forumReadService.getPostLikesCount(createdPost));
 
+			List<Member> members = forumReadService.getMembersWhoLikedPost(createdPost);
+			StringBuilder sb = new StringBuilder();
+			for (int i=0; i<members.size(); i++) {
+				sb.append(members.get(i).getDisplayName());
+				if (i < members.size()-1) {
+					sb.append(", ");
+				}
+			}
+			createdPostJson.put("likers", sb.toString());
+			
 			createdPostsJsonArray.put(createdPostJson);
 		}
 
