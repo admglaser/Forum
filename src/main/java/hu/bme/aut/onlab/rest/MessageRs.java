@@ -63,7 +63,6 @@ public class MessageRs {
 
         if (member != null) {
         	Conversation conversation = messagingService.getConversation(member, conversationNumber);
-        	
         	if (conversation != null) {
         		List<Message> messages = messagingService.getMessagesOfConversationOnPage(conversation, pageNumber);
         		// messages is empty if navigated to a too high page number
@@ -109,7 +108,9 @@ public class MessageRs {
         			messagingService.updateConversationReadMessageNumber(conversation, member, lastMessage.getMessageNumber());
         				
         		}
-        	}
+        	} else {
+    			result.put("error", true);
+    		}
         } else {
 			result.put("error", true);
 		}
