@@ -106,21 +106,21 @@ app.config(function($routeProvider) {
 	})
 	
 	
+	//errorMessage
+	.when('/error', {
+		templateUrl : 'pages/error.template.html'
+	})
+	.otherwise({
+		redirectTo: '/error'
+	}) 
 	
-	/* .otherwise({
-		redirectTo: '/'
-	}) */
+	
 	;
-	
-	
 });
 
 
 //route location change event
 app.run(function($rootScope, $location, $route) {
-	// $rootScope.$on( "$routeChangeStart", function(event, next, current) {
-		// $rootScope.$emit('updateNavbar');
-	// });
 	$rootScope.$on('reload', function(event, data) {
 		$route.reload();
 	});
@@ -135,7 +135,6 @@ app.run(function($rootScope, $location, $route) {
 	$rootScope.$getLastQuote = function() {
 		return $rootScope.$lastQuote;
 	};
-
 });
 
 
@@ -191,8 +190,8 @@ app.controller('homeController', function($rootScope, $scope, $http) {
 	})
 	.then(function(res){
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		$scope.data = res.data;
 	});
 });
 
@@ -213,10 +212,15 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+		$rootScope.$emit('updateNavbar');
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
+		
 		$scope.data = res.data;
 		categoryPostParam = categoryId;
-		$rootScope.$emit('updateNavbar');
-
+		
 		if ($scope.data.canFollow) {
 			$('#followCategoryButton').prop('disabled', false);
 		} else {
@@ -252,7 +256,14 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
+		$rootScope.$emit('updateNavbar');
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
+		
+		$scope.data = res.data;	
+		topicPostParam = topicId;
 		
 		if ($scope.data.canFollow) {
 			$('#followTopicButton').prop('disabled', false);
@@ -280,9 +291,6 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			post.isLikeDisabled = ! $scope.data.canReply;
 
 		}
-
-		topicPostParam = topicId;
-		$rootScope.$emit('updateNavbar');
 
 		if ($scope.data.isFollowedByMember == true) {
 			$('#followTopicButton').html("Unfollow");
@@ -383,8 +391,8 @@ app.controller('membersController', function($rootScope, $scope, $http, $routePa
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		$scope.data = res.data;
 	});
 });
 
@@ -401,8 +409,8 @@ app.controller('userOverviewController', function($rootScope, $scope, $http, $ro
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		$scope.data = res.data;
 	});
 });
 app.controller('userTopicsController', function($rootScope, $scope, $http, $sce, $routeParams) {
@@ -420,12 +428,12 @@ app.controller('userTopicsController', function($rootScope, $scope, $http, $sce,
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+		$rootScope.$emit('updateNavbar');
 		$scope.data = res.data;
 		for (var i = 0; i < $scope.data.topics.length; i++) {
 			var topic = $scope.data.topics[i];
 			topic.text = convertBBCode(topic.text, $sce);
 		}
-		$rootScope.$emit('updateNavbar');
 	});
 });
 app.controller('userPostsController', function($rootScope, $scope, $http, $sce, $routeParams) {
@@ -443,12 +451,12 @@ app.controller('userPostsController', function($rootScope, $scope, $http, $sce, 
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+		$rootScope.$emit('updateNavbar');
 		$scope.data = res.data;
 		for (var i = 0; i < $scope.data.posts.length; i++) {
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
-		$rootScope.$emit('updateNavbar');
 	});
 });
 app.controller('userLikesController', function($rootScope, $scope, $http, $sce, $routeParams) {
@@ -465,13 +473,13 @@ app.controller('userLikesController', function($rootScope, $scope, $http, $sce, 
 		}
 	})
 	.then(function(res) {
-		debug("Result has arrived for " +  link);
+		debug("Result has arrived for " +  link);	
+		$rootScope.$emit('updateNavbar');
 		$scope.data = res.data;
 		for (var i = 0; i < $scope.data.posts.length; i++) {
 			var post = $scope.data.posts[i];
 			post.text = convertBBCode(post.text, $sce);
 		}
-		$rootScope.$emit('updateNavbar');
 	});
 });
 
@@ -491,8 +499,12 @@ app.controller('conversationsController', function($rootScope, $scope, $http, $s
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
+		$scope.data = res.data;
 	});
 });
 
@@ -513,13 +525,19 @@ app.controller('messagesController', function($rootScope, $scope, $http, $sce, $
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+		$rootScope.$emit('updateNavbar');
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
+		
 		$scope.data = res.data;
 		for (var i = 0; i < $scope.data.messages.length; i++) {
 			var message = $scope.data.messages[i];
 			message.text = convertBBCode(message.text, $sce);
 		}
 		conversationPostParam = conversationNumber;
-		$rootScope.$emit('updateNavbar');
+		
 	});
 });
 
@@ -539,8 +557,12 @@ app.controller('notificationsController', function($rootScope, $scope, $http, $s
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
-		$scope.data = res.data;
 		$rootScope.$emit('updateNavbar');
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
+		$scope.data = res.data;
 		
 		$scope.readNotification = function (id) {
 			var postData = {
@@ -579,8 +601,12 @@ app.controller('settingsController', function($rootScope, $scope, $http) {
 	})
 	.then(function(res) {
 		debug("Result has arrived for " +  link);
+		$rootScope.$emit('updateNavbar');		
+		if (res.data.error) {
+			jumpToAbsolutePath("error");
+			return;
+		}
 		$scope.data = res.data;
-		$rootScope.$emit('updateNavbar');	
 	});
 });
 
