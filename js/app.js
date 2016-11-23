@@ -188,6 +188,7 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 						"Authorization": "Basic " + encoded
 					},
 					success: function(data){
+						console.log(data.message);
 						if (data.success) {
 							console.log("Successfully read notification " + id);
 						} else {
@@ -217,13 +218,13 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 						} else {
 							$("#username").val("");
 							$("#password").val("");
-							alert("Invalid username or password!");
+							alert(data.message);
 						}
 					}
 				});
 			});
 
-			$scope.register = function() {
+			$('#registerSubmit').click(function(){
 				var postData = {
 					username: $('#reg_username').val(),
 					displayName: $('#reg_displayname').val(),
@@ -242,8 +243,8 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 						"Authorization": "Basic " + encoded
 					},
 					success: function(data){
+						alert(data.message);
 						if (data.success) {
-							alert("Successfully registered.");
 							$('#registerModalForm').modal('toggle');
 							$('#reg_username').val("");
 							$('#reg_displayname').val("");
@@ -251,12 +252,10 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 							$('#reg_password').val("");
 							$('#reg_passwordConfirm').val("");
 							$('#reg_birthDate').val("");
-						} else {
-							alert("Registration failed:\n\n" + data.errorMessage);
-						}
+						} 
 					}
 				});
-			}
+			});
 			
 			$scope.logout = function() {
 				encoded = "";$rootScope.$emit('reload');
@@ -350,12 +349,10 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$('#startNewTopicModalForm').modal('toggle');
 						jumpToAbsolutePath("topic/" + data.topic);
-						alert("Topic has been created.");
-					} else {
-						alert("Failed to create topic:\n\n" + data.errorMessage);
 					}
 				}
 			});
@@ -385,12 +382,10 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$("#followCategoryButton").html("Unfollow");
-						alert("You are now following this category.");
-					} else {
-						alert("Failed to follow category:\n\n" + data.errorMessage);
-					}
+					} 
 				}
 			});
 		};
@@ -410,12 +405,10 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$("#followCategoryButton").html("Follow");
-						alert("You have stopped following this category.");
-					} else {
-						alert("Failed to stop following category:\n\n" + data.errorMessage);
-					}
+					} 
 				}
 			});
 		};
@@ -550,13 +543,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$('#newPostModalForm').modal('toggle');
-						alert("Post has been created.");
-
 						$rootScope.$emit('reload', { data: { scrollX : window.scrollX, scrollY : window.scrollY } });
-					} else {
-						alert("Failed to create post:\n\n" + data.errorMessage);
 					}
 				}
 			});
@@ -587,11 +577,9 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$("#followTopicButton").html("Unfollow");
-						alert("You are now following this topic.");
-					} else {
-						alert("Failed to follow topic:\n\n" + data.errorMessage);
 					}
 				}
 			});
@@ -612,12 +600,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$("#followTopicButton").html("Follow");
-						alert("You have stopped following this topic.");
-					} else {
-						alert("Failed to stop following topic:\n\n" + data.errorMessage);
-					}
+					} 
 				}
 			});
 		};
@@ -693,12 +679,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$rootScope.$emit('reload', { data: { scrollX : window.scrollX, scrollY : window.scrollY } });
-						alert("You have liked this topic.");
-					} else {
-						alert("Failed to like post:\n\n" + data.errorMessage);
-					}
+					} 
 				}
 			});
 		};
@@ -719,12 +703,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 					"Authorization": "Basic " + encoded
 				},
 				success: function(data){
+					alert(data.message);
 					if (data.success) {
 						$rootScope.$emit('reload');
-						alert("You do no longer like this post.");
-					} else {
-						alert("Failed to stop the like of post:\n\n" + data.errorMessage);
-					}
+					} 
 				}
 			});
 		}
@@ -1108,9 +1090,9 @@ app.controller('settingsController', function($rootScope, $scope, $http) {
 				success: function(data){
 					if (data.success) {
 						$rootScope.$emit('reload');
-						alert("Image uploaded.");
+						alert(data.message);
 					} else {
-						alert(data.errorMessage);
+						alert(data.message);
 					}
 				}
 			});
