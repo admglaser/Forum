@@ -104,6 +104,10 @@ public class TopicRs {
 			}
 			// Renew seen of topic of a member
 			forumReadService.renewTopicSeenByMember(member, topic);
+
+			// Increase view count of the topic
+			topic.setViewCount( topic.getViewCount() + 1 );
+			topicBean.merge(topic);
 		} else {
 			result.put("error", true);
 		}
