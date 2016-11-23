@@ -9,7 +9,7 @@
 				<th><h3>{{data.title}}</h3></th>
 				<th class="cell-stat hidden-xs"></th>
 				<th class="cell-stat-2x">Last Post
-					<button id="followCategoryButton" type="button" class="btn btn-xs btn-primary pull-right" onclick="toggleFollowingCategory()">Follow</button>
+					<button id="followCategoryButton" type="button" class="btn btn-xs btn-primary pull-right" ng-click="toggleFollowingCategory()">Follow</button>
 				</th>
 			</tr>
 		</thead>
@@ -94,137 +94,10 @@
 							<div id="previewHtml" class="panel-body"></div>
 						</div>
 					</div>
-					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button type="submit" class="btn btn-primary pull-right" onclick="submitTopic()">Post</button>
+					<button id="previewButton" class="btn btn-primary" ng-click="togglePreview()">Preview</button>
+					<button type="submit" class="btn btn-primary pull-right" ng-click="submitTopic()">Post</button>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-	$(document).ready(function() {
-		$("#previewDiv").hide();
-	});
-
-	function submitTopic() {
-		var postText = $('#bbcodeEditor').val();
-		postText = postText.replace(/\n/g, "[br][/br]");
-		var title = $('#title').val();
-
-		var postData = {
-			"category" : categoryPostParam,
-			"title" : title,
-			"text" : postText
-		};
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "category/new",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$('#startNewTopicModalForm').modal('toggle');
-
-					jumpToAbsolutePath("topic/" + data.topic);
-					alert("Topic has been created.");
-				} else {
-					alert("Failed to create topic:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-
-	function toggleFollowingCategory() {
-		var btnText = $("#followCategoryButton").html();
-		if (btnText == "Follow") {
-			followCategory();
-		} else {
-			unfollowCategory();
-		}
-	}
-
-	function followCategory() {
-		var postData = {
-			category: categoryPostParam,
-			isFollowRequest: true
-		};
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "category/follow",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$("#followCategoryButton").html("Unfollow");
-					alert("You are now following this category.");
-				} else {
-					alert("Failed to follow category:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-
-	function unfollowCategory() {
-		var postData = {
-			category: categoryPostParam,
-			isFollowRequest: false
-		};
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "category/follow",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$("#followCategoryButton").html("Follow");
-					alert("You have stopped following this category.");
-				} else {
-					alert("Failed to stop following category:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-	
-	function togglePreview() {
-		var text = $("#previewButton").html();
-		if (text == "Preview") {
-			preview();
-		} else {
-			edit();
-		}
-	}
-
-	function preview() {
-		$("#previewButton").html("Edit");
-		$("#bbcodeEditor").hide();
-		$("#previewDiv").show();
-
-		var text = $("#bbcodeEditor").val();
-		text = text.replace(/\n/g, "[br][/br]");
-		var result = XBBCODE.process({
-			text : text,
-			removeMisalignedTags : false,
-			addInLineBreaks : false
-		});
-		$("#previewHtml").html(result.html);
-	}
-
-	function edit() {
-		$("#previewButton").html("Preview");
-		$("#previewDiv").hide();
-		$("#bbcodeEditor").show();
-	}
-</script>

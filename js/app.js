@@ -108,10 +108,12 @@ app.config(function($routeProvider) {
 	
 	//errorMessage
 	.when('/error', {
-		templateUrl : 'pages/error.template.html'
+		templateUrl : 'pages/error.template.html',
+		controller: 'errorController'
 	})
 	.otherwise({
-		redirectTo: '/error'
+		redirectTo: '/error',
+		controller: 'errorController'
 	}) 
 	
 	
@@ -152,28 +154,108 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 			debug("Result has arrived for " +  link);
 			$scope.data = res.data;
 			
-			$scope.readNotification = function (id) {
-			var postData = {
-				"id" : id
-			};
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				contentType: 'application/json',
-				url: restLink + "notifications/read",
-				data: JSON.stringify( postData ),
-				headers: {
-					"Authorization": "Basic " + encoded
-				},
-				success: function(data){
-					if (data.success) {
-						console.log("Successfully read notification " + id);
-					} else {
-						console.log("Failed to read notification " + id + ". " + data.errorMessage);
-					}
-				}
+			
+			$(document).ready(function(){
+				var date_input=$('input[name="reg_birthDate"]');
+				var options={
+					format: "yyyy-mm-dd",
+					weekStart: 1,
+					todayBtn: true,
+					clearBtn: true,
+					autoclose: true,
+					todayHighlight: true
+				};
+				date_input.datepicker(options);
 			});
-		};	
+			
+			$scope.readNotification = function (id) {
+				var postData = {
+					"id" : id
+				};
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					contentType: 'application/json',
+					url: restLink + "notifications/read",
+					data: JSON.stringify( postData ),
+					headers: {
+						"Authorization": "Basic " + encoded
+					},
+					success: function(data){
+						if (data.success) {
+							console.log("Successfully read notification " + id);
+						} else {
+							console.log("Failed to read notification " + id + ". " + data.errorMessage);
+						}
+					}
+				});
+			};	
+		
+			$('#loginSubmit').click(function(){ 
+				var username = $("#username").val();
+				var password = $("#password").val();  
+				var enc = btoa(username + ":" + password);
+				$.ajax({ 
+					type: "GET",
+					dataType: "json",
+					url: restLink + "login",
+					headers: {
+						"Authorization": "Basic " + enc
+					},
+					success: function(data){        
+						if (data.success) {
+							encoded = enc;
+							$('#loginModalForm').modal('toggle');					
+							$rootScope.$emit('reload');
+							$('#password').val("");
+						} else {
+							$("#username").val("");
+							$("#password").val("");
+							alert("Invalid username or password!");
+						}
+					}
+				});
+			});
+
+			$scope.register = function() {
+				var postData = {
+					username: $('#reg_username').val(),
+					displayName: $('#reg_displayname').val(),
+					email: $('#reg_email').val(),
+					password: $('#reg_password').val(),
+					confirmPassword: $('#reg_passwordConfirm').val(),
+					birthDate: $('#reg_birthDate').val()
+				};
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					contentType: 'application/json',
+					url: restLink + "register",
+					data: JSON.stringify( postData ),
+					headers: {
+						"Authorization": "Basic " + encoded
+					},
+					success: function(data){
+						if (data.success) {
+							alert("Successfully registered.");
+							$('#registerModalForm').modal('toggle');
+							$('#reg_username').val("");
+							$('#reg_displayname').val("");
+							$('#reg_email').val("");
+							$('#reg_password').val("");
+							$('#reg_passwordConfirm').val("");
+							$('#reg_birthDate').val("");
+						} else {
+							alert("Registration failed:\n\n" + data.errorMessage);
+						}
+					}
+				});
+			}
+			
+			$scope.logout = function() {
+				encoded = "";$rootScope.$emit('reload');
+			}
+			
 		});
 	});
 });
@@ -235,6 +317,131 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 
 		if ($scope.data.isFollowedByMember == true) {
 			$("#followCategoryButton").html("Unfollow");
+		}
+		
+		
+		$(document).ready(function() {
+			$("#previewDiv").hide();
+		});
+
+		$scope.submitTopic = function() {
+			var postText = $('#bbcodeEditor').val();
+			postText = postText.replace(/\n/g, "[br][/br]");
+			var title = $('#title').val();
+
+			var postData = {
+				"category" : categoryPostParam,
+				"title" : title,
+				"text" : postText
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "category/new",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$('#startNewTopicModalForm').modal('toggle');
+						jumpToAbsolutePath("topic/" + data.topic);
+						alert("Topic has been created.");
+					} else {
+						alert("Failed to create topic:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		}
+
+		$scope.toggleFollowingCategory = function() {
+			var btnText = $("#followCategoryButton").html();
+			if (btnText == "Follow") {
+				$scope.followCategory();
+			} else {
+				$scope.unfollowCategory();
+			}
+		}
+
+		$scope.followCategory = function() {
+			var postData = {
+				category: categoryPostParam,
+				isFollowRequest: true
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "category/follow",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$("#followCategoryButton").html("Unfollow");
+						alert("You are now following this category.");
+					} else {
+						alert("Failed to follow category:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		}
+
+		$scope.unfollowCategory = function() {
+			var postData = {
+				category: categoryPostParam,
+				isFollowRequest: false
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "category/follow",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$("#followCategoryButton").html("Follow");
+						alert("You have stopped following this category.");
+					} else {
+						alert("Failed to stop following category:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		}
+	
+		$scope.togglePreview = function() {
+			var text = $("#previewButton").html();
+			if (text == "Preview") {
+				$scope.preview();
+			} else {
+				$scope.edit();
+			}
+		}
+
+		$scope.preview = function() {
+			$("#previewButton").html("Edit");
+			$("#bbcodeEditor").hide();
+			$("#previewDiv").show();
+
+			var text = $("#bbcodeEditor").val();
+			text = text.replace(/\n/g, "[br][/br]");
+			var result = XBBCODE.process({
+				text : text,
+				removeMisalignedTags : false,
+				addInLineBreaks : false
+			});
+			$("#previewHtml").html(result.html);
+		}
+
+		$scope.edit = function() {
+			$("#previewButton").html("Preview");
+			$("#previewDiv").hide();
+			$("#bbcodeEditor").show();
 		}
 	});
 });
@@ -512,6 +719,74 @@ app.controller('conversationsController', function($rootScope, $scope, $http, $s
 			return;
 		}
 		$scope.data = res.data;
+		
+		$(document).ready(function() {
+			$("#previewDiv").hide();
+		});
+	
+		$scope.togglePreview = function() {
+			var text = $("#previewButton").html();
+			if (text == "Preview") {
+				$scope.preview();
+			} else {
+				$scope.edit();
+			}
+		}
+
+		$scope.preview = function() {
+			$("#previewButton").html("Edit");
+			$("#bbcodeEditor").hide();
+			$("#previewDiv").show();
+
+			var text = $("#bbcodeEditor").val();
+			text = text.replace(/\n/g, "[br][/br]");
+			var result = XBBCODE.process({
+				text : text,
+				removeMisalignedTags : false,
+				addInLineBreaks : false
+			});
+			$("#previewHtml").html(result.html);
+		}
+
+		$scope.edit = function() {
+			$("#previewButton").html("Preview");
+			$("#previewDiv").hide();
+			$("#bbcodeEditor").show();
+		}
+		
+		$('#conversationSubmit').click(function(){ 
+			var subject = $("#subject").val();
+			var recipients = $("#recipients").val();
+			var text = $("#bbcodeEditor").val();
+			
+			var postData = {
+				"subject": subject,
+				"recipients": recipients,
+				"text": text,
+			};
+			$.ajax({ 
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "conversations/new",
+				data: JSON.stringify(postData),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){        
+					if (data.success) {
+						alert("Message sent.")
+						$('#newMessageModalForm').modal('toggle');					
+						$rootScope.$emit('reload');
+						$("#subject").val("");
+						$("#recipients").val("");
+						$("#bbcodeEditor").val("");
+					} else {
+						alert(data.message);
+					}
+				}			
+			});
+		});
 	});
 });
 
@@ -545,6 +820,67 @@ app.controller('messagesController', function($rootScope, $scope, $http, $sce, $
 		}
 		conversationPostParam = conversationNumber;
 		
+		$(document).ready(function() {
+			$("#previewDiv").hide();
+		});
+		
+		$scope.togglePreview = function() {
+			var text = $("#previewButton").html();
+			if (text == "Preview") {
+				$scope.preview();
+			} else {
+				$scope.edit();
+			}
+		}
+		
+		$scope.preview = function() {
+			$("#previewButton").html("Edit");
+			$("#bbcodeEditor").hide();
+			$("#previewDiv").show();
+		
+			var text = $("#bbcodeEditor").val();
+			text = text.replace(/\n/g, "[br][/br]");
+			var result = XBBCODE.process({
+				text : text,
+				removeMisalignedTags : false,
+				addInLineBreaks : false
+			});
+			$("#previewHtml").html(result.html);
+		}
+		
+		$scope.edit = function() {
+			$("#previewButton").html("Preview");
+			$("#previewDiv").hide();
+			$("#bbcodeEditor").show();
+		}
+		
+		$('#messageSubmit').click(function(){ 
+			var text = $("#bbcodeEditor").val();
+			var postData = {
+				"text": text,
+				"conversationNumber": conversationPostParam
+			};
+			$.ajax({ 
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "message/new",
+				data: JSON.stringify(postData),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){        
+					if (data.success) {
+						alert("Message sent.")
+						$('#newReplyModalForm').modal('toggle');					
+						$rootScope.$emit('reload');
+						$("#bbcodeEditor").val("");
+					} else {
+						alert("Failed to send message!");
+					}
+				}			
+			});
+		});
 	});
 });
 
@@ -614,9 +950,35 @@ app.controller('settingsController', function($rootScope, $scope, $http) {
 			return;
 		}
 		$scope.data = res.data;
+		
+		$('#uploadSubmit').click(function(){ 	
+			var file = $("#fileInput").prop('files')[0];
+			console.log(file);
+			$.ajax({
+				type: "POST",
+				contentType: 'multipart/form-data',
+				url: restLink + "settings/photo",
+				data: file,
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				processData: false,
+				success: function(data){
+					if (data.success) {
+						$rootScope.$emit('reload');
+						alert("Image uploaded.");
+					} else {
+						alert(data.errorMessage);
+					}
+				}
+			});
+		});
 	});
 });
 
+app.controller('errorController', function($rootScope) {
+	$rootScope.$emit('updateNavbar');		
+});
 
 function createAbsolutePath(absolutePath) {
 	var currentURL = window.location.href;
