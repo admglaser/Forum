@@ -290,6 +290,13 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			post.isQuoteDisabled = ! $scope.data.canReply;
 			post.isLikeDisabled = ! $scope.data.canReply;
 
+			for (var j = 0; j < post.styles.length; j++) {
+				var style = post.styles[j];
+				if (post.style == null) {
+					post.style = "";
+				}
+				post.style = post.style + style.style + ";";
+			}
 		}
 
 		if ($scope.data.isFollowedByMember == true) {
