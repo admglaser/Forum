@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "member_group", schema = "", catalog = "forum")
+@Table(name = "member_group")
 public class MemberGroup {
 	
 	@Id
@@ -63,4 +63,5 @@ public class MemberGroup {
     public void setStyleOfMemberGroups(List<StyleOfMemberGroup> styleOfMemberGroupsById) {
         this.styleOfMemberGroups = styleOfMemberGroupsById;
     }
+    
 }

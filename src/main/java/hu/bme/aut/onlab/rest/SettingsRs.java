@@ -50,9 +50,10 @@ public class SettingsRs {
 			member.setPictureId(pictureId);
 			memberBean.merge(member);
 			result.put("success", true);
+			result.put("message", "Image uploaded.");
 		} catch (Exception e) {
 			result.put("success", false);
-			result.put("errorMessage", e.getMessage());
+			result.put("message", e.getMessage());
 		}
 		return result.toString();
 	}

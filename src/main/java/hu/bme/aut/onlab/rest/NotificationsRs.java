@@ -79,20 +79,17 @@ public class NotificationsRs {
 	public String readNotification(@Context Member member, String data) {
 		JSONObject input = new JSONObject(data);
 		JSONObject result = new JSONObject();
-		String errorMessage;
+		int notificationId = input.getInt("id");
 
 		if (member != null) {
-			int notificationId = input.getInt("id");
 			Notification notification = notificationBean.findEntityById(notificationId);
 			notification.setSeen(true);
 			notificationBean.merge(notification);
-			result.put("success", true);
+			result.put("message", String.format("Sucessfully read notification %d", notificationId));
 			return result.toString();
 		} 
 
-		errorMessage = "Not logged in.";
-		result.put("success", false);
-		result.put("errorMessage", errorMessage);
+		result.put("message", String.format("Failed to read notification %d", notificationId));
 		return result.toString();
 	}
 

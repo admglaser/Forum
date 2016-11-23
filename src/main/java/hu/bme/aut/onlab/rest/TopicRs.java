@@ -132,7 +132,7 @@ public class TopicRs {
 	public String addPost(@Context Member member, String data) {
 		JSONObject input = new JSONObject(data);
 		JSONObject result = new JSONObject();
-		String errorMessage;
+		String message;
 
 		if (member != null) {
 			int topicId = Integer.parseInt((String) input.get("topic"));
@@ -181,19 +181,20 @@ public class TopicRs {
 					forumReadService.renewTopicSeenByMember(member, topic);
 
 					result.put("success", true);
+					result.put("message", "Reply created.");
 					return result.toString();
 				} else {
-					errorMessage = "You have no permission to create new reply.";
+					message = "You have no permission to create new reply.";
 				}
 			} else {
-				errorMessage = "Unknown topic.";
+				message = "Unknown topic.";
 			}
 		} else {
-			errorMessage = "Unidentified member.\nPlease log in.";
+			message = "Unidentified member.";
 		}
 
 		result.put("success", false);
-		result.put("errorMessage", errorMessage);
+		result.put("message", message);
 		return result.toString();
 	}
 
@@ -204,14 +205,14 @@ public class TopicRs {
 	public String followTopic(@Context Member member, String data) {
 		JSONObject input = new JSONObject(data);
 		JSONObject result = new JSONObject();
-		String errorMessage;
+		String message;
 		int topicId;
 
 		try {
 			topicId = Integer.parseInt((String) input.get("topic"));
 		} catch (NumberFormatException e) {
 			result.put("success", false);
-			result.put("errorMessage", "Invalid number format for topic ID.");
+			result.put("message", "Invalid number format for topic ID.");
 			return result.toString();
 		}
 
@@ -224,7 +225,7 @@ public class TopicRs {
 					TopicSubscription existingTopicSubscription = forumReadService.getTopicSubscription(member, topic);
 
 					if (isFollowRequest) {
-						// Request to follow the topic
+						message = "Topic followed.";
 						if (existingTopicSubscription == null) {
 							TopicSubscription topicSubscription = new TopicSubscription();
 							topicSubscription.setMember(member);
@@ -233,26 +234,27 @@ public class TopicRs {
 						}
 
 					} else {
-						// Request to unfollow the topic
+						message = "Topic unfollowed.";
 						if (existingTopicSubscription != null) {
 							topicSubscriptionBean.remove(existingTopicSubscription);
 						}
 					}
 
 					result.put("success", true);
+					result.put("message", message);
 					return result.toString();
 				} else {
-					errorMessage = "Unknown error has occurred.";
+					message = "Unknown error has occurred.";
 				}
 			} else {
-				errorMessage = "Unknown topic.";
+				message = "Unknown topic.";
 			}
 		} else {
-			errorMessage = "Unidentified member.\nPlease log in.";
+			message = "Unidentified member.\nPlease log in.";
 		}
 
 		result.put("success", false);
-		result.put("errorMessage", errorMessage);
+		result.put("message", message);
 		return result.toString();
 	}
 
@@ -263,7 +265,7 @@ public class TopicRs {
 	public String likePost(@Context Member member, String data) {
 		JSONObject input = new JSONObject(data);
 		JSONObject result = new JSONObject();
-		String errorMessage;
+		String message;
 		int topicId;
 		int postNumber;
 
@@ -271,7 +273,7 @@ public class TopicRs {
 			topicId = Integer.parseInt(input.getString("topic"));
 		} catch (NumberFormatException e) {
 			result.put("success", false);
-			result.put("errorMessage", "Invalid number format for topic ID.");
+			result.put("message", "Invalid number format for topic ID.");
 			return result.toString();
 		}
 
@@ -279,7 +281,7 @@ public class TopicRs {
 			postNumber = input.getInt("postNumber");
 		} catch (NumberFormatException e) {
 			result.put("success", false);
-			result.put("errorMessage", "Invalid number format for post number.");
+			result.put("message", "Invalid number format for post number.");
 			return result.toString();
 		}
 
@@ -294,7 +296,7 @@ public class TopicRs {
 						MemberLike existingMemberLike = forumReadService.getMemberLike(member, post);
 
 						if (isLikeRequest) {
-							// Request to like the post
+							message = "Post liked.";
 							if (existingMemberLike == null) {
 								MemberLike memberLike = new MemberLike();
 								memberLike.setMember(member);
@@ -308,29 +310,30 @@ public class TopicRs {
 							}
 
 						} else {
-							// Request to unlike the post
+							message = "Post unliked.";
 							if (existingMemberLike != null) {
 								memberLikeBean.remove(existingMemberLike);
 							}
 						}
 
 						result.put("success", true);
+						result.put("message", message);
 						return result.toString();
 					} else {
-						errorMessage = "Unknown error has occurred.";
+						message = "Unknown error has occurred.";
 					}
 				} else {
-					errorMessage = "Unknown post.";
+					message = "Unknown post.";
 				}
 			} else {
-				errorMessage = "Unknown topic.";
+				message = "Unknown topic.";
 			}
 		} else {
-			errorMessage = "Unidentified member.\nPlease log in.";
+			message = "Unidentified member.\nPlease log in.";
 		}
 
 		result.put("success", false);
-		result.put("errorMessage", errorMessage);
+		result.put("message", message);
 		return result.toString();
 	}
 

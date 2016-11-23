@@ -18,6 +18,9 @@ public class LoginRs {
 	  public String getHome(@Context Member member) {
 		  JSONObject result = new JSONObject();
 		  result.put("success", member != null);
+		  if (member == null) {
+			  result.put("message", "Invalid username or password!");
+		  }
 		  return result.toString();
 	  }
 	  

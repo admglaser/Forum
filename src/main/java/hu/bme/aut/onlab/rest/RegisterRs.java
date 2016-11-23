@@ -30,8 +30,8 @@ public class RegisterRs {
     public String register(String data) {
         JSONObject input = new JSONObject(data);
         JSONObject result = new JSONObject();
-        String errorMessage;
-
+        String message;
+        	
         String username = input.getString("username");
         String displayName = input.getString("displayName");
         String email = input.getString("email");
@@ -40,11 +40,11 @@ public class RegisterRs {
         String birthDateString = input.getString("birthDate");
 
         // Validate all field
-        if ((errorMessage = registrationService.validateUsername(username)) == null) {
-            if ((errorMessage = registrationService.validateDisplayName(displayName)) == null) {
-                if ((errorMessage = registrationService.validateEmail(email)) == null) {
-                    if ((errorMessage = registrationService.validatePassword(password)) == null) {
-                        if ((errorMessage = registrationService.validateConfirmPassword(confirmPassword, password)) == null) {
+        if ((message = registrationService.validateUsername(username)) == null) {
+            if ((message = registrationService.validateDisplayName(displayName)) == null) {
+                if ((message = registrationService.validateEmail(email)) == null) {
+                    if ((message = registrationService.validatePassword(password)) == null) {
+                        if ((message = registrationService.validateConfirmPassword(confirmPassword, password)) == null) {
                             Member member = new Member();
                             member.setUserName(username);
                             member.setDisplayName(displayName);
@@ -64,6 +64,7 @@ public class RegisterRs {
                             memberBean.add(member);
 
                             result.put("success", true);
+                            result.put("message", "Registraiong successful.");
                             return result.toString();
                         }
                     }
@@ -72,7 +73,7 @@ public class RegisterRs {
         }
 
         result.put("success", false);
-        result.put("errorMessage", errorMessage);
+        result.put("message", message);
         return result.toString();
     }
 }

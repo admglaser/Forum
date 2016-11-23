@@ -117,7 +117,7 @@ public class SubcategoryRs {
     public String addTopic(@Context Member member, String data) {
         JSONObject input = new JSONObject(data);
         JSONObject result = new JSONObject();
-        String errorMessage;
+        String message;
 
         if (member != null) {
             int subcategoryId = Integer.parseInt((String) input.get("category"));
@@ -165,20 +165,21 @@ public class SubcategoryRs {
                     forumReadService.renewTopicSeenByMember(member, topic);
 
                     result.put("success", true);
+                    result.put("message", "Topic created.");
                     result.put("topic", topic.getId());
                     return result.toString();
                 } else {
-                    errorMessage = "You have no permission to start a new topic.";
+                    message = "You have no permission to start a new topic.";
                 }
             } else {
-                errorMessage = "Unknown category.";
+                message = "Unknown category.";
             }
         } else {
-            errorMessage = "Unidentified member.\nPlease log in.";
+            message = "Unidentified member.";
         }
 
         result.put("success", false);
-        result.put("errorMessage", errorMessage);
+        result.put("message", message);
         return result.toString();
     }
 
@@ -189,7 +190,7 @@ public class SubcategoryRs {
     public String followTopic(@Context Member member, String data) {
         JSONObject input = new JSONObject(data);
         JSONObject result = new JSONObject();
-        String errorMessage;
+        String message;
 
         if (member != null) {
             int subcategoryId = Integer.parseInt((String) input.get("category"));
@@ -201,7 +202,7 @@ public class SubcategoryRs {
                     SubcategorySubscription existingSubcategorySubscription = forumReadService.getSubcategorySubscription(member, subcategory);
 
                     if (isFollowRequest) {
-                        // Request to follow the subcategory
+                    	message = "Subcategory followed";
                         if (existingSubcategorySubscription == null) {
                             SubcategorySubscription subcategorySubscription = new SubcategorySubscription();
                             subcategorySubscription.setMember(member);
@@ -210,26 +211,27 @@ public class SubcategoryRs {
                         }
 
                     } else {
-                        // Request to unfollow the subcategory
+                    	message = "Subcategory unfollowed.";
                         if (existingSubcategorySubscription != null) {
                             subcategorySubscriptionBean.remove(existingSubcategorySubscription);
                         }
                     }
 
                     result.put("success", true);
+                    result.put("message", message);
                     return result.toString();
                 } else {
-                    errorMessage = "Unknown error has occurred.";
+                    message = "Unknown error has occurred.";
                 }
             } else {
-                errorMessage = "Unknown category.";
+                message = "Unknown category.";
             }
         } else {
-            errorMessage = "Unidentified member.\nPlease log in.";
+            message = "Unidentified member.";
         }
 
         result.put("success", false);
-        result.put("errorMessage", errorMessage);
+        result.put("mesage", message);
         return result.toString();
     }
 }

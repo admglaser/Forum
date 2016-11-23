@@ -26,128 +26,80 @@ public class RegistrationService {
 
     public String validateUsername(String username) {
         if (username == null || username.isEmpty()) {
-            // No username is given
-            return "Please give a username.";
+            return "User name is missing.";
         }
 
-        /* A username may contain only the following characters:
-             - Alphabetic characters
-             - Numeric characters
-             - _
-          */
-        // \A: beginning of input
-        // \Z: end of input
-        Pattern pattern = Pattern.compile("\\A[\\w]+\\Z");
+        Pattern pattern = Pattern.compile("[\\w]+");
         if (!pattern.matcher(username).matches()) {
-            // Illegal format of username
-            return "Illegal format of username.\n" +
-                    "A username may contain only the following characters (and must contain at least one):\n" +
-                    "  - Alphabetic characters\n" +
+            return "User name may contain the following characters only:\n" +
+            		"  - Alphabetic characters\n" +
                     "  - Numeric characters\n" +
                     "  - _";
         }
 
         if (isUsernameExists(username)) {
-            // Username already in use
-            return "Username already in use.\nPlease use another one.";
+            return "Username already in use.";
         }
-
         return null;
     }
 
     public String validateDisplayName(String displayName) {
         if (displayName == null || displayName.isEmpty()) {
-            // No display name is given
-            return "Please give a display name.";
+            return "Display name is missing.";
         }
 
-        /* A display name may contain only the following characters:
-             - Alphabetic characters
-             - Numeric characters
-             - _, ., \, /, [space]
-          */
-        // \A: beginning of input
-        // \Z: end of input
-        Pattern pattern = Pattern.compile("\\A[\\w /\\\\.]+\\Z");
+        Pattern pattern = Pattern.compile("[\\w /\\\\.]+");
         if (!pattern.matcher(displayName).matches()) {
-            // Illegal format of display name
-            return "Illegal format of display name.\n" +
-                    "A display name may contain only the following characters (and must contain at least one):\n" +
+            return "Display name may contain the following characters only:\n" +
                     "  - Alphabetic characters\n" +
                     "  - Numeric characters\n" +
                     "  - _, ., \\, /, [space]";
         }
 
         if (isDisplayNameExists(displayName)) {
-            // Display name already in use
-            return "Display name already in use.\nPlease use another one.";
+            return "Display name already in use.";
         }
-
         return null;
     }
 
     public String validateEmail(String email) {
         if (email == null || email.isEmpty()) {
-            // No e-mail address is given
-            return "Please give an e-mail address.";
+            return "E-mail is missing.";
         }
 
-        /* A e-mail address may contain only the following characters:
-             - Alphabetic characters
-             - Numeric characters
-             - _, @, ., %, +, -
-          */
-        // \A: beginning of input
-        // \Z: end of input
-        Pattern pattern = Pattern.compile("\\A[\\w_.%+-]+@([\\w-]+.)+[\\w]{2,6}\\Z");
+        Pattern pattern = Pattern.compile("[\\w_.%+-]+@([\\w-]+.)+[\\w]{2,6}");
         if (!pattern.matcher(email).matches()) {
-            // Illegal format of e-mail address
-            return "Illegal format of e-mail address.\n" +
-                    "A display name may contain only the following characters (and must contain at least one):\n" +
+            return "E-mail address may contain the following characters only:\n" +
                     "  - Alphabetic characters\n" +
                     "  - Numeric characters\n" +
                     "  - _, @, ., %, +, -";
         }
 
         if (isEmailExists(email)) {
-            // E-mail address already in use
-            return "E-mail address already in use.\nPlease use another one.";
+            return "E-mail is already in use.";
         }
-
         return null;
     }
 
     public String validatePassword(String password) {
         if (password == null || password.isEmpty()) {
-            // No password is given
-            return "Please give a password.";
+            return "Password is missing.";
         }
 
-        /* A password must be at least 5 characters long and may contain only the following characters:
-             - Alphabetic characters
-             - Numeric characters
-             - _, @, ., #, $, %, ^, &, +, -, =, !
-          */
-        // \A: beginning of input
-        // \Z: end of input
-        Pattern pattern = Pattern.compile("\\A[\\w.@#$%^&+-=!&&[^\\s]]{5,}\\Z");
+        Pattern pattern = Pattern.compile("[\\w.@#$%^&+-=!&&[^\\s]]{5,}");
         if (!pattern.matcher(password).matches()) {
-            // Illegal format of password
-            return "Illegal format of password.\n" +
-                    "A password must be at least 5 characters long and may contain only the following characters (and must contain at least one):\n" +
+            return "A password must be at least 5 characters long and may contain only the following characters (and must contain at least one):\n" +
                     "  - Alphabetic characters\n" +
                     "  - Numeric characters\n" +
                     "  - _, @, ., #, $, %, ^, &, +, -, =, !";
         }
-
         return null;
     }
 
     public String validateConfirmPassword(String confirmPassword, String password) {
         if (! password.equals(confirmPassword)) {
-            return "The password and the confirmation password are different.\nPlease make them to be the same.";
+            return "Passwords do not match.";
         }
-
         return null;
     }
 
@@ -210,4 +162,5 @@ public class RegistrationService {
             return null;
         }
     }
+    
 }

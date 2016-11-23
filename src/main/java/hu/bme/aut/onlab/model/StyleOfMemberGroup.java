@@ -3,7 +3,7 @@ package hu.bme.aut.onlab.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "style_of_member_group", schema = "", catalog = "forum")
+@Table(name = "style_of_member_group")
 public class StyleOfMemberGroup {
     private int id;
     private String style;
