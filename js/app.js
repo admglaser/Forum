@@ -123,6 +123,12 @@ app.config(function($routeProvider) {
 app.run(function($rootScope, $location, $route) {
 	$rootScope.$on('reload', function(event, data) {
 		$route.reload();
+		/*
+		if (data != null) {
+			window.scrollX = data.data.scrollX;
+			window.scrollY = data.data.scrollY;
+		}
+		*/
 	});
 
 	$rootScope.$setLastQuote = function(post) {
@@ -261,6 +267,10 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			jumpToAbsolutePath("error");
 			return;
 		}
+
+		$(document).ready(function() {
+			$("#previewDiv").hide();
+		});
 		
 		$scope.data = res.data;	
 		topicPostParam = topicId;
@@ -302,6 +312,138 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 		if ($scope.data.isFollowedByMember == true) {
 			$('#followTopicButton').html("Unfollow");
 		}
+
+		$scope.submitPost = function () {
+			var postText = $('#bbcodeEditor').val();
+			var lastQuote = angular.element(document.body).scope().$root.$getLastQuote();
+			// Delete the quoted text from the beginning of the post.
+			//   Not supported that the user deletes from the quote.
+			if (lastQuote != null && lastQuote.text != null) {
+				postText = postText.slice(lastQuote.text.length);
+			}
+			postText = postText.replace(/\n/g, "[br][/br]");
+
+			var postData = {
+				"topic" : topicPostParam,
+				"text" : postText
+			};
+
+			if (lastQuote != null) {
+				postData.quote = lastQuote.text;
+				postData.quotePostNumber = lastQuote.postNumber;
+			}
+
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "topic/new",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$('#newPostModalForm').modal('toggle');
+						alert("Post has been created.");
+
+						$rootScope.$emit('reload', { data: { scrollX : window.scrollX, scrollY : window.scrollY } });
+					} else {
+						alert("Failed to create post:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		};
+
+
+		$scope.toggleFollowingTopic = function () {
+			var btnText = $("#followTopicButton").html();
+			if (btnText == "Follow") {
+				$scope.followTopic();
+			} else {
+				$scope.unfollowTopic();
+			}
+		};
+
+		$scope.followTopic = function () {
+			var postData = {
+				topic: topicPostParam,
+				isFollowRequest: true
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "topic/follow",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$("#followTopicButton").html("Unfollow");
+						alert("You are now following this topic.");
+					} else {
+						alert("Failed to follow topic:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		};
+
+		$scope.unfollowTopic = function() {
+			var postData = {
+				topic: topicPostParam,
+				isFollowRequest: false
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				contentType: 'application/json',
+				url: restLink + "topic/follow",
+				data: JSON.stringify( postData ),
+				headers: {
+					"Authorization": "Basic " + encoded
+				},
+				success: function(data){
+					if (data.success) {
+						$("#followTopicButton").html("Follow");
+						alert("You have stopped following this topic.");
+					} else {
+						alert("Failed to stop following topic:\n\n" + data.errorMessage);
+					}
+				}
+			});
+		};
+
+		$scope.togglePreview = function() {
+			var text = $("#previewButton").html();
+			if (text == "Preview") {
+				$scope.preview();
+			} else {
+				$scope.edit();
+			}
+		};
+
+		$scope.preview = function() {
+			$("#previewButton").html("Edit");
+			$("#bbcodeEditor").hide();
+			$("#previewDiv").show();
+
+			var text = $("#bbcodeEditor").val();
+			text = text.replace(/\n/g, "[br][/br]");
+			var result = XBBCODE.process({
+				text : text,
+				removeMisalignedTags : false,
+				addInLineBreaks : false
+			});
+			$("#previewHtml").html(result.html);
+		};
+
+		$scope.edit = function() {
+			$("#previewButton").html("Preview");
+			$("#previewDiv").hide();
+			$("#bbcodeEditor").show();
+		};
 
 		$scope.openQuotePanel = function (username, userLink, postNumber, postLink, text) {
 			var linkToUser = createBBCodeLink(userLink, username);
@@ -345,7 +487,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 				},
 				success: function(data){
 					if (data.success) {
-						$rootScope.$emit('reload');
+						$rootScope.$emit('reload', { data: { scrollX : window.scrollX, scrollY : window.scrollY } });
 						alert("You have liked this topic.");
 					} else {
 						alert("Failed to like post:\n\n" + data.errorMessage);

@@ -8,7 +8,7 @@
 		<div class="pull-right">
 
 			<h3>
-			<button id="followTopicButton" type="button" class="btn btn-primary" onclick="toggleFollowingTopic()">Follow</button></h3>
+			<button id="followTopicButton" type="button" class="btn btn-primary" ng-click="toggleFollowingTopic()">Follow</button></h3>
 		</div>
 	</div>
 
@@ -63,7 +63,7 @@
 		<div id="test" style="margin-top: 25px;">
 			<!-- new reply button -->
 			<div class="btn-group pull-right">
-				<button id="newReplyButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm" ng-click="setLastQuote(null);" onclick="edit()">
+				<button id="newReplyButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPostModalForm" ng-click="setLastQuote(null);" ng-click="edit()">
 					New Reply
 				</button>
 			</div>
@@ -98,150 +98,10 @@
 							<div id="previewHtml" class="panel-body"></div>
 						</div>
 					</div>
-					<button id="previewButton" class="btn btn-primary" onclick="togglePreview()">Preview</button>
-					<button id="submitPostButton" type="submit" class="btn btn-primary pull-right" onclick="submitPost()">Post</button>
+					<button id="previewButton" class="btn btn-primary" ng-click="togglePreview()">Preview</button>
+					<button id="submitPostButton" type="submit" class="btn btn-primary pull-right" ng-click="submitPost()">Post</button>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-	$(document).ready(function() {
-		$("#previewDiv").hide();
-		$('[data-toggle="popover"]').popover();
-	});
-
-	function submitPost() {
-		var postText = $('#bbcodeEditor').val();
-		var lastQuote = angular.element(document.body).scope().$root.$getLastQuote();
-		// Delete the quoted text from the beginning of the post.
-		//   Not supported that the user deletes from the quote.
-		if (lastQuote != null && lastQuote.text != null) {
-			postText = postText.slice(lastQuote.text.length);
-		}
-		postText = postText.replace(/\n/g, "[br][/br]");
-
-		var postData = {
-			"topic" : topicPostParam,
-			"text" : postText
-		};
-
-		if (lastQuote != null) {
-			postData.quote = lastQuote.text;
-			postData.quotePostNumber = lastQuote.postNumber;
-		}
-
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "topic/new",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$('#newPostModalForm').modal('toggle');
-
-					var $body = angular.element(document.body);
-					var $rootScope = $body.scope().$root;
-					$rootScope.$emit('reload');
-					alert("Post has been created.");
-				} else {
-					alert("Failed to create post:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-
-	function toggleFollowingTopic() {
-		var btnText = $("#followTopicButton").html();
-		if (btnText == "Follow") {
-			followTopic();
-		} else {
-			unfollowTopic();
-		}
-	}
-
-	function followTopic() {
-		var postData = {
-			topic: topicPostParam,
-			isFollowRequest: true
-		};
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "topic/follow",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$("#followTopicButton").html("Unfollow");
-					alert("You are now following this topic.");
-				} else {
-					alert("Failed to follow topic:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-
-	function unfollowTopic() {
-		var postData = {
-			topic: topicPostParam,
-			isFollowRequest: false
-		};
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			contentType: 'application/json',
-			url: restLink + "topic/follow",
-			data: JSON.stringify( postData ),
-			headers: {
-				"Authorization": "Basic " + encoded
-			},
-			success: function(data){
-				if (data.success) {
-					$("#followTopicButton").html("Follow");
-					alert("You have stopped following this topic.");
-				} else {
-					alert("Failed to stop following topic:\n\n" + data.errorMessage);
-				}
-			}
-		});
-	}
-	
-	function togglePreview() {
-		var text = $("#previewButton").html();
-		if (text == "Preview") {
-			preview();
-		} else {
-			edit();
-		}
-	}
-	
-	function preview() {
-		$("#previewButton").html("Edit");
-		$("#bbcodeEditor").hide();
-		$("#previewDiv").show();
-	
-		var text = $("#bbcodeEditor").val();
-		text = text.replace(/\n/g, "[br][/br]");
-		var result = XBBCODE.process({
-			text : text,
-			removeMisalignedTags : false,
-			addInLineBreaks : false
-		});
-		$("#previewHtml").html(result.html);
-	}
-
-	function edit() {
-		$("#previewButton").html("Preview");
-		$("#previewDiv").hide();
-		$("#bbcodeEditor").show();
-	}
-</script>
