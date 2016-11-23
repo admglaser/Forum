@@ -1,19 +1,11 @@
 package hu.bme.aut.onlab.model;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 @Entity
-@Table(name = "member_group")
+@Table(name = "member_group", schema = "", catalog = "forum")
 public class MemberGroup {
 	
 	@Id
@@ -23,17 +15,14 @@ public class MemberGroup {
 	@Column(name = "title")
     private String title;
     
-	@Column(name = "prefix")
-    private String prefix;
-    
-	@Column(name = "postfix")
-    private String postfix;
-    
     @OneToMany(mappedBy = "memberGroup")
     private Collection<Member> members;
     
     @ManyToMany(mappedBy = "memberGroups")
     private List<PermissionSet> permissionSets;
+
+    @OneToMany(mappedBy = "memberGroup")
+    private List<StyleOfMemberGroup> styleOfMemberGroups;
 
     public int getId() {
         return id;
@@ -51,22 +40,6 @@ public class MemberGroup {
         this.title = title;
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public String getPostfix() {
-        return postfix;
-    }
-
-    public void setPostfix(String postfix) {
-        this.postfix = postfix;
-    }
-
     public Collection<Member> getMembers() {
         return members;
     }
@@ -82,5 +55,12 @@ public class MemberGroup {
     public void setPermissionSets(List<PermissionSet> permissionSets) {
         this.permissionSets = permissionSets;
     }
-    
+
+    public List<StyleOfMemberGroup> getStyleOfMemberGroups() {
+        return styleOfMemberGroups;
+    }
+
+    public void setStyleOfMemberGroups(List<StyleOfMemberGroup> styleOfMemberGroupsById) {
+        this.styleOfMemberGroups = styleOfMemberGroupsById;
+    }
 }

@@ -78,8 +78,18 @@ public class TopicRs {
 							sb.append(", ");
 						}
 					}
-					postJson.put("likers", sb.toString());
 
+					List<StyleOfMemberGroup> styles = memberGroup.getStyleOfMemberGroups();
+					JSONArray stylesJsonArray = new JSONArray();
+					for (int i=0; i<styles.size(); i++) {
+						JSONObject styleJson = new JSONObject();
+						styleJson.put("style", styles.get(i).getStyle());
+
+						stylesJsonArray.put(styleJson);
+					}
+
+					postJson.put("likers", sb.toString());
+					postJson.put("styles", stylesJsonArray);
 					postJson.put("username", memberOfPost.getDisplayName());
 					postJson.put("userLink", "#/user/" + memberOfPost.getId());
 					postJson.put("userImageLink", LinkUtils.getProfilePictureLink(memberOfPost.getPictureId()));
@@ -106,7 +116,7 @@ public class TopicRs {
 			forumReadService.renewTopicSeenByMember(member, topic);
 
 			// Increase view count of the topic
-			topic.setViewCount( topic.getViewCount() + 1 );
+			topic.setViewCount(topic.getViewCount() + 1);
 			topicBean.merge(topic);
 		} else {
 			result.put("error", true);
