@@ -359,7 +359,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					}
 				}
 			});
-		}
+		};
 
 		$scope.toggleFollowingCategory = function() {
 			var btnText = $("#followCategoryButton").html();
@@ -368,7 +368,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 			} else {
 				$scope.unfollowCategory();
 			}
-		}
+		};
 
 		$scope.followCategory = function() {
 			var postData = {
@@ -393,7 +393,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					}
 				}
 			});
-		}
+		};
 
 		$scope.unfollowCategory = function() {
 			var postData = {
@@ -418,7 +418,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 					}
 				}
 			});
-		}
+		};
 	
 		$scope.togglePreview = function() {
 			var text = $("#previewButton").html();
@@ -427,7 +427,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 			} else {
 				$scope.edit();
 			}
-		}
+		};
 
 		$scope.preview = function() {
 			$("#previewButton").html("Edit");
@@ -442,7 +442,7 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 				addInLineBreaks : false
 			});
 			$("#previewHtml").html(result.html);
-		}
+		};
 
 		$scope.edit = function() {
 			$("#previewButton").html("Preview");
