@@ -1,9 +1,7 @@
 var restLink = "http://localhost:8080/ForumApp/rest/";
 //var restLink = "http://54.69.96.56:8080/ForumApp/rest/";
 
-//var username = null; //robertk
-//var password = null; //bbb
-var encoded = ""; //btoa(username + ":" + password);
+var encoded = "";
 var conversationPostParam = null;
 var topicPostParam = null;
 var categoryPostParam = null;
@@ -160,7 +158,6 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 			debug("Result has arrived for " +  link);
 			$scope.data = res.data;
 			
-			
 			$(document).ready(function(){
 				var date_input=$('input[name="reg_birthDate"]');
 				var options={
@@ -211,10 +208,11 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 					},
 					success: function(data){        
 						if (data.success) {
-							encoded = enc;
-							$('#loginModalForm').modal('toggle');					
 							$rootScope.$emit('reload');
+							$('#loginModalForm').modal('toggle');	
 							$('#password').val("");
+							encoded = enc;											
+							
 						} else {
 							$("#username").val("");
 							$("#password").val("");
