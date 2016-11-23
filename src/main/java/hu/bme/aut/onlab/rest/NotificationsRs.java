@@ -50,7 +50,6 @@ public class NotificationsRs {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getNotificationsWithPage(@Context Member member, @PathParam("pageNumber") int pageNumber) {
 		JSONObject result = new JSONObject();
-
 		if (member != null) {
 			Collection<Notification> notifications = member.getNotifications();
 			JSONArray notificationsJsonArray = new JSONArray();
@@ -67,10 +66,10 @@ public class NotificationsRs {
 			}
 			result.put("notifications", notificationsJsonArray);
 			result.put("pages", NavigationUtils.getPagesJsonArray("#/notifications", pageNumber, notifications.size()));
-		}
-		
+		} else {
+			result.put("error", true);
+		}		
 		return result.toString();
-
 	}
 	
 	@POST

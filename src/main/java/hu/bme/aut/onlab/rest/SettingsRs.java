@@ -33,6 +33,8 @@ public class SettingsRs {
 		JSONObject result = new JSONObject();
 		if (member != null) {
 			result.put("imageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
+		} else {
+			result.put("error", true);
 		}
         return result.toString();
     }

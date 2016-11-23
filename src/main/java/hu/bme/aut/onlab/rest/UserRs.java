@@ -62,23 +62,23 @@ public class UserRs {
 	@Path("{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserOverview(@Context Member member, @PathParam("userId") int userId) {
-		Member memberToSee = memberBean.findEntityById(userId);
-		JSONObject result = generateBase(memberToSee);
+		Member targetMember = memberBean.findEntityById(userId);
+		JSONObject result = generateBase(targetMember);
 
 		// Increase the view count of the profile if the page is not his own.
-		if (member != null  && ! member.equals(memberToSee)) {
-			memberToSee.setViewsCount( memberToSee.getViewsCount() + 1 );
-			memberBean.update(memberToSee);
+		if (member != null  && ! member.equals(targetMember)) {
+			targetMember.setViewsCount( targetMember.getViewsCount() + 1 );
+			memberBean.update(targetMember);
 		}
 
-		MemberGroup memberGroup = memberToSee.getMemberGroup();
+		MemberGroup memberGroup = targetMember.getMemberGroup();
 
 		result.put("memberGroup", memberGroup.getTitle());
-		result.put("topicCount", memberToSee.getTopicCount());
-		result.put("postCount", memberToSee.getPostCount());
-		result.put("viewCount", memberToSee.getViewsCount());
-		result.put("birthday", memberToSee.getBirthday());
-		result.put("email", memberToSee.getEmail());
+		result.put("topicCount", targetMember.getTopicCount());
+		result.put("postCount", targetMember.getPostCount());
+		result.put("viewCount", targetMember.getViewsCount());
+		result.put("birthday", targetMember.getBirthday());
+		result.put("email", targetMember.getEmail());
 
 		return result.toString();
 	}

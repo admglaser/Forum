@@ -103,6 +103,8 @@ public class SubcategoryRs {
             result.put("canStartTopic", forumReadService.canMemberStartTopicInSubcategory(member, subcategory));
 	        result.put("topics", topicJsonArray);
 	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
+        } else {
+        	result.put("error", true);
         }
         
         return result.toString();

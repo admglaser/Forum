@@ -110,7 +110,9 @@ public class MessageRs {
         				
         		}
         	}
-        }
+        } else {
+			result.put("error", true);
+		}
         
         return result.toString();
     }

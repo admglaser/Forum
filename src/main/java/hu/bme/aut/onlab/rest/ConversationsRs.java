@@ -106,6 +106,8 @@ public class ConversationsRs {
 			result.put("conversations", conversationsJsonArray);
 			result.put("pages", NavigationUtils.getPagesJsonArray("#/conversations", pageNumber,
 					messagingService.getConversationsCount(member)));
+		} else {
+			result.put("error", true);
 		}
 		return result.toString();
 	}
