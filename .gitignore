@@ -1,1 +1,6 @@
 .project
+
+open_index.bat
+
+.idea
+client.iml
