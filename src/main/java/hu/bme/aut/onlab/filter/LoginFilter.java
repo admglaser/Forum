@@ -10,7 +10,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.dao.LoginDao;
 import hu.bme.aut.onlab.model.Member;
 
 @Provider
@@ -18,7 +18,7 @@ import hu.bme.aut.onlab.model.Member;
 public class LoginFilter implements ContainerRequestFilter {
 
 	@EJB
-	LoginService loginService;
+	LoginDao loginService;
 	
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {

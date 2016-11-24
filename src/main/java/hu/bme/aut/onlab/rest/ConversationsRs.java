@@ -18,13 +18,13 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.bean.MessagingService;
-import hu.bme.aut.onlab.bean.dao.ConversationBean;
-import hu.bme.aut.onlab.bean.dao.ConversationSeenByMemberBean;
-import hu.bme.aut.onlab.bean.dao.ConversationToMemberBean;
-import hu.bme.aut.onlab.bean.dao.MemberBean;
-import hu.bme.aut.onlab.bean.dao.MessageBean;
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.dao.MessagingDao;
+import hu.bme.aut.onlab.dao.model.ConversationDao;
+import hu.bme.aut.onlab.dao.model.ConversationSeenByMemberDao;
+import hu.bme.aut.onlab.dao.model.ConversationToMemberDao;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.dao.model.MessageDao;
 import hu.bme.aut.onlab.model.Conversation;
 import hu.bme.aut.onlab.model.ConversationSeenByMember;
 import hu.bme.aut.onlab.model.ConversationToMember;
@@ -39,25 +39,25 @@ import hu.bme.aut.onlab.util.NavigationUtils;
 public class ConversationsRs {
 
 	@EJB
-	private MessagingService messagingService;
+	private MessagingDao messagingService;
 
 	@EJB
-	private LoginService loginService;
+	private LoginDao loginService;
 
 	@EJB
-	MemberBean memberBean;
+	MemberDao memberBean;
 
 	@EJB
-	MessageBean messageBean;
+	MessageDao messageBean;
 
 	@EJB
-	ConversationBean conversationBean;
+	ConversationDao conversationBean;
 
 	@EJB
-	ConversationSeenByMemberBean conversationSeenByMemberBean;
+	ConversationSeenByMemberDao conversationSeenByMemberBean;
 	
 	@EJB
-	ConversationToMemberBean conversationToMemberBean;
+	ConversationToMemberDao conversationToMemberBean;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

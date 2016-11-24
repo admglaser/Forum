@@ -15,10 +15,10 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.ForumService;
-import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.bean.NotificationService;
-import hu.bme.aut.onlab.bean.dao.NotificationBean;
+import hu.bme.aut.onlab.dao.ForumDao;
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.dao.NotificationsDao;
+import hu.bme.aut.onlab.dao.model.NotificationDao;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Notification;
 import hu.bme.aut.onlab.model.NotificationEvent;
@@ -30,16 +30,16 @@ import hu.bme.aut.onlab.util.NotificationType;
 public class NotificationsRs {
 
 	@EJB
-	private ForumService forumReadService;
+	private ForumDao forumReadService;
 	
 	@EJB
-	private NotificationService notificationService;
+	private NotificationsDao notificationService;
 
 	@EJB
-	private LoginService loginService;
+	private LoginDao loginService;
 	
 	@EJB
-	private NotificationBean notificationBean;
+	private NotificationDao notificationBean;
 
 
 	@Path("")

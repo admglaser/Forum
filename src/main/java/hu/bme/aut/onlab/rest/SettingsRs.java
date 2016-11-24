@@ -13,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.UploadService;
-import hu.bme.aut.onlab.bean.dao.MemberBean;
+import hu.bme.aut.onlab.dao.UploadDao;
+import hu.bme.aut.onlab.dao.model.MemberDao;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.util.LinkUtils;
 
@@ -22,10 +22,10 @@ import hu.bme.aut.onlab.util.LinkUtils;
 public class SettingsRs {
 	
 	@EJB
-	private UploadService uploadService;
+	private UploadDao uploadService;
 	
 	@EJB
-	private MemberBean memberBean;
+	private MemberDao memberBean;
 	
 	@GET
     @Produces(MediaType.APPLICATION_JSON)

@@ -1,14 +1,6 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.ForumService;
-import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.util.Formatter;
-import hu.bme.aut.onlab.util.LinkUtils;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
@@ -16,16 +8,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.dao.ForumDao;
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/members")
 public class MemberRs {
 
     @EJB
-    private ForumService forumReadService;
+    private ForumDao forumReadService;
 
     @EJB
-    private LoginService loginService;
+    private LoginDao loginService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

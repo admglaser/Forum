@@ -1,32 +1,50 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.ForumService;
-import hu.bme.aut.onlab.bean.NotificationService;
-import hu.bme.aut.onlab.bean.dao.*;
-import hu.bme.aut.onlab.model.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.dao.ForumDao;
+import hu.bme.aut.onlab.dao.NotificationsDao;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.dao.model.MemberLikeDao;
+import hu.bme.aut.onlab.dao.model.PostBean;
+import hu.bme.aut.onlab.dao.model.TopicBean;
+import hu.bme.aut.onlab.dao.model.TopicSubscriptionBean;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.MemberLike;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.StyleOfMemberGroup;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSubscription;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Path("topic")
 public class TopicRs {
 
 	@EJB
-	private ForumService forumReadService;
+	private ForumDao forumReadService;
 
 	@EJB
-	private NotificationService notificationService;
+	private NotificationsDao notificationService;
 
 	@EJB
 	private TopicBean topicBean;
@@ -35,13 +53,13 @@ public class TopicRs {
 	private PostBean postBean;
 
 	@EJB
-	private MemberBean memberBean;
+	private MemberDao memberBean;
 
 	@EJB
 	private TopicSubscriptionBean topicSubscriptionBean;
 
 	@EJB
-	private MemberLikeBean memberLikeBean;
+	private MemberLikeDao memberLikeBean;
 
 	@GET
 	@Path("{topicId}")

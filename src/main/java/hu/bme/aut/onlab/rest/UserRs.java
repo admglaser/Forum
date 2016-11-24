@@ -1,17 +1,6 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.ForumService;
-import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.bean.dao.*;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.Post;
-import hu.bme.aut.onlab.model.Topic;
-import hu.bme.aut.onlab.util.Formatter;
-import hu.bme.aut.onlab.util.LinkUtils;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.GET;
@@ -20,19 +9,36 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.dao.ForumDao;
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.dao.model.CategoryDao;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.dao.model.PostBean;
+import hu.bme.aut.onlab.dao.model.SubcategoryBean;
+import hu.bme.aut.onlab.dao.model.TopicBean;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/user")
 public class UserRs {
 
 	@EJB
-	private ForumService forumReadService;
+	private ForumDao forumReadService;
 
 	@EJB
-	private LoginService loginService;
+	private LoginDao loginService;
 	
 	@EJB
-	private CategoryBean categoryBean;
+	private CategoryDao categoryBean;
 
 	@EJB
 	private SubcategoryBean subcategoryBean;
@@ -44,7 +50,7 @@ public class UserRs {
 	private PostBean postBean;
 
 	@EJB
-	private MemberBean memberBean;
+	private MemberDao memberBean;
 
 	private JSONObject generateBase(Member member) {
 		JSONObject result = new JSONObject();

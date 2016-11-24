@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean.dao;
+package hu.bme.aut.onlab.dao.model;
 
 import java.util.List;
 
@@ -13,14 +13,14 @@ import javax.persistence.metamodel.SingularAttribute;
  * The base class for entity beans.
  * @param <E> The entity class to work on.
  */
-public abstract class BaseBean<E> {
+public abstract class BaseDao<E> {
 
     protected Class<E> entityType;
     
     @PersistenceContext
 	private EntityManager em;
 
-    public BaseBean(Class<E> entityType) {
+    public BaseDao(Class<E> entityType) {
         super();
 		this.entityType = entityType;
     }

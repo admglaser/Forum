@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 
-import hu.bme.aut.onlab.bean.dao.TopicSeenByMemberBean;
+import hu.bme.aut.onlab.dao.model.TopicSeenByMemberBean;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.MemberGroup;
 import hu.bme.aut.onlab.model.MemberGroup_;
@@ -45,7 +45,7 @@ import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
-public class ForumService {
+public class ForumDao {
 
 	private final int GUEST_PERMISSION_SET_ID = 0;
 	

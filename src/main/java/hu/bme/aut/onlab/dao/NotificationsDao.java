@@ -1,8 +1,7 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import hu.bme.aut.onlab.util.NotificationType;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -14,12 +13,27 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
-import java.util.Collections;
-import java.util.List;
+
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Notification;
+import hu.bme.aut.onlab.model.NotificationEvent;
+import hu.bme.aut.onlab.model.NotificationEvent_;
+import hu.bme.aut.onlab.model.Notification_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.SubcategorySubscription;
+import hu.bme.aut.onlab.model.SubcategorySubscription_;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSubscription;
+import hu.bme.aut.onlab.model.TopicSubscription_;
+import hu.bme.aut.onlab.util.NavigationUtils;
+import hu.bme.aut.onlab.util.NotificationType;
 
 @LocalBean
 @Stateless
-public class NotificationService {
+public class NotificationsDao {
 
 	@PersistenceContext
 	private EntityManager em;

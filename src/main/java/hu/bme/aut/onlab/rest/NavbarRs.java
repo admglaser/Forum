@@ -12,8 +12,8 @@ import javax.ws.rs.core.MediaType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import hu.bme.aut.onlab.bean.MessagingService;
-import hu.bme.aut.onlab.bean.NotificationService;
+import hu.bme.aut.onlab.dao.MessagingDao;
+import hu.bme.aut.onlab.dao.NotificationsDao;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Message;
 import hu.bme.aut.onlab.model.Notification;
@@ -25,10 +25,10 @@ import hu.bme.aut.onlab.util.NotificationType;
 public class NavbarRs  {
    
     @EJB
-    private MessagingService messagingService; 
+    private MessagingDao messagingService; 
     
     @EJB
-    private NotificationService notificationService; 
+    private NotificationsDao notificationService; 
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)

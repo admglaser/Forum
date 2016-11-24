@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean.dao;
+package hu.bme.aut.onlab.dao.model;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -7,9 +7,9 @@ import hu.bme.aut.onlab.model.ConversationSeenByMember;
 
 @LocalBean
 @Stateless
-public class ConversationSeenByMemberBean extends BaseBean<ConversationSeenByMember> {
+public class ConversationSeenByMemberDao extends BaseDao<ConversationSeenByMember> {
 
-	public ConversationSeenByMemberBean() {
+	public ConversationSeenByMemberDao() {
 		super(ConversationSeenByMember.class);
 	}
 

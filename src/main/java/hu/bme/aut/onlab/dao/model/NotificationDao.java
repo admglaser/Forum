@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean.dao;
+package hu.bme.aut.onlab.dao.model;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -7,9 +7,9 @@ import hu.bme.aut.onlab.model.Notification;
 
 @LocalBean
 @Stateless
-public class NotificationBean extends BaseBean<Notification> {
+public class NotificationDao extends BaseDao<Notification> {
 
-	public NotificationBean() {
+	public NotificationDao() {
 		super(Notification.class);
 	}
 

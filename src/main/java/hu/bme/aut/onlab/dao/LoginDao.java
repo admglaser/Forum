@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,20 +17,20 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import hu.bme.aut.onlab.bean.dao.MemberBean;
+import hu.bme.aut.onlab.dao.model.MemberDao;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Member_;
 
 @LocalBean
 @Stateful
 @ApplicationScoped
-public class LoginService {
+public class LoginDao {
 
 	@PersistenceContext
 	private EntityManager em;
 
 	@EJB
-	private MemberBean memberBean;
+	private MemberDao memberBean;
 
 	private Map<String, Integer> membersMap = new HashMap<>();
 

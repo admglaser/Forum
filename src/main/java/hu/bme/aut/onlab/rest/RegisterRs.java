@@ -1,9 +1,8 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.RegistrationService;
-import hu.bme.aut.onlab.bean.dao.MemberBean;
-import hu.bme.aut.onlab.model.Member;
-import org.json.JSONObject;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -11,18 +10,21 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.dao.RegistrationDao;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.model.Member;
 
 @Path("register")
 public class RegisterRs {
 
     @EJB
-    private RegistrationService registrationService;
+    private RegistrationDao registrationService;
 
     @EJB
-    private MemberBean memberBean;
+    private MemberDao memberBean;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,7 +54,7 @@ public class RegisterRs {
                             member.setPassword(password);
                             member.setPictureId("default");
                             member.setRegisterTime(Timestamp.valueOf(LocalDateTime.now()));
-                            member.setMemberGroup(registrationService.getMemberGroupByTitle(RegistrationService.DEFAULT_MEMBER_GROUP));
+                            member.setMemberGroup(registrationService.getMemberGroupByTitle(RegistrationDao.DEFAULT_MEMBER_GROUP));
                             member.setViewsCount(0);
                             member.setPostCount(0);
                             member.setTopicCount(0);

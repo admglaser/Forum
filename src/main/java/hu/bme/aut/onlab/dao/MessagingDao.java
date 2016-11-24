@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,7 @@ import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
-public class MessagingService {
+public class MessagingDao {
 
 	@PersistenceContext
 	private EntityManager em;

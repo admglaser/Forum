@@ -1,9 +1,6 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.MemberGroup_;
-import hu.bme.aut.onlab.model.Member_;
+import java.util.regex.Pattern;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -13,11 +10,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.regex.Pattern;
+
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.MemberGroup_;
+import hu.bme.aut.onlab.model.Member_;
 
 @LocalBean
 @Stateless
-public class RegistrationService {
+public class RegistrationDao {
 
     public static final String DEFAULT_MEMBER_GROUP = "Member";
 

@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean;
+package hu.bme.aut.onlab.dao;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 @LocalBean
 @Stateless
-public class UploadService {
+public class UploadDao {
 
 	private final String PROFILE_IMAGES_PATH = "/var/www/html/images/profiles/";	
 	

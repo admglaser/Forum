@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.bean.dao;
+package hu.bme.aut.onlab.dao.model;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -7,7 +7,7 @@ import hu.bme.aut.onlab.model.Subcategory;
 
 @LocalBean
 @Stateless
-public class SubcategoryBean extends BaseBean<Subcategory> {
+public class SubcategoryBean extends BaseDao<Subcategory> {
 
 	public SubcategoryBean() {
 		super(Subcategory.class);

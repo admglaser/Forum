@@ -1,19 +1,8 @@
 package hu.bme.aut.onlab.rest;
 
-import hu.bme.aut.onlab.bean.ForumService;
-import hu.bme.aut.onlab.bean.LoginService;
-import hu.bme.aut.onlab.bean.MessagingService;
-import hu.bme.aut.onlab.bean.dao.ConversationBean;
-import hu.bme.aut.onlab.bean.dao.MessageBean;
-import hu.bme.aut.onlab.model.Conversation;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.MemberGroup;
-import hu.bme.aut.onlab.model.Message;
-import hu.bme.aut.onlab.util.Formatter;
-import hu.bme.aut.onlab.util.LinkUtils;
-import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -25,27 +14,39 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import hu.bme.aut.onlab.dao.ForumDao;
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.dao.MessagingDao;
+import hu.bme.aut.onlab.dao.model.ConversationDao;
+import hu.bme.aut.onlab.dao.model.MessageDao;
+import hu.bme.aut.onlab.model.Conversation;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.Message;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("message")
 public class MessageRs {
 
     @EJB
-    private ForumService forumReadService;
+    private ForumDao forumReadService;
 
     @EJB
-    private MessagingService messagingService;
+    private MessagingDao messagingService;
 
     @EJB
-    private LoginService loginService;
+    private LoginDao loginService;
 
     @EJB
-    private ConversationBean conversationBean;
+    private ConversationDao conversationBean;
 
     @EJB
-    private MessageBean messageBean;
+    private MessageDao messageBean;
 
     @GET
     @Path("{conversationNumber}")
