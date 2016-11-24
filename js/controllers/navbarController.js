@@ -1,14 +1,14 @@
 app.controller('navbarController', function($rootScope, $scope, $http) {
 	$rootScope.$on('updateNavbar', function(event, data) {
 		var link = restLink + "navbar";
-		debug("Getting page: " + link);
+		console.log("Getting page: " + link);
 		$http.get(link, {
 			headers : {
 				"Authorization" : "Basic " + encoded
 			}
 		})
 		.then(function(res) {
-			debug("Result has arrived for " +  link);
+			console.log("Result has arrived for " +  link);
 			$scope.data = res.data;
 			
 			$(document).ready(function(){
@@ -39,18 +39,13 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 					},
 					success: function(data){
 						console.log(data.message);
-						if (data.success) {
-							console.log("Successfully read notification " + id);
-						} else {
-							console.log("Failed to read notification " + id + ". " + data.errorMessage);
-						}
 					}
 				});
 			};	
 		
-			$('#loginSubmit').click(function(){ 
-				var username = $("#username").val();
-				var password = $("#password").val();  
+			$('#loginSubmit').off("click").click(function(){ 
+				var username = $("#loginUsername").val();
+				var password = $("#loginPassword").val();  
 				var enc = btoa(username + ":" + password);
 				$.ajax({ 
 					type: "GET",
@@ -60,22 +55,23 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 						"Authorization": "Basic " + enc
 					},
 					success: function(data){        
-						if (data.success) {
-							$rootScope.$emit('reload');
-							$('#loginModalForm').modal('toggle');	
-							$('#password').val("");
+						if (data.success) {		
+							console.log("Login successful")
+							$('#loginModalForm').modal('hide');	
+							$("#loginUsername").val("");
+							$('#loginPassword').val("");
 							encoded = enc;											
-							
+							$rootScope.$emit('reload');
 						} else {
-							$("#username").val("");
-							$("#password").val("");
+							$("#loginUsername").val("");
+							$("#loginPassword").val("");
 							alert(data.message);
 						}
 					}
 				});
 			});
 
-			$('#registerSubmit').click(function(){
+			$('#registerSubmit').off("click").click(function(){
 				var postData = {
 					username: $('#reg_username').val(),
 					displayName: $('#reg_displayname').val(),
@@ -96,7 +92,7 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 					success: function(data){
 						alert(data.message);
 						if (data.success) {
-							$('#registerModalForm').modal('toggle');
+							$('#registerModalForm').modal('hide');
 							$('#reg_username').val("");
 							$('#reg_displayname').val("");
 							$('#reg_email').val("");
@@ -109,7 +105,8 @@ app.controller('navbarController', function($rootScope, $scope, $http) {
 			});
 			
 			$scope.logout = function() {
-				encoded = "";$rootScope.$emit('reload');
+				encoded = "";
+				$rootScope.$emit('reload');
 			}
 			
 		});

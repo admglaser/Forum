@@ -5,14 +5,14 @@ app.controller('messagesController', function($rootScope, $scope, $http, $sce, $
 		pageNumber = $routeParams.pageNumber;
 	}
 	var link = restLink + 'message/' + conversationNumber + '/' + pageNumber;
-	debug("Getting page: " + link);
+	console.log("Getting page: " + link);
 	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
 	.then(function(res) {
-		debug("Result has arrived for " +  link);
+		console.log("Result has arrived for " +  link);
 		$rootScope.$emit('updateNavbar');
 		if (res.data.error) {
 			jumpToAbsolutePath("error");
@@ -60,7 +60,7 @@ app.controller('messagesController', function($rootScope, $scope, $http, $sce, $
 			$("#bbcodeEditor").show();
 		}
 		
-		$('#messageSubmit').click(function(){ 
+		$('#messageSubmit').off("click").click(function(){ 
 			var text = $("#bbcodeEditor").val();
 			var postData = {
 				"text": text,

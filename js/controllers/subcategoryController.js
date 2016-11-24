@@ -5,14 +5,14 @@ app.controller('subcategoryController', function($rootScope, $scope, $http, $rou
 		pageNumber = $routeParams.pageNumber;
 	}
 	var link = restLink + 'category/' + categoryId + "/" + pageNumber;
-	debug("Getting page: " + link);
+	console.log("Getting page: " + link);
 	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
 	.then(function(res) {
-		debug("Result has arrived for " +  link);
+		console.log("Result has arrived for " +  link);
 		$rootScope.$emit('updateNavbar');
 		if (res.data.error) {
 			jumpToAbsolutePath("error");

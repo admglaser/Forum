@@ -172,7 +172,3 @@ function convertBBCode(text, $sce) {
 	});
 	return $sce.trustAsHtml(result.html);
 }
-
-function debug(text) {
-	console.log(text);
-}

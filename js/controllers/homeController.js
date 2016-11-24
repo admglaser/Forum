@@ -1,13 +1,13 @@
 app.controller('homeController', function($rootScope, $scope, $http) {
 	var link = restLink + "home";
-	debug("Getting page: " + link);
+	console.log("Getting page: " + link);
 	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
 	.then(function(res){
-		debug("Result has arrived for " +  link);
+		console.log("Result has arrived for " +  link);
 		$rootScope.$emit('updateNavbar');
 		$scope.data = res.data;
 	});

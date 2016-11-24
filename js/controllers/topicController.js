@@ -6,14 +6,14 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 		pageNumber = $routeParams.pageNumber;
 	}
 	var link = restLink + 'topic/' + topicId + "/" + pageNumber;
-	debug("Getting page: " + link);
+	console.log("Getting page: " + link);
 	$http.get(link, {
 		headers : {
 			"Authorization" : "Basic " + encoded
 		}
 	})
 	.then(function(res) {
-		debug("Result has arrived for " +  link);
+		console.log("Result has arrived for " +  link);
 		$rootScope.$emit('updateNavbar');
 		if (res.data.error) {
 			jumpToAbsolutePath("error");
@@ -190,12 +190,12 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 			$("#bbcodeEditor").show();
 		};
 
-		$scope.openQuotePanel = function (username, userLink, postNumber, postLink, text) {
+		$scope.openQuotePanel = function(username, userLink, postNumber, postLink, text) {
 			var linkToUser = createBBCodeLink(userLink, username);
 			var linkToQuote = createBBCodeLink(postLink, "posted");
 			var quote = surroundWithBBCodeTag("I", surroundWithBBCodeTag("B", linkToUser) + " has " + linkToQuote + ":") + "\n" + surroundWithBBCodeTag("QUOTE", text) + "\n";
 			$('#bbcodeEditor').val(quote);
-			edit();
+			$scope.edit();
 			$('#newPostModalForm').modal('toggle');
 
 			var quoteToSave = { text: quote, postNumber: postNumber };
