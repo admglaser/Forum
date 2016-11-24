@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "message")
 public class Message {
@@ -33,16 +32,10 @@ public class Message {
     @JoinColumn(name = "conversation_id", referencedColumnName = "id", nullable = false)
     private Conversation conversation;
     
-    @Column(name = "conversation_id", insertable = false, updatable = false)
-    protected int conversationId;
-
     @ManyToOne
     @JoinColumn(name = "member_id", referencedColumnName = "id", nullable = false)
     private Member member;
 
-    @Column(name = "member_id", insertable = false, updatable = false)
-    protected int memberId;
-    
     public int getId() {
         return id;
     }
@@ -83,28 +76,12 @@ public class Message {
         this.conversation = conversation;
     }
 
-	private int getConversationId() {
-		return conversationId;
-	}
-
-	private void setConversationId(int conversationId) {
-		this.conversationId = conversationId;
-	}
-
-    public Member getMember() {
+	public Member getMember() {
         return member;
     }
 
     public void setMember(Member member) {
         this.member = member;
-    }
-
-    private int getMemberId() {
-        return memberId;
-    }
-
-    private void setMemberId(int memberId) {
-        this.memberId = memberId;
     }
 
 }

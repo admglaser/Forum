@@ -82,8 +82,8 @@ public class MessagingDao {
 		
 		query.where(
 				builder.and(
-						builder.equal(conversationToMemberRoot.get(ConversationToMember_.conversationId), conversation.getId()),
-						builder.equal(conversationToMemberRoot.get(ConversationToMember_.memberId), member.getId())
+						builder.equal(conversationToMemberRoot.get(ConversationToMember_.conversation).get(Conversation_.id), conversation.getId()),
+						builder.equal(conversationToMemberRoot.get(ConversationToMember_.member).get(Member_.id), member.getId())
 				)
 		);
 		
@@ -215,8 +215,8 @@ public class MessagingDao {
 	
 		query.where(
 				builder.and(
-						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
-						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())));
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversation).get(Conversation_.id), conversation.getId()),
+						builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.member).get(Member_.id), member.getId())));
 	
 		query.select(conversationSeenByMemberRoot);
 		
@@ -248,8 +248,8 @@ public class MessagingDao {
 				
 				update.where(
 						builder.and(
-								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversationId), conversation.getId()),
-								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.memberId), member.getId())
+								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.conversation).get(Conversation_.id), conversation.getId()),
+								builder.equal(conversationSeenByMemberRoot.get(ConversationSeenByMember_.member).get(Member_.id), member.getId())
 						)
 				);
 				update.set(conversationSeenByMemberRoot.get(ConversationSeenByMember_.seenMessageNumber), seenMessageNumber);

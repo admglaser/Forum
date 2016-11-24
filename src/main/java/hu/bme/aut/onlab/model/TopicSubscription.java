@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "topic_subscription")
 public class TopicSubscription {
@@ -26,12 +24,6 @@ public class TopicSubscription {
 	@JoinColumn(name = "topic_id", referencedColumnName = "id", nullable = false)
 	private Topic topic;
 	
-	@Column(name = "member_id", insertable = false, updatable = false)
-	protected int memberId;
-	
-	@Column(name = "topic_id", insertable = false, updatable = false)
-	protected int topicId;
-
 	public int getId() {
 		return id;
 	}
@@ -54,22 +46,6 @@ public class TopicSubscription {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
-	}
-
-	private int getMemberId() {
-		return memberId;
-	}
-
-	private void setMemberId(int memberId) {
-		this.memberId = memberId;
-	}
-
-	private int getTopicId() {
-		return topicId;
-	}
-
-	private void setTopicId(int topicId) {
-		this.topicId = topicId;
 	}
 
 }

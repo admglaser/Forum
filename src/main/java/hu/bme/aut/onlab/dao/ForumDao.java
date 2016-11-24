@@ -66,8 +66,8 @@ public class ForumDao {
 		
 		query.where(
 				builder.and(
-						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.memberId), member.getId()),
-						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.topicId), topic.getId())
+						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.member).get(Member_.id), member.getId()),
+						builder.equal(topicSeenByMemberRoot.get(TopicSeenByMember_.topic).get(Topic_.id), topic.getId())
 				)
 		);
 
@@ -127,7 +127,7 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(postJoin.get(Post_.memberId), member.getId()),
+						builder.equal(postJoin.get(Post_.member).get(Member_.id), member.getId()),
 						builder.equal(postJoin.get(Post_.postNumber), 1)
 				)
 		);
@@ -149,7 +149,7 @@ public class ForumDao {
 		Root<Post> postRoot = query.from(Post.class);
 		
 		postRoot.join(Post_.member);
-		query.where(builder.equal(postRoot.get(Post_.memberId), member.getId()));
+		query.where(builder.equal(postRoot.get(Post_.member).get(Member_.id), member.getId()));
 
 		try {
 			return em.createQuery(query)
@@ -167,7 +167,7 @@ public class ForumDao {
 		CriteriaQuery<Post> query = builder.createQuery(Post.class);
 		Root<Post> postRoot = query.from(Post.class);
 
-		query.where(builder.equal(postRoot.get(Post_.topicId), topic.getId()));
+		query.where(builder.equal(postRoot.get(Post_.topic).get(Topic_.id), topic.getId()));
 		if (position == Position.FIRST) {
 			query.orderBy(builder.asc(postRoot.get(Post_.time)));
 		} else if (position == Position.LAST) {
@@ -195,7 +195,7 @@ public class ForumDao {
 		// Posts that has no like will not be included
 		root.join(Post_.likes, JoinType.INNER);
 
-		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.memberId), member.getId()));
+		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.member).get(Member_.id), member.getId()));
 
 		criteriaQuery.select(root).distinct(true);
 
@@ -219,7 +219,7 @@ public class ForumDao {
 		postRoot.join(Post_.likes, JoinType.INNER);		
 
 		query.select(builder.count(query.from(Post.class)));
-		query.where(builder.equal(postRoot.get(Post_.memberId), member.getId()));
+		query.where(builder.equal(postRoot.get(Post_.member).get(Member_.id), member.getId()));
 		
 		try {
 			return em.createQuery(query).getSingleResult().intValue();
@@ -292,9 +292,9 @@ public class ForumDao {
 		CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
 		Root<MemberLike> root = query.from(MemberLike.class);
 
-		query.where(criteriaBuilder.equal(root.get(MemberLike_.postId), post.getId()));
+		query.where(criteriaBuilder.equal(root.get(MemberLike_.post).get(Post_.id), post.getId()));
 
-		query.groupBy(root.get(MemberLike_.postId));
+		query.groupBy(root.get(MemberLike_.post).get(Post_.id));
 
 		query.select(criteriaBuilder.count(root));
 
@@ -312,7 +312,7 @@ public class ForumDao {
 
 		Join<Member, MemberLike> memberLikeJoin = root.join(Member_.likes);
 
-		query.where(criteriaBuilder.equal(memberLikeJoin.get(MemberLike_.postId), post.getId()));
+		query.where(criteriaBuilder.equal(memberLikeJoin.get(MemberLike_.post).get(Post_.id), post.getId()));
 
 		query.select(root);
 
@@ -334,7 +334,7 @@ public class ForumDao {
 		query.where(
 				builder.and(
 						builder.equal(memberGroupJoin.get(MemberGroup_.id), member.getMemberGroup().getId()),
-						builder.equal(permissionRoot.get(Permission_.subcategoryId), subcategory.getId())
+						builder.equal(permissionRoot.get(Permission_.subcategory).get(Subcategory_.id), subcategory.getId())
 				)
 		);
 				
@@ -357,7 +357,7 @@ public class ForumDao {
 		query.where(
 				builder.and(
 						builder.equal(permissionSetjoin.get(PermissionSet_.id), GUEST_PERMISSION_SET_ID),
-						builder.equal(permissionRoot.get(Permission_.subcategoryId), subcategory.getId())
+						builder.equal(permissionRoot.get(Permission_.subcategory).get(Subcategory_.id), subcategory.getId())
 				)
 		);
 				
@@ -431,8 +431,8 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(TopicSubscription_.memberId), member.getId()),
-						builder.equal(root.get(TopicSubscription_.topicId), topic.getId())
+						builder.equal(root.get(TopicSubscription_.member).get(Member_.id), member.getId()),
+						builder.equal(root.get(TopicSubscription_.topic).get(Topic_.id), topic.getId())
 				)
 		);
 
@@ -458,8 +458,8 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(SubcategorySubscription_.memberId), member.getId()),
-						builder.equal(root.get(SubcategorySubscription_.subcategoryId), subcategory.getId())
+						builder.equal(root.get(SubcategorySubscription_.member).get(Member_.id), member.getId()),
+						builder.equal(root.get(SubcategorySubscription_.subcategory).get(Subcategory_.id), subcategory.getId())
 				)
 		);
 
@@ -485,8 +485,8 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(TopicSeenByMember_.memberId), member.getId()),
-						builder.equal(root.get(TopicSeenByMember_.topicId), topic.getId())
+						builder.equal(root.get(TopicSeenByMember_.member).get(Member_.id), member.getId()),
+						builder.equal(root.get(TopicSeenByMember_.topic).get(Topic_.id), topic.getId())
 				)
 		);
 
@@ -518,7 +518,7 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(Post_.topicId), topic.getId()),
+						builder.equal(root.get(Post_.topic).get(Topic_.id), topic.getId()),
 						builder.equal(root.get(Post_.postNumber), postNumber)
 				)
 		);
@@ -541,8 +541,8 @@ public class ForumDao {
 
 		query.where(
 				builder.and(
-						builder.equal(root.get(MemberLike_.memberId), member.getId()),
-						builder.equal(root.get(MemberLike_.postId), post.getId())
+						builder.equal(root.get(MemberLike_.member).get(Member_.id), member.getId()),
+						builder.equal(root.get(MemberLike_.post).get(Post_.id), post.getId())
 				)
 		);
 
@@ -575,7 +575,7 @@ public class ForumDao {
 		ListJoin<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
 		
 		query.where(
-				builder.equal(topicRoot.get(Topic_.subcategoryId), subcategory.getId())		
+				builder.equal(topicRoot.get(Topic_.subcategory).get(Subcategory_.id), subcategory.getId())		
 		);
 		
 		query.groupBy(topicRoot);
@@ -599,7 +599,7 @@ public class ForumDao {
 		Root<Topic> topicRoot = query.from(Topic.class);
 
 		query.where(
-				builder.equal(topicRoot.get(Topic_.subcategoryId), subcategory.getId())		
+				builder.equal(topicRoot.get(Topic_.subcategory).get(Subcategory_.id), subcategory.getId())		
 		);
 		
 		query.select(builder.count(topicRoot));

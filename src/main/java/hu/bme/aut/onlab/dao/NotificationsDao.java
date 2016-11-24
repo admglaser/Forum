@@ -25,9 +25,11 @@ import hu.bme.aut.onlab.model.Post_;
 import hu.bme.aut.onlab.model.Subcategory;
 import hu.bme.aut.onlab.model.SubcategorySubscription;
 import hu.bme.aut.onlab.model.SubcategorySubscription_;
+import hu.bme.aut.onlab.model.Subcategory_;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.model.TopicSubscription;
 import hu.bme.aut.onlab.model.TopicSubscription_;
+import hu.bme.aut.onlab.model.Topic_;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationType;
 
@@ -44,7 +46,7 @@ public class NotificationsDao {
 		Root<Notification> notificationRoot = query.from(Notification.class);
 		
 		query.where(
-				builder.equal(notificationRoot.get(Notification_.memberId), member.getId()));
+				builder.equal(notificationRoot.get(Notification_.member).get(Member_.id), member.getId()));
 		
 		query.select(notificationRoot);
 		
@@ -82,7 +84,7 @@ public class NotificationsDao {
 		CriteriaQuery<Notification> query = builder.createQuery(Notification.class);
 		Root<Notification> notificationRoot = query.from(Notification.class);
 		
-		query.where(builder.equal(notificationRoot.get(Notification_.memberId), member.getId()));
+		query.where(builder.equal(notificationRoot.get(Notification_.member).get(Member_.id), member.getId()));
 		
 		query.orderBy(builder.desc(notificationRoot.get(Notification_.notificationNumber)));
 		
@@ -124,7 +126,7 @@ public class NotificationsDao {
 		
 		query.where(
 				builder.and(
-						builder.equal(postJoin.get(Post_.topicId), topicId),
+						builder.equal(postJoin.get(Post_.topic).get(Topic_.id), topicId),
 						builder.equal(postJoin.get(Post_.postNumber), postNumber)
 				)
 		);
@@ -165,7 +167,7 @@ public class NotificationsDao {
 		ListJoin<Member, TopicSubscription> topicSubscribtionJoin = memberRoot.join(Member_.topicSubscriptions);
 		
 		query.where(
-				builder.equal(topicSubscribtionJoin.get(TopicSubscription_.topicId), topic.getId())
+				builder.equal(topicSubscribtionJoin.get(TopicSubscription_.topic).get(Topic_.id), topic.getId())
 		);
 		
 		try {
@@ -183,7 +185,7 @@ public class NotificationsDao {
 		ListJoin<Member, SubcategorySubscription> subcategorySubscribtion = memberRoot.join(Member_.subcategorySubscriptions);
 		
 		query.where(
-				builder.equal(subcategorySubscribtion.get(SubcategorySubscription_.subcategoryId), subcategory.getId())
+				builder.equal(subcategorySubscribtion.get(SubcategorySubscription_.subcategory).get(Subcategory_.id), subcategory.getId())
 		);
 		
 		try {
@@ -269,7 +271,7 @@ public class NotificationsDao {
 		Join<Notification, NotificationEvent> notificationEventJoin = notificationRoot.join(Notification_.notificationEvent);
 		
 		query.where(
-				builder.equal(notificationRoot.get(Notification_.memberId), member.getId())		
+				builder.equal(notificationRoot.get(Notification_.member).get(Member_.id), member.getId())		
 		);
 		
 		query.groupBy(notificationRoot);

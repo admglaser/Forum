@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "conversation_seen_by_member")
 public class ConversationSeenByMember {
@@ -28,12 +27,6 @@ public class ConversationSeenByMember {
     @ManyToOne
     @JoinColumn(name = "conversation_id", referencedColumnName = "id", nullable = false)
     private Conversation conversation;
-    
-    @Column(name = "conversation_id", insertable = false, updatable = false)
-	protected int conversationId;
-    
-    @Column(name = "member_id", insertable = false, updatable = false)
-    protected int memberId;
     
     public int getId() {
         return id;
@@ -66,21 +59,5 @@ public class ConversationSeenByMember {
     public void setConversation(Conversation conversation) {
         this.conversation = conversation;
     }
-
-	private int getConversationId() {
-		return conversationId;
-	}
-
-	private void setConversationId(int conversationId) {
-		this.conversationId = conversationId;
-	}
-
-	private int getMemberId() {
-		return memberId;
-	}
-
-	private void setMemberId(int memberId) {
-		this.memberId = memberId;
-	}
     
 }

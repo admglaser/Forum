@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "member")
 public class Member {
@@ -89,10 +88,7 @@ public class Member {
 	@OneToMany(mappedBy = "member")
 	private List<TopicSeenByMember> topicSeenByMembers;
 
-	@Column(name = "member_group_id", insertable = false, updatable = false)
-	protected int memberGroupId;
-
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -278,13 +274,5 @@ public class Member {
     public void setTopicSeenByMembers(List<TopicSeenByMember> topicSeenByMembers) {
         this.topicSeenByMembers = topicSeenByMembers;
     }
-
-	private int getMemberGroupId() {
-		return memberGroupId;
-	}
-
-	private void setMemberGroupId(int memberGroupId) {
-		this.memberGroupId = memberGroupId;
-	}
     
 }

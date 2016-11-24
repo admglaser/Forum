@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@SuppressWarnings("unused")
 @Entity
 @Table(name = "topic")
 public class Topic {
@@ -39,9 +38,6 @@ public class Topic {
 	
 	@OneToMany(mappedBy = "topic")
 	private List<TopicSeenByMember> topicSeenByMembers;
-	
-	@Column(name = "subcategory_id", insertable = false, updatable = false)
-	protected int subcategoryId;
 	
 	public int getId() {
 		return id;
@@ -97,14 +93,6 @@ public class Topic {
 
 	public void setTopicSeenByMembers(List<TopicSeenByMember> topicSeenByMembers) {
 		this.topicSeenByMembers = topicSeenByMembers;
-	}
-
-	private int getSubcategoryId() {
-		return subcategoryId;
-	}
-
-	private void setSubcategoryId(int subcategoryId) {
-		this.subcategoryId = subcategoryId;
 	}
 	
 }
