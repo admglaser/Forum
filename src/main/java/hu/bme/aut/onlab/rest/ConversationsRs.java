@@ -73,7 +73,7 @@ public class ConversationsRs {
 
 		if (member != null) {
 			JSONArray conversationsJsonArray = new JSONArray();
-			List<Conversation> conversations = messagingService.getConversations(member, pageNumber);
+			List<Conversation> conversations = messagingService.getConversationsOnPage(member, pageNumber);
 			for (Conversation conversation : conversations) {
 				JSONObject conversationJson = new JSONObject();
 

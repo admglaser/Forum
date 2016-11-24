@@ -65,7 +65,7 @@ public class MemberRs {
         }
 
         result.put("members", memberJsonArray);
-        result.put("pages", NavigationUtils.getPagesJsonArray("#/members", pageNumber, members.size()));
+        result.put("pages", NavigationUtils.getPagesJsonArray("#/members", pageNumber, forumReadService.getMembersCount()));
 
         return result.toString();
     }

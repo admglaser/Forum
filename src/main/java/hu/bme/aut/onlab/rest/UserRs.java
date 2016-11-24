@@ -98,7 +98,7 @@ public class UserRs {
 		JSONObject result = generateBase(member);
 		JSONArray likedPostsJsonArray = new JSONArray();
 
-		List<Post> likedPosts = forumReadService.getLikedPostsOfMember(member, pageNumber);
+		List<Post> likedPosts = forumReadService.getLikedPostsOfMemberOnPage(member, pageNumber);
 		for (Post likedPost : likedPosts) {
 			JSONObject likedPostJsonObject = new JSONObject();
 
@@ -143,7 +143,7 @@ public class UserRs {
 		JSONObject result = generateBase(member);
 		JSONArray topicsJsonArray = new JSONArray();
 
-		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMember(member, pageNumber);
+		List<Topic> createdTopics = forumReadService.getCreatedTopicsByMemberOnPage(member, pageNumber);
 		for (Topic createdTopic : createdTopics) {
 			JSONObject createdTopicJson = new JSONObject();
 			Post firstPost = forumReadService.getFirstPostFromTopic(createdTopic);
@@ -187,7 +187,7 @@ public class UserRs {
 		JSONObject result = generateBase(member);
 		JSONArray createdPostsJsonArray = new JSONArray();
 
-		List<Post> createdPosts = forumReadService.getPostsByMember(member, pageNumber);
+		List<Post> createdPosts = forumReadService.getPostsByMemberOnPage(member, pageNumber);
 		for (Post createdPost : createdPosts) {
 			JSONObject createdPostJson = new JSONObject();
 

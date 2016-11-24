@@ -1,8 +1,9 @@
 package hu.bme.aut.onlab.bean;
 
-import hu.bme.aut.onlab.bean.dao.TopicSeenByMemberBean;
-import hu.bme.aut.onlab.model.*;
-import hu.bme.aut.onlab.util.NavigationUtils;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -10,11 +11,37 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Root;
+
+import hu.bme.aut.onlab.bean.dao.TopicSeenByMemberBean;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.MemberGroup_;
+import hu.bme.aut.onlab.model.MemberLike;
+import hu.bme.aut.onlab.model.MemberLike_;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Permission;
+import hu.bme.aut.onlab.model.PermissionSet;
+import hu.bme.aut.onlab.model.PermissionSet_;
+import hu.bme.aut.onlab.model.Permission_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Post_;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.SubcategorySubscription;
+import hu.bme.aut.onlab.model.SubcategorySubscription_;
+import hu.bme.aut.onlab.model.Subcategory_;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSeenByMember;
+import hu.bme.aut.onlab.model.TopicSeenByMember_;
+import hu.bme.aut.onlab.model.TopicSubscription;
+import hu.bme.aut.onlab.model.TopicSubscription_;
+import hu.bme.aut.onlab.model.Topic_;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
@@ -91,7 +118,7 @@ public class ForumService {
 		return true;
 	}
 
-	public List<Topic> getCreatedTopicsByMember(Member member, int pageNumber) {
+	public List<Topic> getCreatedTopicsByMemberOnPage(Member member, int pageNumber) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Topic> query = builder.createQuery(Topic.class);
 		Root<Topic> topicRoot = query.from(Topic.class);
@@ -116,7 +143,7 @@ public class ForumService {
 		}
 	}
 	
-	public List<Post> getPostsByMember(Member member, int pageNumber) {
+	public List<Post> getPostsByMemberOnPage(Member member, int pageNumber) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Post> query = builder.createQuery(Post.class);
 		Root<Post> postRoot = query.from(Post.class);
@@ -160,7 +187,7 @@ public class ForumService {
 		return getPostFromTopicAtPosition(topic, Position.LAST);
 	}
 	
-	public List<Post> getLikedPostsOfMember(Member member, int pageNumber) {
+	public List<Post> getLikedPostsOfMemberOnPage(Member member, int pageNumber) {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		CriteriaQuery<Post> criteriaQuery = criteriaBuilder.createQuery(Post.class);
 		Root<Post> root = criteriaQuery.from(Post.class);
@@ -523,6 +550,64 @@ public class ForumService {
 			return em.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
 			return null;
+		}
+	}
+
+	public int getMembersCount() {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		Root<Member> memberRoot = query.from(Member.class);
+
+		query.select(builder.count(memberRoot));
+
+		try {
+			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
+		}
+	}
+
+	public List<Topic> getTopicsOnPage(Subcategory subcategory, int pageNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Topic> query = builder.createQuery(Topic.class);
+		Root<Topic> topicRoot = query.from(Topic.class);
+
+		ListJoin<Topic, Post> postJoin = topicRoot.join(Topic_.posts);
+		
+		query.where(
+				builder.equal(topicRoot.get(Topic_.subcategoryId), subcategory.getId())		
+		);
+		
+		query.groupBy(topicRoot);
+		query.orderBy(builder.desc(postJoin.get(Post_.time)));
+		
+		query.select(topicRoot);
+
+		try {
+			return em.createQuery(query)
+					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
+	}
+
+	public int getTopicCountInSubcategory(Subcategory subcategory) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Long> query = builder.createQuery(Long.class);
+		Root<Topic> topicRoot = query.from(Topic.class);
+
+		query.where(
+				builder.equal(topicRoot.get(Topic_.subcategoryId), subcategory.getId())		
+		);
+		
+		query.select(builder.count(topicRoot));
+
+		try {
+			return em.createQuery(query).getSingleResult().intValue();
+		} catch (NoResultException e) {
+			return 0;
 		}
 	}
 }

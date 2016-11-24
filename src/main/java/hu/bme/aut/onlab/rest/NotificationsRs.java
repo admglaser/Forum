@@ -1,6 +1,6 @@
 package hu.bme.aut.onlab.rest;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import hu.bme.aut.onlab.bean.ForumService;
 import hu.bme.aut.onlab.bean.LoginService;
+import hu.bme.aut.onlab.bean.NotificationService;
 import hu.bme.aut.onlab.bean.dao.NotificationBean;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.model.Notification;
@@ -30,6 +31,9 @@ public class NotificationsRs {
 
 	@EJB
 	private ForumService forumReadService;
+	
+	@EJB
+	private NotificationService notificationService;
 
 	@EJB
 	private LoginService loginService;
@@ -51,7 +55,7 @@ public class NotificationsRs {
 	public String getNotificationsWithPage(@Context Member member, @PathParam("pageNumber") int pageNumber) {
 		JSONObject result = new JSONObject();
 		if (member != null) {
-			Collection<Notification> notifications = member.getNotifications();
+			List<Notification> notifications = notificationService.getNotificationsOnPage(member, pageNumber);
 			JSONArray notificationsJsonArray = new JSONArray();
 			for (Notification notification : notifications) {
 				JSONObject notificationJson = new JSONObject();
@@ -65,7 +69,7 @@ public class NotificationsRs {
 				notificationsJsonArray.put(notificationJson);
 			}
 			result.put("notifications", notificationsJsonArray);
-			result.put("pages", NavigationUtils.getPagesJsonArray("#/notifications", pageNumber, notifications.size()));
+			result.put("pages", NavigationUtils.getPagesJsonArray("#/notifications", pageNumber, notificationService.getHighestNotificationNumber(member)));
 		} else {
 			result.put("error", true);
 		}		

@@ -69,7 +69,7 @@ public class SubcategoryRs {
         
         if (canMemberViewSubcategory) {
 	        JSONArray topicJsonArray = new JSONArray();
-	        List<Topic> topics = topicBean.findEntitiesByEquality(Topic_.subcategoryId, subcategoryId);
+	        List<Topic> topics = forumReadService.getTopicsOnPage(subcategory, pageNumber);
 	
 	        for (Topic topic : topics) {
 	            JSONObject topicJson = new JSONObject();
@@ -102,7 +102,7 @@ public class SubcategoryRs {
             result.put("canFollow", (member != null));
             result.put("canStartTopic", forumReadService.canMemberStartTopicInSubcategory(member, subcategory));
 	        result.put("topics", topicJsonArray);
-	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, subcategory.getTopics().size()));
+	        result.put("pages", NavigationUtils.getPagesJsonArray("#/category/" + subcategoryId, pageNumber, forumReadService.getTopicCountInSubcategory(subcategory)));
         } else {
         	result.put("error", true);
         }

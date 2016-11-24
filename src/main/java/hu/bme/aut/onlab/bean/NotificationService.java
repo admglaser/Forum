@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Root;
 import java.util.Collections;
@@ -244,6 +245,32 @@ public class NotificationService {
 		notification.setMember(targetMember);
 		notification.setNotificationEvent(notificationEvent);
 		em.persist(notification);
+	}
+
+	public List<Notification> getNotificationsOnPage(Member member, int pageNumber) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Notification> query = builder.createQuery(Notification.class);
+		Root<Notification> notificationRoot = query.from(Notification.class);
+
+		Join<Notification, NotificationEvent> notificationEventJoin = notificationRoot.join(Notification_.notificationEvent);
+		
+		query.where(
+				builder.equal(notificationRoot.get(Notification_.memberId), member.getId())		
+		);
+		
+		query.groupBy(notificationRoot);
+		query.orderBy(builder.desc(notificationEventJoin.get(NotificationEvent_.time)));
+		
+		query.select(notificationRoot);
+
+		try {
+			return em.createQuery(query)
+					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
+					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
+					.getResultList();
+		} catch (NoResultException e) {
+			return Collections.emptyList();
+		}
 	}
 	
 }

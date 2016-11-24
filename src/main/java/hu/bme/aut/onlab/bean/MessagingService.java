@@ -34,7 +34,7 @@ public class MessagingService {
 	@PersistenceContext
 	private EntityManager em;
 
-	public List<Conversation> getConversations(Member member, int pageNumber) {
+	public List<Conversation> getConversationsOnPage(Member member, int pageNumber) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Conversation> query = builder.createQuery(Conversation.class);
 		Root<Conversation> conversationRoot = query.from(Conversation.class);
