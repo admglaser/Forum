@@ -38,7 +38,7 @@ public class RegistrationService {
         }
 
         if (isUsernameExists(username)) {
-            return "Username already in use.";
+            return "User name is already in use.";
         }
         return null;
     }
@@ -57,7 +57,7 @@ public class RegistrationService {
         }
 
         if (isDisplayNameExists(displayName)) {
-            return "Display name already in use.";
+            return "Display name is already in use.";
         }
         return null;
     }

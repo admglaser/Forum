@@ -64,7 +64,7 @@ public class RegisterRs {
                             memberBean.add(member);
 
                             result.put("success", true);
-                            result.put("message", "Registraiong successful.");
+                            result.put("message", "Registration successful.");
                             return result.toString();
                         }
                     }

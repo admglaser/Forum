@@ -202,7 +202,7 @@ public class SubcategoryRs {
                     SubcategorySubscription existingSubcategorySubscription = forumReadService.getSubcategorySubscription(member, subcategory);
 
                     if (isFollowRequest) {
-                    	message = "Subcategory followed";
+                    	message = "Subcategory followed.";
                         if (existingSubcategorySubscription == null) {
                             SubcategorySubscription subcategorySubscription = new SubcategorySubscription();
                             subcategorySubscription.setMember(member);
