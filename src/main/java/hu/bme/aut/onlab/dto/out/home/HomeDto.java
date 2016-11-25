@@ -1,11 +1,17 @@
 package hu.bme.aut.onlab.dto.out.home;
 
+import hu.bme.aut.onlab.dto.out.BaseOutDto;
+
 import java.util.List;
 
-public class HomeDto {
+public class HomeDto extends BaseOutDto {
 
 	private boolean loggedIn;
 	private List<CategoryHomeDto> categories;
+
+	public HomeDto() {
+		super();
+	}
 
 	public boolean isLoggedIn() {
 		return loggedIn;
