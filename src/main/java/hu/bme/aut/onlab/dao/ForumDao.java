@@ -161,7 +161,7 @@ public class ForumDao {
 			return Collections.emptyList();
 		}
 	}
-
+	
 	private Post getPostFromTopicAtPosition(Topic topic, Position position) {
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Post> query = builder.createQuery(Post.class);
@@ -188,19 +188,21 @@ public class ForumDao {
 	}
 	
 	public List<Post> getLikedPostsOfMemberOnPage(Member member, int pageNumber) {
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<Post> criteriaQuery = criteriaBuilder.createQuery(Post.class);
-		Root<Post> root = criteriaQuery.from(Post.class);
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Post> query = builder.createQuery(Post.class);
+		Root<Post> root = query.from(Post.class);
 
 		// Posts that has no like will not be included
-		root.join(Post_.likes, JoinType.INNER);
+		ListJoin<Post, MemberLike> likeJoin = root.join(Post_.likes, JoinType.INNER);
 
-		criteriaQuery.where(criteriaBuilder.equal(root.get(Post_.member).get(Member_.id), member.getId()));
+		query.where(builder.equal(root.get(Post_.member).get(Member_.id), member.getId()));
 
-		criteriaQuery.select(root).distinct(true);
-
+		query.select(root).distinct(true);
+		query.orderBy(builder.desc(builder.count(likeJoin)));
+		query.groupBy(root);
+		
 		try {
-			return em.createQuery(criteriaQuery)
+			return em.createQuery(query)
 					.setFirstResult((pageNumber - 1) * NavigationUtils.ELEMENTS_PER_PAGE)
 					.setMaxResults(NavigationUtils.ELEMENTS_PER_PAGE)
 					.getResultList();
@@ -218,7 +220,7 @@ public class ForumDao {
 		// Posts that has no like will not be included
 		postRoot.join(Post_.likes, JoinType.INNER);		
 
-		query.select(builder.count(query.from(Post.class)));
+		query.select(builder.count(postRoot));
 		query.where(builder.equal(postRoot.get(Post_.member).get(Member_.id), member.getId()));
 		
 		try {

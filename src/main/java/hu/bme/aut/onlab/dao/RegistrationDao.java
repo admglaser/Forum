@@ -109,7 +109,7 @@ public class RegistrationDao {
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Member> root = query.from(Member.class);
 
-        query.select(builder.count(query.from(Member.class)));
+        query.select(builder.count(root));
         query.where(builder.equal(root.get(Member_.userName), username));
 
         try {
@@ -124,7 +124,7 @@ public class RegistrationDao {
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Member> root = query.from(Member.class);
 
-        query.select(builder.count(query.from(Member.class)));
+        query.select(builder.count(root));
         query.where(builder.equal(root.get(Member_.displayName), displayName));
 
         try {
@@ -139,7 +139,7 @@ public class RegistrationDao {
         CriteriaQuery<Long> query = builder.createQuery(Long.class);
         Root<Member> root = query.from(Member.class);
 
-        query.select(builder.count(query.from(Member.class)));
+        query.select(builder.count(root));
         query.where(builder.equal(root.get(Member_.email), email));
 
         try {

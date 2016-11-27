@@ -111,7 +111,7 @@ public class UserRs {
 			Topic topic = likedPost.getTopic();
 
 			likedPostJsonObject.put("title", topic.getTitle());
-			likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + likedPost.getPostNumber());
+			likedPostJsonObject.put("link", "#/topic/" + topic.getId() + "/" + NavigationUtils.getPageOfElement(likedPost.getPostNumber()));
 			likedPostJsonObject.put("date", Formatter.formatTimeStamp(likedPost.getTime()));
 			likedPostJsonObject.put("text", likedPost.getText());
 			likedPostJsonObject.put("likeCount", forumReadService.getPostLikesCount(likedPost));
@@ -200,7 +200,7 @@ public class UserRs {
 			Topic topic = createdPost.getTopic();
 
 			createdPostJson.put("title", topic.getTitle());
-			createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + createdPost.getPostNumber());
+			createdPostJson.put("link", "#/topic/" + topic.getId() + "/" + NavigationUtils.getPageOfElement(createdPost.getPostNumber()));
 			createdPostJson.put("date", Formatter.formatTimeStamp(createdPost.getTime()));
 			createdPostJson.put("text", createdPost.getText());
 			createdPostJson.put("likeCount", forumReadService.getPostLikesCount(createdPost));
