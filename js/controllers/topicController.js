@@ -1,4 +1,3 @@
-
 app.controller('topicController', function($rootScope, $scope, $http, $routeParams, $sce) {
 	var topicId = $routeParams.topicId;
 	var pageNumber = 1;
