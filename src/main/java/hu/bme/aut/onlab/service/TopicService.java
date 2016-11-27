@@ -188,7 +188,7 @@ public class TopicService {
         if (member != null) {
             Topic topic = topicBean.findEntityById(topicId);
             if (topic != null) {
-                boolean isFollowRequest = requestDto.isFollowRequest();
+                boolean isFollowRequest = requestDto.getIsFollowRequest();
                 TopicSubscription existingTopicSubscription = forumDao.getTopicSubscription(member, topic);
 
                 if (isFollowRequest) {
@@ -227,7 +227,7 @@ public class TopicService {
         String message;
         int topicId = requestDto.getTopic();
         int postNumber = requestDto.getPostNumber();
-        boolean isLikeRequest = requestDto.isLikeRequest();
+        boolean isLikeRequest = requestDto.getIsLikeRequest();
         
 
         if (member != null) {
