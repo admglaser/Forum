@@ -169,7 +169,7 @@ public class SubcategoryService {
             int subcategoryId = requestDto.getCategory();
             Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
             if (subcategory != null) {
-                boolean isFollowRequest = requestDto.isFollowRequest();
+                boolean isFollowRequest = requestDto.getIsFollowRequest();
                 SubcategorySubscription existingSubcategorySubscription = forumDao.getSubcategorySubscription(member, subcategory);
 
                 if (isFollowRequest) {
