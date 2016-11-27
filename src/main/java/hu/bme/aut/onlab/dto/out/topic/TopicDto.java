@@ -39,7 +39,7 @@ public class TopicDto extends BaseOutDto {
         this.startedByText = startedByText;
     }
 
-    public boolean isFollowedByMember() {
+    public boolean getIsFollowedByMember() {
         return isFollowedByMember;
     }
 
@@ -47,7 +47,7 @@ public class TopicDto extends BaseOutDto {
         this.isFollowedByMember = isFollowedByMember;
     }
 
-    public boolean isCanFollow() {
+    public boolean getCanFollow() {
         return canFollow;
     }
 
@@ -55,7 +55,7 @@ public class TopicDto extends BaseOutDto {
         this.canFollow = canFollow;
     }
 
-    public boolean isCanReply() {
+    public boolean getCanReply() {
         return canReply;
     }
 

@@ -96,7 +96,7 @@ public class TopicSubcategoryDto {
         this.lastDate = lastDate;
     }
 
-    public boolean isUnread() {
+    public boolean getUnread() {
         return unread;
     }
 

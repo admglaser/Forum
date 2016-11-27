@@ -40,7 +40,7 @@ public class SubcategoryHomeDto {
 		this.lastTitle = lastTitle;
 	}
 
-	public boolean isUnread() {
+	public boolean getUnread() {
 		return unread;
 	}
 
@@ -72,7 +72,7 @@ public class SubcategoryHomeDto {
 		this.postCount = postCount;
 	}
 
-	public boolean isHasLastTopic() {
+	public boolean getHasLastTopic() {
 		return hasLastTopic;
 	}
 
