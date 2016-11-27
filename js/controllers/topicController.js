@@ -232,7 +232,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 				success: function(data){
 					alert(data.message);
 					if (data.success) {
-						$rootScope.$emit('reload', { data: { scrollX : window.scrollX, scrollY : window.scrollY } });
+						$rootScope.$emit('reload');
 					} 
 				}
 			});
