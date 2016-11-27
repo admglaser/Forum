@@ -2,6 +2,7 @@ package hu.bme.aut.onlab.dto.out.home;
 
 public class SubcategoryHomeDto {
 
+	private String topicLink;
 	private String postLink;
 	private String subcategoryLink;
 	private String lastTitle;
@@ -15,7 +16,15 @@ public class SubcategoryHomeDto {
 	private String desc;
 	private String lastDate;
 	private String userLink;
+	
+	public String getTopicLink() {
+		return topicLink;
+	}
 
+	public void setTopicLink(String topicLink) {
+		this.topicLink = topicLink;
+	}
+	
 	public String getPostLink() {
 		return postLink;
 	}

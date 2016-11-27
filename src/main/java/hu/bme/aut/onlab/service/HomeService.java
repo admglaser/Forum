@@ -20,6 +20,7 @@ import hu.bme.aut.onlab.model.Subcategory;
 import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
+import hu.bme.aut.onlab.util.NavigationUtils;
 
 @LocalBean
 @Stateless
@@ -76,7 +77,8 @@ public class HomeService {
 						subcategoryDto.setLastPoster(memberOfLastPost.getDisplayName());
 						subcategoryDto.setLastDate(Formatter.formatTimeStamp(lastPost.getTime()));
 						subcategoryDto.setLastPosterImageLink(LinkUtils.getProfilePictureLink(memberOfLastPost.getPictureId()));
-						subcategoryDto.setPostLink("#/topic/" + lastTopic.getId() + "/" + lastPost.getPostNumber());
+						subcategoryDto.setTopicLink("#/topic/" + lastTopic.getId());
+						subcategoryDto.setPostLink("#/topic/" + lastTopic.getId() + "/" + NavigationUtils.getPageOfElement(lastPost.getPostNumber()));
 						subcategoryDto.setUserLink("#/user/" + memberOfLastPost.getId());
 						subcategoryDto.setUnread(member == null ? false	: forumDao.hasTopicUnreadPostsByMember(lastTopic, member));
 					}
