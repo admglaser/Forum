@@ -47,7 +47,7 @@
 								<button id="quoteButton" type="button" class="btn btn-sm btn-primary" ng-disabled="post.isQuoteDisabled" ng-click="openQuotePanel(post.username, post.userLink, post.postNumber, post.postLink, post.text)" >
 									Quote
 								</button>
-								<button id="likePostButton" type="button" class="btn btn-sm btn-primary" ng-disabled="post.isLikeDisabled" ng-click="toggleLikingPost(post)" onclick="getScrollPosition()">{{post.likePostButtonText}}</button>
+								<button id="likePostButton" type="button" class="btn btn-sm btn-primary" ng-disabled="post.isLikeDisabled" ng-click="toggleLikingPost(post)">{{post.likePostButtonText}}</button>
 							</div>
 							<div class="pull-right">
 								<button uib-popover="{{post.likers}}" type="button" class="btn btn-sm btn-primary">{{post.likeCount}} likes</button> 	
@@ -105,9 +105,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	function getScrollPosition() {
-		alert("Position (X,Y): " + window.scrollX + "," + window.scrollY);
-	}
-</script>

@@ -56,7 +56,7 @@ app.controller('topicController', function($rootScope, $scope, $http, $routePara
 				if (post.style == null) {
 					post.style = "";
 				}
-				post.style = post.style + style.style + ";";
+				post.style = post.style + style + ";";
 			}
 		}
 
