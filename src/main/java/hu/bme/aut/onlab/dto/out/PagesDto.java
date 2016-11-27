@@ -20,7 +20,7 @@ public class PagesDto {
         this.link = link;
     }
 
-    public boolean isActive() {
+    public boolean getActive() {
         return active;
     }
 

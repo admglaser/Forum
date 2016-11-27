@@ -103,7 +103,7 @@ public class PostTopicDto {
         this.postLink = postLink;
     }
 
-    public boolean isPostLiked() {
+    public boolean getIsPostLiked() {
         return isPostLiked;
     }
 

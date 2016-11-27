@@ -29,7 +29,7 @@ public class SubcategoryDto extends BaseOutDto {
         this.title = title;
     }
 
-    public boolean isFollowedByMember() {
+    public boolean getIsFollowedByMember() {
         return isFollowedByMember;
     }
 
@@ -37,7 +37,7 @@ public class SubcategoryDto extends BaseOutDto {
         this.isFollowedByMember = isFollowedByMember;
     }
 
-    public boolean isCanFollow() {
+    public boolean getCanFollow() {
         return canFollow;
     }
 
@@ -45,7 +45,7 @@ public class SubcategoryDto extends BaseOutDto {
         this.canFollow = canFollow;
     }
 
-    public boolean isCanStartTopic() {
+    public boolean getCanStartTopic() {
         return canStartTopic;
     }
 

@@ -22,7 +22,7 @@ public class LikePostRequestDto {
         this.postNumber = postNumber;
     }
 
-    public boolean isLikeRequest() {
+    public boolean getIsLikeRequest() {
         return isLikeRequest;
     }
 

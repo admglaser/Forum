@@ -13,7 +13,7 @@ public class FollowTopicRequestDto {
         this.topic = topic;
     }
 
-    public boolean isFollowRequest() {
+    public boolean getIsFollowRequest() {
         return isFollowRequest;
     }
 

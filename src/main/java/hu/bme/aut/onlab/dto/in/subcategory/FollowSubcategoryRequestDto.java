@@ -13,7 +13,7 @@ public class FollowSubcategoryRequestDto {
         this.category = category;
     }
 
-    public boolean isFollowRequest() {
+    public boolean getIsFollowRequest() {
         return isFollowRequest;
     }
 

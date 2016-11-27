@@ -13,7 +13,7 @@ public class HomeDto extends BaseOutDto {
 		super();
 	}
 
-	public boolean isLoggedIn() {
+	public boolean getLoggedIn() {
 		return loggedIn;
 	}
 

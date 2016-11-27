@@ -8,7 +8,7 @@ public class BaseOutDto {
         error = false;
     }
 
-    public boolean isError() {
+    public boolean getIsError() {
         return error;
     }
 
