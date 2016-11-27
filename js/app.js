@@ -36,7 +36,7 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/topic.template.html',
 		controller: 'topicController'
 	})
-	.when('/topic/:topicId/:postId', {
+	.when('/topic/:topicId/:pageNumber', {
 		templateUrl : 'pages/topic.template.html',
 		controller: 'topicController'
 	})
@@ -51,11 +51,23 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/user.topics.template.html',
 		controller: 'userTopicsController'
 	})
+	.when('/user/:userId/topics/:pageNumber', {
+		templateUrl : 'pages/user.topics.template.html',
+		controller: 'userTopicsController'
+	})
 	.when('/user/:userId/posts', {
 		templateUrl : 'pages/user.posts.template.html',
 		controller: 'userPostsController'
 	})
+	.when('/user/:userId/posts/:pageNumber', {
+		templateUrl : 'pages/user.posts.template.html',
+		controller: 'userPostsController'
+	})
 	.when('/user/:userId/likes', {
+		templateUrl : 'pages/user.likes.template.html',
+		controller: 'userLikesController'
+	})
+	.when('/user/:userId/likes/:pageNumber', {
 		templateUrl : 'pages/user.likes.template.html',
 		controller: 'userLikesController'
 	})
@@ -66,10 +78,18 @@ app.config(function($routeProvider) {
 		templateUrl : 'pages/members.template.html',
 		controller: 'membersController'
 	})
+	.when('/members/:pageNumber', {
+		templateUrl : 'pages/members.template.html',
+		controller: 'membersController'
+	})
 	
 	
 	//conversations
 	.when('/conversations', {
+		templateUrl : 'pages/conversations.template.html',
+		controller: 'conversationsController'
+	})
+	.when('/conversations/:pageNumber', {
 		templateUrl : 'pages/conversations.template.html',
 		controller: 'conversationsController'
 	})
