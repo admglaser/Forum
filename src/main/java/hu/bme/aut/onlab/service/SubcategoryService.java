@@ -47,7 +47,7 @@ public class SubcategoryService {
     @EJB
     private SubcategorySubscriptionBean subcategorySubscriptionBean;
 
-    public SubcategoryDto getSubcategoryWithPage(Member member, int subcategoryId, int pageNumber) {
+    public SubcategoryDto getSubcategory(Member member, int subcategoryId, int pageNumber) {
         SubcategoryDto subcategoryDto = new SubcategoryDto();
 
         Subcategory subcategory = subcategoryBean.findEntityById(subcategoryId);
@@ -161,7 +161,7 @@ public class SubcategoryService {
         return createTopicResponseDto;
     }
 
-    public PostResponseDto followTopic(Member member, FollowSubcategoryRequestDto requestDto) {
+    public PostResponseDto followSubcategory(Member member, FollowSubcategoryRequestDto requestDto) {
         PostResponseDto postResponseDto = new PostResponseDto();
         String message;
 

@@ -31,14 +31,14 @@ public class SubcategoryRs {
     @Path("{subcategoryId}")
     @Produces(MediaType.APPLICATION_JSON)
     public SubcategoryDto getSubcategory(@Context Member member, @PathParam("subcategoryId") int subcategoryId) {
-    	return subcategoryService.getSubcategoryWithPage(member, subcategoryId, 1);
+    	return subcategoryService.getSubcategory(member, subcategoryId, 1);
     }
     
     @GET
     @Path("{subcategoryId}/{pageNumber}")
     @Produces(MediaType.APPLICATION_JSON)
     public SubcategoryDto getSubcategoryWithPage(@Context Member member, @PathParam("subcategoryId") int subcategoryId, @PathParam("pageNumber") int pageNumber) {
-        return subcategoryService.getSubcategoryWithPage(member, subcategoryId, pageNumber);
+        return subcategoryService.getSubcategory(member, subcategoryId, pageNumber);
     }
 
     @POST
@@ -53,7 +53,7 @@ public class SubcategoryRs {
     @Path("follow")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public PostResponseDto followTopic(@Context Member member, FollowSubcategoryRequestDto requestDto) {
-        return subcategoryService.followTopic(member, requestDto);
+    public PostResponseDto followSubcategory(@Context Member member, FollowSubcategoryRequestDto requestDto) {
+        return subcategoryService.followSubcategory(member, requestDto);
     }
 }

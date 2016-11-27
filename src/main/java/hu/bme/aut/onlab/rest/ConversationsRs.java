@@ -1,39 +1,23 @@
 package hu.bme.aut.onlab.rest;
 
+import hu.bme.aut.onlab.dao.LoginDao;
+import hu.bme.aut.onlab.dao.MessagingDao;
+import hu.bme.aut.onlab.dao.model.*;
+import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.util.Formatter;
+import hu.bme.aut.onlab.util.LinkUtils;
+import hu.bme.aut.onlab.util.NavigationUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.ejb.EJB;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ejb.EJB;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import hu.bme.aut.onlab.dao.LoginDao;
-import hu.bme.aut.onlab.dao.MessagingDao;
-import hu.bme.aut.onlab.dao.model.ConversationDao;
-import hu.bme.aut.onlab.dao.model.ConversationSeenByMemberDao;
-import hu.bme.aut.onlab.dao.model.ConversationToMemberDao;
-import hu.bme.aut.onlab.dao.model.MemberDao;
-import hu.bme.aut.onlab.dao.model.MessageDao;
-import hu.bme.aut.onlab.model.Conversation;
-import hu.bme.aut.onlab.model.ConversationSeenByMember;
-import hu.bme.aut.onlab.model.ConversationToMember;
-import hu.bme.aut.onlab.model.Member;
-import hu.bme.aut.onlab.model.Member_;
-import hu.bme.aut.onlab.model.Message;
-import hu.bme.aut.onlab.util.Formatter;
-import hu.bme.aut.onlab.util.LinkUtils;
-import hu.bme.aut.onlab.util.NavigationUtils;
 
 @Path("/conversations")
 public class ConversationsRs {
@@ -116,7 +100,7 @@ public class ConversationsRs {
 	@Path("new")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String addConversation(@Context Member member, String data) {
+	public String createConversation(@Context Member member, String data) {
 		JSONObject json = new JSONObject(data);
 		JSONObject result = new JSONObject();
 		if (member != null) {
