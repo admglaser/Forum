@@ -26,7 +26,7 @@
 					</div>
 				</td>
 				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a> <br>
-					<small> Started by <a href="{{topic.starterLink}}">{{topic.starter}}</a>
+					<small> Started by <a href="{{topic.starterLink}}" style="{{topic.starterStyle}}">{{topic.starter}}</a>
 						<i class="fa fa-clock-o"></i> {{topic.startDate}}
 				</small></td>
 				<td class="hidden-xs"><small> {{topic.postCount}}
@@ -38,7 +38,7 @@
 							<img class="user-icon img-thumbnail" src="{{topic.posterImageLink}}">
 						</div>
 						<div class="col-xs-9">
-							<small> By <a href="{{topic.posterLink}}">{{topic.lastPoster}}</a>
+							<small> By <a href="{{topic.posterLink}}" style="{{topic.lastPosterStyle}}">{{topic.lastPoster}}</a>
 								<br> <a href="{{topic.postLink}}">{{topic.lastDate}}</a>
 							</small>
 						</div>

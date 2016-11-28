@@ -17,7 +17,7 @@
 					<div class="panel-heading">
 						<div class="container">
 							<div class="pull-left small">
-								<h4><a href="{{message.userLink}}">{{message.userName}}</a></h4>
+								<h4><a href="{{message.userLink}}" style="{{message.style}}">{{message.userName}}</a></h4>
 								<small>{{message.time}}</small>
 							</div>
 							<div class="pull-right small">
@@ -28,7 +28,7 @@
 					<div class="panel-body">
 						<div class="col-xs-2 text-center">
 							<img class="img-thumbnail" src="{{message.userImageLink}}"></img>
-							<h5>{{message.memberGroup}}</h5>
+							<h5 style="{{message.style}}">{{message.memberGroup}}</h5>
 							<h6>{{message.posts}} posts</h6>
 						</div>
 						<div class="col-xs-10 text-center">
