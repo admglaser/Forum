@@ -13,6 +13,7 @@ public class SubcategoryHomeDto {
 	private boolean hasLastTopic;
 	private String lastPosterImageLink;
 	private String lastPoster;
+	private String lastPosterStyle;
 	private String desc;
 	private String lastDate;
 	private String userLink;
@@ -127,6 +128,14 @@ public class SubcategoryHomeDto {
 
 	public void setUserLink(String userLink) {
 		this.userLink = userLink;
+	}
+
+	public String getLastPosterStyle() {
+		return lastPosterStyle;
+	}
+
+	public void setLastPosterStyle(String lastPosterStyle) {
+		this.lastPosterStyle = lastPosterStyle;
 	}
 
 }

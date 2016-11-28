@@ -62,6 +62,7 @@ public class MemberRs {
             memberJson.put("userLink", "#/user/" + memberId);
             memberJson.put("userImageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
             memberJson.put("imageLink", member.getPictureId());
+            memberJson.put("style", Formatter.getMemberStyle(member));
 
             memberJsonArray.put(memberJson);
         }

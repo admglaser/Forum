@@ -81,10 +81,10 @@ public class HomeService {
 						subcategoryDto.setPostLink("#/topic/" + lastTopic.getId() + "/" + NavigationUtils.getPageOfElement(lastPost.getPostNumber()));
 						subcategoryDto.setUserLink("#/user/" + memberOfLastPost.getId());
 						subcategoryDto.setUnread(member == null ? false	: forumDao.hasTopicUnreadPostsByMember(lastTopic, member));
+						subcategoryDto.setLastPosterStyle(Formatter.getMemberStyle(memberOfLastPost));
 					}
 					subcategoriesDto.add(subcategoryDto);
 				}
-
 			}
 			if (canViewCategory) {
 				categoriesDto.add(categoryDto);

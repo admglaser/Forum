@@ -3,7 +3,11 @@ package hu.bme.aut.onlab.util;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
+
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.StyleOfMemberGroup;
 
 /**
  * Created by N. Vilagos.
@@ -82,6 +86,16 @@ public class Formatter {
 		else {
 			return "";
 		}
+	}
+	
+	public static String getMemberStyle(Member member) {
+		StringBuilder sb = new StringBuilder();
+		List<StyleOfMemberGroup> styles = member.getMemberGroup().getStyleOfMemberGroups();
+		for (int i = 0; i < styles.size(); i++) {
+			StyleOfMemberGroup style = styles.get(i);
+			sb.append(style.getStyle() + ";");
+		}
+		return sb.toString();
 	}
 	
 }

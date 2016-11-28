@@ -1,5 +1,22 @@
 package hu.bme.aut.onlab.rest;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import hu.bme.aut.onlab.dao.ForumDao;
 import hu.bme.aut.onlab.dao.LoginDao;
 import hu.bme.aut.onlab.dao.MessagingDao;
@@ -12,16 +29,6 @@ import hu.bme.aut.onlab.model.Message;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Path("message")
 public class MessageRs {
@@ -77,6 +84,7 @@ public class MessageRs {
         				messageJson.put("time", Formatter.formatTimeStampForMessage(message.getTime()));
         				messageJson.put("text", message.getText());
         				messageJson.put("messageNumber", message.getMessageNumber());
+        				messageJson.put("style", Formatter.getMemberStyle(member2));
         				messagesJsonArray.put(messageJson);
         			}
         			

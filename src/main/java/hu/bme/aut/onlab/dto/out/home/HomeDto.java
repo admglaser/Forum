@@ -1,8 +1,8 @@
 package hu.bme.aut.onlab.dto.out.home;
 
-import hu.bme.aut.onlab.dto.out.BaseOutDto;
-
 import java.util.List;
+
+import hu.bme.aut.onlab.dto.out.BaseOutDto;
 
 public class HomeDto extends BaseOutDto {
 

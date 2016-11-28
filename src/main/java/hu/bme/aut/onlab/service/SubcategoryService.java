@@ -1,26 +1,36 @@
 package hu.bme.aut.onlab.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+
 import hu.bme.aut.onlab.dao.ForumDao;
 import hu.bme.aut.onlab.dao.NotificationsDao;
-import hu.bme.aut.onlab.dao.model.*;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.dao.model.PostBean;
+import hu.bme.aut.onlab.dao.model.SubcategoryBean;
+import hu.bme.aut.onlab.dao.model.SubcategorySubscriptionBean;
+import hu.bme.aut.onlab.dao.model.TopicBean;
 import hu.bme.aut.onlab.dto.in.subcategory.CreateTopicRequestDto;
 import hu.bme.aut.onlab.dto.in.subcategory.FollowSubcategoryRequestDto;
 import hu.bme.aut.onlab.dto.out.PostResponseDto;
 import hu.bme.aut.onlab.dto.out.subcategory.CreateTopicResponseDto;
 import hu.bme.aut.onlab.dto.out.subcategory.SubcategoryDto;
 import hu.bme.aut.onlab.dto.out.subcategory.TopicSubcategoryDto;
-import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.Subcategory;
+import hu.bme.aut.onlab.model.SubcategorySubscription;
+import hu.bme.aut.onlab.model.Topic;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationUtils;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @LocalBean
 @Stateless
@@ -62,7 +72,6 @@ public class SubcategoryService {
                 Member starterMemberPosted = firstPost.getMember();
                 Post lastPost = forumDao.getLastPostFromTopic(topic);
                 Member lastMemberPosted = lastPost.getMember();
-
                 TopicSubcategoryDto topicSubcategoryDto = new TopicSubcategoryDto();
                 topicSubcategoryDto.setUnread(isUnread);
                 topicSubcategoryDto.setTitle(topic.getTitle());
@@ -77,7 +86,8 @@ public class SubcategoryService {
                 topicSubcategoryDto.setStarterLink("#/user/" + starterMemberPosted.getId());
                 topicSubcategoryDto.setPosterLink("#/user/" + lastMemberPosted.getId());
                 topicSubcategoryDto.setPosterImageLink(LinkUtils.getProfilePictureLink(lastMemberPosted.getPictureId()));
-
+                topicSubcategoryDto.setLastPosterStyle(Formatter.getMemberStyle(lastMemberPosted));
+                topicSubcategoryDto.setStarterStyle(Formatter.getMemberStyle(starterMemberPosted));
                 subcategoryDto.getTopics().add(topicSubcategoryDto);
             }
 

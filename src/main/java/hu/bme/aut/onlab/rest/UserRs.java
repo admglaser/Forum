@@ -60,7 +60,8 @@ public class UserRs {
 		result.put("joined", Formatter.formatTimeStamp(member.getRegisterTime()));
 		result.put("active", Formatter.formatTimeStamp(member.getActiveTime()));
 		result.put("imageLink", LinkUtils.getProfilePictureLink(member.getPictureId()));
-
+		result.put("style", Formatter.getMemberStyle(member));
+		
 		return result;
 	}
 

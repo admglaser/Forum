@@ -6,10 +6,12 @@ public class TopicSubcategoryDto {
     private String posterImageLink;
     private String starter;
     private String starterLink;
+    private String starterStyle;
     private String topicLink;
     private String title;
     private String posterLink;
     private String lastPoster;
+    private String lastPosterStyle;
     private String startDate;
     private String lastDate;
     private boolean unread;
@@ -119,4 +121,20 @@ public class TopicSubcategoryDto {
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
+
+	public String getStarterStyle() {
+		return starterStyle;
+	}
+
+	public void setStarterStyle(String starterStyle) {
+		this.starterStyle = starterStyle;
+	}
+
+	public String getLastPosterStyle() {
+		return lastPosterStyle;
+	}
+
+	public void setLastPosterStyle(String lastPosterStyle) {
+		this.lastPosterStyle = lastPosterStyle;
+	}
 }

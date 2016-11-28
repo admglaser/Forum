@@ -1,5 +1,15 @@
 package hu.bme.aut.onlab.rest;
 
+import javax.ejb.EJB;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+
 import hu.bme.aut.onlab.dao.LoginDao;
 import hu.bme.aut.onlab.dao.model.CategoryDao;
 import hu.bme.aut.onlab.dto.in.subcategory.CreateTopicRequestDto;
@@ -9,11 +19,6 @@ import hu.bme.aut.onlab.dto.out.subcategory.CreateTopicResponseDto;
 import hu.bme.aut.onlab.dto.out.subcategory.SubcategoryDto;
 import hu.bme.aut.onlab.model.Member;
 import hu.bme.aut.onlab.service.SubcategoryService;
-
-import javax.ejb.EJB;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 @Path("/category")
 public class SubcategoryRs {

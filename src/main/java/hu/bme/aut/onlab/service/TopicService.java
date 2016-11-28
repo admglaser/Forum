@@ -1,26 +1,38 @@
 package hu.bme.aut.onlab.service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+
 import hu.bme.aut.onlab.dao.ForumDao;
 import hu.bme.aut.onlab.dao.NotificationsDao;
-import hu.bme.aut.onlab.dao.model.*;
+import hu.bme.aut.onlab.dao.model.MemberDao;
+import hu.bme.aut.onlab.dao.model.MemberLikeDao;
+import hu.bme.aut.onlab.dao.model.PostBean;
+import hu.bme.aut.onlab.dao.model.TopicBean;
+import hu.bme.aut.onlab.dao.model.TopicSubscriptionBean;
 import hu.bme.aut.onlab.dto.in.topic.CreatePostRequestDto;
 import hu.bme.aut.onlab.dto.in.topic.FollowTopicRequestDto;
 import hu.bme.aut.onlab.dto.in.topic.LikePostRequestDto;
 import hu.bme.aut.onlab.dto.out.PostResponseDto;
 import hu.bme.aut.onlab.dto.out.topic.PostTopicDto;
 import hu.bme.aut.onlab.dto.out.topic.TopicDto;
-import hu.bme.aut.onlab.model.*;
+import hu.bme.aut.onlab.model.Member;
+import hu.bme.aut.onlab.model.MemberGroup;
+import hu.bme.aut.onlab.model.MemberLike;
+import hu.bme.aut.onlab.model.Member_;
+import hu.bme.aut.onlab.model.Post;
+import hu.bme.aut.onlab.model.StyleOfMemberGroup;
+import hu.bme.aut.onlab.model.Topic;
+import hu.bme.aut.onlab.model.TopicSubscription;
 import hu.bme.aut.onlab.util.Formatter;
 import hu.bme.aut.onlab.util.LinkUtils;
 import hu.bme.aut.onlab.util.NavigationUtils;
 import hu.bme.aut.onlab.util.NotificationUtils;
-
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @LocalBean
 @Stateless

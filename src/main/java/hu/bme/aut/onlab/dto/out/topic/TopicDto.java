@@ -1,10 +1,10 @@
 package hu.bme.aut.onlab.dto.out.topic;
 
-import hu.bme.aut.onlab.dto.out.BaseOutDto;
-import hu.bme.aut.onlab.dto.out.PagesDto;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import hu.bme.aut.onlab.dto.out.BaseOutDto;
+import hu.bme.aut.onlab.dto.out.PagesDto;
 
 public class TopicDto extends BaseOutDto {
 
