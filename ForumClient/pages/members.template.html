@@ -1,0 +1,49 @@
+<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+
+	<!-- members -->
+	<table class="table forum table-striped">
+		<thead>
+			<tr>
+				<th class="cell-stat"></th>
+				<th><h3>Members</h3></th>
+				<th class="cell-stat">ID</th>
+				<th class="cell-stat">Group</th>
+				<th class="cell-stat-2x">Joined</th>
+				<th class="cell-stat">Topics</th>
+				<th class="cell-stat">Posts</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<!-- member -->
+			<tr ng-repeat="member in data.members">
+				<td class="text-center">
+					<img class="img-thumbnail" src="{{member.userImageLink}}"/>
+				</td>
+				<td><h4><a href="{{member.userLink}}" style="{{member.style}}">{{member.name}}</a></h4></td>
+				<td>{{member.id}}</td>
+				<td style="{{member.style}}">{{member.memberGroup}}</td>
+				<td>{{member.joined}}</td>
+				<td>{{member.topicCount}}</td>
+				<td>{{member.postCount}}</td>
+			</tr>
+			<!-- end of members -->
+
+		</tbody>
+	</table>
+	<!-- end of members -->
+
+	<div style="margin-top: 25px;">
+
+		<!-- pagination -->
+		<div class="btn-group ">
+			<ul class="pagination" style="margin: 0;">
+				<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
+					<a href="{{page.link}}">{{page.text}}</a>
+				</li>
+			</ul>
+		</div>
+		<!-- end of pagination -->
+
+	</div>
+</div>

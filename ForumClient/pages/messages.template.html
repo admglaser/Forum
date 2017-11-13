@@ -1,0 +1,92 @@
+<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+
+	<div class="container">
+		<div class="pull-left">
+			<h3>{{data.title}}</h3>
+			<h6>Recipients: {{data.recipients}}</h6>
+			<h6>Started by {{data.starter}}, {{data.startDate}}</h6>
+		</div>
+	</div>
+
+	<div class="container">
+		<!-- posts -->
+		<div ng-repeat="message in data.messages" id="messageId" class="panel-group">
+
+			<div class="panel panel-default">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="container">
+							<div class="pull-left small">
+								<h4><a href="{{message.userLink}}" style="{{message.style}}">{{message.userName}}</a></h4>
+								<small>{{message.time}}</small>
+							</div>
+							<div class="pull-right small">
+								<h5>{{message.messageNumber}}</h5>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="col-xs-2 text-center">
+							<img class="img-thumbnail" src="{{message.userImageLink}}"></img>
+							<h5 style="{{message.style}}">{{message.memberGroup}}</h5>
+							<h6>{{message.posts}} posts</h6>
+						</div>
+						<div class="col-xs-10 text-center">
+							<div class="container">
+								<div class="post-text pull-left" ng-bind-html="message.text"></div>
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer user-panel-footer">
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!-- end of posts -->
+
+		<div id="test" style="margin-top: 25px;">
+			<!-- new reply button -->
+			<div class="btn-group pull-right">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newReplyModalForm">
+					New Reply
+				</button>
+			</div>
+			<!-- end of new reply button -->
+
+			<!-- pagination -->
+			<div class="btn-group ">
+				<ul class="pagination" style="margin: 0;">
+					<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
+						<a href="{{page.link}}">{{page.text}}</a>
+					</li>
+				</ul>
+			</div>
+			<!-- end of pagination -->
+		</div>
+	</div>
+</div>
+
+<div id="newReplyModalForm" class="modal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>New Reply</h2>
+			</div>
+			<div class="modal-body">
+				<form id="newPostForm">
+					<div class="form-group">
+						<label for="bbcodeEditor" class="control-label">Text</label>
+						<textarea rows="25" name="bbcodeEditor" id="bbcodeEditor" class="form-control"></textarea>
+						<div id="previewDiv" class="panel panel-default">
+							<div class="panel-heading">Preview</div>
+							<div id="previewHtml" class="panel-body"></div>
+						</div>
+					</div>
+					<button id="previewButton" class="btn btn-primary" ng-click="togglePreview()">Preview</button>
+					<button id="messageSubmit" type="submit" class="btn btn-primary pull-right">Send</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

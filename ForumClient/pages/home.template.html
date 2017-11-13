@@ -1,0 +1,59 @@
+<!-- category -->
+<div ng-repeat="category in data.categories" class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+	<table class="table forum table-striped">
+		<thead>
+			<tr>
+				<th class="cell-stat"></th>
+				<th>
+				  <h3>{{category.title}}</h3>
+				</th>
+				<th class="cell-stat text-center hidden-xs">Topics</th>
+				<th class="cell-stat text-center hidden-xs">Posts</th>
+				<th class="cell-stat-2x">Last Post</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+			<!-- subcategory -->
+			<tr ng-repeat="subcategory in category.subcategories">
+				<td class="text-center">
+					<div ng-if="data.loggedIn">
+						<div ng-if="subcategory.unread">
+							<i class="fa fa-circle fa-2x text-primary"></i>
+						</div>
+						<div ng-if="!subcategory.unread">
+							<i class="fa fa-circle-o fa-2x text-primary"></i>
+						</div>
+					</div>
+				</td>
+				<td>
+					<h4>
+						<a href="{{subcategory.subcategoryLink}}">{{subcategory.title}}</a>
+						<br/><small>{{subcategory.desc}}</small>
+					</h4>
+				</td>
+				<td class="text-center hidden-xs">{{subcategory.topicCount}}</td>
+				<td class="text-center hidden-xs">{{subcategory.postCount}}</td>
+				<td>
+					<div ng-if="subcategory.hasLastTopic">
+						<div class="row">
+							<div class="col-xs-3">
+								<img class="user-icon img-thumbnail" src="{{subcategory.lastPosterImageLink}}"/>
+							</div>
+							<div class="col-xs-9">
+								<small>
+									<a href="{{subcategory.topicLink}}">{{subcategory.lastTitle}}</a>
+									<br/>By <a href="{{subcategory.userLink}}" style="{{subcategory.lastPosterStyle}}">{{subcategory.lastPoster}}</a>
+									<br/><a href="{{subcategory.postLink}}">{{subcategory.lastDate}}</a>
+								</small>
+							</div>
+						</div>
+					</div>		
+				</td>
+			</tr>
+			<!-- end of subcategory -->
+			
+		</tbody>
+	</table>
+</div>
+<!-- end of category -->

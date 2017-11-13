@@ -1,0 +1,103 @@
+<div class="well"
+	style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px;">
+
+	<!-- topics -->
+	<table class="table forum table-striped">
+		<thead>
+			<tr>
+				<th class="cell-stat"></th>
+				<th><h3>{{data.title}}</h3></th>
+				<th class="cell-stat hidden-xs"></th>
+				<th class="cell-stat-2x">Last Post
+					<button id="followCategoryButton" type="button" class="btn btn-xs btn-primary pull-right" ng-click="toggleFollowingCategory()">Follow</button>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			<!-- topic -->
+			<tr ng-repeat="topic in data.topics">
+				<td class="text-center">
+					<div ng-if="topic.unread">
+						<i class="fa fa-circle fa-2x text-primary"></i>
+					</div>
+					<div ng-if="!topic.unread">
+						<i class="fa fa-circle-o fa-2x text-primary"></i>
+					</div>
+				</td>
+				<td><a href="{{topic.topicLink}}"> {{topic.title}} </a> <br>
+					<small> Started by <a href="{{topic.starterLink}}" style="{{topic.starterStyle}}">{{topic.starter}}</a>
+						<i class="fa fa-clock-o"></i> {{topic.startDate}}
+				</small></td>
+				<td class="hidden-xs"><small> {{topic.postCount}}
+						replies <br> {{topic.viewCount}} views
+				</small></td>
+				<td>
+					<div class="row">
+						<div class="col-xs-3">
+							<img class="user-icon img-thumbnail" src="{{topic.posterImageLink}}">
+						</div>
+						<div class="col-xs-9">
+							<small> By <a href="{{topic.posterLink}}" style="{{topic.lastPosterStyle}}">{{topic.lastPoster}}</a>
+								<br> <a href="{{topic.postLink}}">{{topic.lastDate}}</a>
+							</small>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<!-- end of topic -->
+
+		</tbody>
+	</table>
+	<!-- end of topics -->
+
+	<div style="margin-top: 25px;">
+
+		<!-- new topic button -->
+		<div class="btn-group pull-right">
+			<button id="startNewTopicButton" type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#startNewTopicModalForm">Start New Topic</button>
+		</div>
+		<!-- end of new topic button -->
+
+		<!-- pagination -->
+		<div class="btn-group ">
+			<ul class="pagination" style="margin: 0;">
+				<li ng-repeat="page in data.pages"
+					ng-class="{active: page.active==true}"><a href="{{page.link}}">{{page.text}}</a>
+				</li>
+			</ul>
+		</div>
+		<!-- end of pagination -->
+
+	</div>
+</div>
+
+<div id="startNewTopicModalForm" class="modal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h2>Start New Topic</h2>
+			</div>
+			<div class="modal-body">
+				<form id="startNewTopicForm">
+					<div class="form-group">
+						<label for="title" class="control-label">Title</label>
+						<input type="text" class="form-control" id="title" name="title" value="" title="Please enter the topic title">
+					</div>
+					<div class="form-group">
+						<label for="bbcodeEditor" class="control-label">Text</label>
+						<textarea rows="25" name="bbcodeEditor" id="bbcodeEditor"
+							class="form-control"></textarea>
+						<div id="previewDiv" class="panel panel-default">
+							<div class="panel-heading">Preview</div>
+							<div id="previewHtml" class="panel-body"></div>
+						</div>
+					</div>
+					<button id="previewButton" class="btn btn-primary" ng-click="togglePreview()">Preview</button>
+					<button type="submit" class="btn btn-primary pull-right" ng-click="submitTopic()">Post</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,92 @@
+<div class="well" style="padding-left:30px;padding-right:30px;padding-bottom:30px;">
+
+	<div class="container">
+		<div class="row">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="col-xs-2 text-center">
+						<img class="img-thumbnail" src="{{data.imageLink}}"></img>
+					</div>
+					<div class="col-xs-10">
+						<h2 style="{{data.style}}">{{data.name}}</h2>
+						<h6>Member since {{data.joined}}</h6>
+						<h6>Last active {{data.active}}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="panel with-nav-tabs panel-default">
+				<div class="panel-heading">
+					<ul class="nav nav-tabs">
+						<li>
+							<a href="#/user/{{data.id}}">Overview</a>
+						</li>
+						<li class="active">
+							<a href="#/user/{{data.id}}/topics">Topics</a>
+						</li>
+						<li>
+							<a href="#/user/{{data.id}}/posts">Posts</a>
+						</li>
+						<li>
+							<a href="#/user/{{data.id}}/likes">Likes</a>
+						</li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<!-- topics -->
+						<div ng-repeat="topic in data.topics" class="tab-pane active" id="tabTopics">
+							<div class="container">
+								<div class="panel-group">
+									<div class="panel panel-default">
+										<div class="panel panel-default">
+											<div class="panel-heading">
+												<div class="container">
+													<div class="pull-left small">
+														<h4><a href="{{topic.link}}">{{topic.title}}</a></h4>
+													</div>
+													<div class="pull-right small">
+														<small>{{topic.date}}</small>
+													</div>
+
+												</div>
+											</div>
+											<div class="panel-body">
+												<div class="container">
+													<div class="post-text" ng-bind-html="topic.text"></div>
+												</div>
+											</div>
+											<div class="panel-footer user-panel-footer">
+												<div class="container">
+													<div class="pull-right">
+														<button uib-popover="{{topic.likers}}" type="button" class="btn btn-sm">{{topic.likeCount}} likes</button> 
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end of topics -->
+
+						<div style="margin-top: 25px;">
+							<!-- pagination -->
+							<div class="btn-group ">
+								<ul class="pagination" style="margin: 0;">
+									<li ng-repeat="page in data.pages" ng-class="{active: page.active==true}">
+										<a href="{{page.link}}">{{page.text}}</a>
+									</li>
+								</ul>
+							</div>
+							<!-- end of pagination -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

@@ -1,0 +1,186 @@
+<!-- navbar -->
+<nav ng-controller="navbarController" class="navbar navbar-default navbar-static-top">
+	<div class="container">
+		<div class="navbar-header">
+			<!-- navbar button -->
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<!-- brand -->
+			<a class="navbar-brand" href="#/">TestForum</a>
+		</div>
+		<div id="navbar">
+			<!-- left side -->
+			<ul class="nav navbar-nav collapse navbar-collapse" role="navigation">
+				<li>
+					<a href="#/">Forums</a>
+				</li>
+				<li>
+					<a href="#/members">Members</a>
+				</li>
+			</ul>
+			<!-- end of left side -->
+
+			<!-- right side -->
+			<div ng-if="data.loggedIn">
+				<ul class="nav navbar-top-links navbar-right" role="navigation">
+					<!-- messages -->
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="">
+						<div class="{{data.messagesUnread ? 'text-danger' : ''}}">
+							<i class="fa fa-envelope fa-fw"></i><i class="fa fa-caret-down"></i>
+						</div> </a>
+						<ul class="dropdown-menu dropdown-messages">
+							<li ng-repeat-start="message in data.messages">
+								<a href="{{message.link}}">
+								<div class="small {{message.unread ? 'text-danger' : ''}}">
+									<div>
+										<strong>{{message.title}}</strong>
+										<span class="pull-right small"> {{message.time}} </span>
+									</div>
+									{{message.sender}}
+								</div> </a>
+							</li>
+							<li ng-repeat-end class="divider"></li>
+							<li>
+								<a class="text-center" href="#/conversations"> <strong>See All Conversations</strong> <i class="fa fa-angle-right"></i> </a>
+							</li>
+						</ul>
+					</li>
+					<!-- end of messages -->
+
+					<!-- notifications -->
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="">
+						<div class="{{data.notificationsUnread ? 'text-danger' : ''}}">
+							<i class="fa fa-bell fa-fw "></i><i class="fa fa-caret-down"></i>
+						</div> </a>
+						<ul class="dropdown-menu dropdown-messages">
+							<li ng-repeat-start="notification in data.notifications">
+								<a href="{{notification.link}}" ng-click="readNotification(notification.id)">
+								<div class="small {{notification.unread ? 'text-danger' : ''}}">
+									<div>
+										<strong>{{notification.type}}</strong>
+										<span class="pull-right small"> {{notification.time}} </span>
+									</div>
+									{{notification.text}}
+								</div> </a>
+							</li>
+							<li ng-repeat-end class="divider"></li>
+							<li>
+								<a class="text-center" href="#/notifications"> <strong>See All Notifications</strong> <i class="fa fa-angle-right"></i> </a>
+							</li>
+						</ul>
+					</li>
+					<!-- end of notifications -->
+
+					<!-- user -->
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href=""> {{data.username}} <i class="fa fa-caret-down"></i> </a>
+						<ul class="dropdown-menu dropdown-user">
+							<li>
+								<a href="{{data.userLink}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
+							</li>
+							<li>
+								<a href="#/settings"><i class="fa fa-gear fa-fw"></i> Settings</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="" ng-click="logout();"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+							</li>
+						</ul>
+					</li>
+					<!-- end of user -->
+				</ul>
+			</div>
+			<div ng-if="!data.loggedIn">
+				<ul class="nav navbar-top-links navbar-right" role="navigation">
+					<li>
+						<a href="" data-toggle="modal" data-target="#loginModalForm"><i class="fa fa-sign-in fa-fw"></i> Login</a>
+					</li>
+					<li>
+						<a href="" data-toggle="modal" data-target="#registerModalForm"><i class="fa fa-sign-in fa-fw"></i> Register</a>
+					</li>
+				</ul>
+			</div>
+			<!-- end of right side -->
+		</div>
+	</div>
+
+	
+</nav>
+<!-- end of navbar -->
+
+
+	
+	<div id="loginModalForm" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="form-signin-heading">Login</h2>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="loginUsername" class="control-label">Username</label>
+							<input type="text" class="form-control" id="loginUsername" name="username" value="" required title="Please enter you username">
+						</div>
+						<div class="form-group">
+							<label for="loginPassword" class="control-label">Password</label>
+							<input type="password" class="form-control" id="loginPassword" name="password" value="" required title="Please enter your password">
+						</div>
+						<div id="signinErrorMsg" class="alert alert-error hide">
+							Wrong username or password!
+						</div>
+						<button id ="loginSubmit" type="submit" class="btn btn-primary btn-block">
+							Login
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="registerModalForm" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="form-signin-heading">Register</h2>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="form-group">
+							<label for="reg_username" class="control-label">User name</label>
+							<input type="text" class="form-control" id="reg_username" name="username" value="" required title="Please enter you username">
+						</div>
+						<div class="form-group">
+							<label for="reg_displayname" class="control-label">Display name</label>
+							<input type="text" class="form-control" id="reg_displayname" name="displayname" value="" required title="Please enter you display name">
+						</div>
+						<div class="form-group">
+							<label for="reg_email" class="control-label">E-mail</label>
+							<input type="email" class="form-control" id="reg_email" name="email" value="" required title="Please enter you email">
+						</div>
+						<div class="form-group">
+							<label for="reg_password" class="control-label">Password</label>
+							<input type="password" class="form-control" id="reg_password" name="password" value="" required title="Please enter your password">
+						</div>
+						<div class="form-group">
+							<label for="reg_passwordConfirm" class="control-label">Confirm password</label>
+							<input type="password" class="form-control" id="reg_passwordConfirm" name="passwordConfirm" value="" required title="Please confirm your password">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="reg_birthDate">Date of birth</label>
+							<input class="form-control" id="reg_birthDate" name="reg_birthDate" placeholder="YYYY-MM-DD" type="text" readonly/>
+						</div>
+						<button id="registerSubmit" type="submit" class="btn btn-primary btn-block">
+							Submit
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
